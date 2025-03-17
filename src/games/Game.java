@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface Game {
     // Game setup
-    void initializeGame();
     void start();
     void addPlayer(Playable player);
     List<Playable> getPlayers();
