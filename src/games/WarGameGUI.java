@@ -61,8 +61,8 @@ public class WarGameGUI extends JFrame {
         deck = new Deck("animated");
         deck.shuffle();
 
-        player1 = new Player("Player 1");
-        player2 = new Player("Player 2");
+        player1 = new Player("Player 1", clientId);
+        player2 = new Player("Player 2", clientId);
 
         // Deal cards to players
         while (deck.size() >= 2) {
