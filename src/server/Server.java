@@ -1,6 +1,7 @@
 package server;
 
 import games.Game;
+import games.GameType;
 import player.Playable;
 import player.Player;
 
@@ -110,19 +111,34 @@ public class Server implements NetworkManager {
             Playable player = game.getPlayers().stream().
                     filter(p -> p instanceof Player && ((Player) p).getId() == clientId).
                     findFirst().orElse(null);
-            if (player != null) {
-                if (action.equals("Raise")) {
-                    game.playerRaise(player);
-                } else if (action.equals("Fold")) {
-                    game.playerFold(player);
-                } else if (action.equals("Hit")) {
-                    game.playerHit(player);
-                } else if (action.equals("Stand")) {
-                    game.playerStand(player);
-                }
+            switch (action.toLowerCase()) {
+                case "raise":
+                    if (game.getGameType() == GameType.POKER) {
+                        game.playerRaise(player);
+                    }
+                    break;
+                case "fold":
+                    if (game.getGameType() == GameType.POKER) {
+                        game.playerFold(player);
+                    }
+                    break;
+                case "hit":
+                    if (game.getGameType() == GameType.BLACKJACK) {
+                        game.playerHit(player);
+                    }
+                    break;
+                case "stand":
+                    if (game.getGameType() == GameType.BLACKJACK) {
+                        game.playerStand(player);
+                    }
+                    break;
+                default:
+                    System.err.println("Unsupported action: " + action);
+                    return;
+            }
                 game.broadcastState();
             }
-        }
+
         catch (Exception e) {
             System.err.println("Error processing message: " + message);
         }
