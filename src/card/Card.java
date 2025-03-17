@@ -3,7 +3,7 @@ import javax.swing.*;
 import java.awt.Image;
 
 public class Card {
-    private String suit;
+    private String suit ;
     private String rank;
     private String imagePath;
     private ImageIcon image;
