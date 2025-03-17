@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Player implements Playable {
     private String name;
-    private int id;
+    private int id; //
     private List<Card> hand;
     private GameMode gameMode;
 
