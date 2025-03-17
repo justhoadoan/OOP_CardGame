@@ -1,6 +1,8 @@
 package server;
 
 import games.Game;
+import player.Playable;
+import player.Player;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,19 +11,22 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
+import java.util.stream.Collectors;
+import static java.util.Locale.filter;
 
 public class Server implements NetworkManager {
     private ServerSocket serverSocket;
     private Game game;
     Map<Integer, ClientHandler> clientHandlers;
     private volatile boolean isRunning;
-    private int clientId;
+    private int nextClientId;
     public Server(int port, Game game) {
         try {
+            this.nextClientId=0;
             serverSocket = new ServerSocket(port);
             this.game = game;
             isRunning = false;
-            clientId = 0;
+
         } catch (IOException e) {
             System.err.println("Error initializing server on port " + port);
         }
@@ -37,35 +42,90 @@ public class Server implements NetworkManager {
              while (isRunning) {
                  try {
                      Socket clientSocket = serverSocket.accept();
+                     int clientId = nextClientId++;
                      ClientHandler clientHandler = new ClientHandler(clientSocket, this, clientId);
                      clientHandlers.put(clientId, clientHandler);
-                     clientId++;
                      clientHandler.start();
+                     System.out.println("Client " + clientId + " connected");
+                     if (game != null) {
+                         Player newPlayer = new Player("Client-" + clientId, clientId);
+                         game.addPlayer((Playable) newPlayer);
+                         clientHandler.sendMessage("STATE:" + game.getPublicState());
+                     }
                  } catch (IOException e) {
-                     System.err.println("Error accepting client connection");
+                     if (isRunning) {
+                         System.err.println("Accept failed: " + e.getMessage());
+                     }
                  }
              }
          }).start();
-        
     }
+
 
     @Override
     public void close() {
-
+        try{
+            for(ClientHandler clientHandler : clientHandlers.values()) {
+                clientHandler.close();
+            }
+            clientHandlers.clear();
+            if (serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
+            }
+            System.out.println("Server closed");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void sendMessage(String message) {
+        for(ClientHandler clientHandler : clientHandlers.values()) {
+            clientHandler.sendMessage(message);
 
+        }
     }
 
     @Override
     public void sendMessageToClient(int clientId, String message) {
+        ClientHandler handler = clientHandlers.get(clientId);
+        if (handler != null) {
+            handler.sendMessage(message);
+        }
 
     }
 
     @Override
     public void receiveMessage(String message) {
+        if (game == null || message == null || !message.startsWith("ACTION:")) {
+            return;
+        }
+        try {
+            String[] parts = message.split(":");
+            if (parts.length != 3) {
+                return;
+            }
+            String action = parts[1];
+            int clientId = Integer.parseInt(parts[2]);
+            Playable player = game.getPlayers().stream().
+                    filter(p -> p instanceof Player && ((Player) p).getId() == clientId).
+                    findFirst().orElse(null);
+            if (player != null) {
+                if (action.equals("Raise")) {
+                    game.playerRaise(player);
+                } else if (action.equals("Fold")) {
+                    game.playerFold(player);
+                } else if (action.equals("Hit")) {
+                    game.playerHit(player);
+                } else if (action.equals("Stand")) {
+                    game.playerStand(player);
+                }
+                game.broadcastState();
+            }
+        }
+        catch (Exception e) {
+            System.err.println("Error processing message: " + message);
+        }
 
     }
 

@@ -6,8 +6,8 @@ import java.util.List;
 public class Player {
     private String name;
     private List<Card> hand;
-
-    public Player(String name) {
+    private int id;
+    public Player(String name, int id) {
         this.name = name;
         this.hand = new ArrayList<>();
     }
@@ -34,5 +34,9 @@ public class Player {
     @Override
     public String toString() {
         return name + " has " + hand.size() + " cards.";
+    }
+
+    public int getId() {
+        return  id;
     }
 }
