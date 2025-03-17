@@ -30,4 +30,6 @@ public interface Game {
 
     // Network communication
     void broadcastState();
+
+    GameType getGameType();
 }
