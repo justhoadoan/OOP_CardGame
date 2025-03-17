@@ -53,6 +53,10 @@ public class Player implements Playable {
         hand.remove(card);
     }
 
+    public void resetHand() {
+        hand.clear();
+    }
+
     public int getId() {
         return id;
     }
