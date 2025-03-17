@@ -58,7 +58,7 @@ public class WarGameGUI extends JFrame {
     }
 
     private void initializeGame() {
-        deck = new Deck();
+        deck = new Deck("animated");
         deck.shuffle();
 
         player1 = new Player("Player 1");

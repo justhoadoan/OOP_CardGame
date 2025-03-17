@@ -1,17 +1,18 @@
 package card;
-import javax.swing.*;
 import java.awt.Image;
+import javax.swing.*;
 
 public class Card {
     private String suit;
     private String rank;
-    private String imagePath;
+    private CardSkin skin;
     private ImageIcon image;
 
-    public Card(String suit, String rank, String imagePath) {
+    public Card(String rank, String suit, CardSkin skin) {
         this.suit = suit;
         this.rank = rank;
-        this.imagePath = imagePath;
+        setSkin(skin);
+        String imagePath = skin.getImagePath(rank, suit);
         this.image = loadAndResizeImage(imagePath, 100, 150); // Resize to 100x150 pixels
     }
 
@@ -23,8 +24,12 @@ public class Card {
         return rank;
     }
 
-    public ImageIcon getImage() {
-        return image;
+    public CardSkin getSkin() {
+        return skin;
+    }
+
+    public void setSkin(CardSkin skin) {
+        this.skin = skin;
     }
 
     private ImageIcon loadAndResizeImage(String imagePath, int width, int height) {
@@ -37,6 +42,10 @@ public class Card {
 
         // Return the resized image as an ImageIcon
         return new ImageIcon(resizedImage);
+    }
+
+    public ImageIcon getImage() {
+        return image;
     }
 
     @Override
