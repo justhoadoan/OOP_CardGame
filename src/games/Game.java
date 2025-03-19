@@ -1,7 +1,7 @@
 package games;
 
 import gamemode.GameMode;
-import player.Playable;
+import playeable.Playable;
 
 import java.util.List;
 
@@ -17,8 +17,8 @@ public interface Game {
     String getPublicState();
 
     // Player actions
-    void playerRaise(Playable player);
-    void playerFold(Playable player);
+    void playerRaise(Playable player, int raiseAmount);
+    void playerFold(Playable player );
     void playerHit(Playable player);
     void playerStand(Playable player);
 

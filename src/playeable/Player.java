@@ -1,8 +1,9 @@
-package player;
+package playeable;
 
 import games.Game;
 import gamemode.GameMode;
 import card.Card;
+import server.Client;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class Player implements Playable {
     private GameMode gameMode;
     private int currentBalance;
     private boolean status;
+    private Client client;
 
     public Player(String name, int id) {
         this.name = name;
@@ -56,7 +58,9 @@ public class Player implements Playable {
     public void resetHand() {hand.clear();}
 
     public int getId() {return id;}
-
+    public Client getClient() {
+        return client;
+    }
     @Override
     public String toString() {
         return "Player{" +

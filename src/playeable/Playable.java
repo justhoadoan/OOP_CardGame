@@ -1,4 +1,4 @@
-package player;
+package playeable;
 
 import card.Card;
 import games.Game;
