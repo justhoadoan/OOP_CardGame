@@ -17,7 +17,7 @@ public class PlayerStrategy {
 
         if (game.getGameType() == GameType.POKER) {
             // Poker
-            actions.add(new PokerAction("Raise", true)); // Cần raiseAmount
+            actions.add(new PokerAction("Raise", true)); // need raiseAmount
             actions.add(new PokerAction("Fold", false));
         } else if (game.getGameType() == GameType.BLACKJACK) {
             // Blackjack
