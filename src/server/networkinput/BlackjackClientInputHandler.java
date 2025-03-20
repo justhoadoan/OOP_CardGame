@@ -1,7 +1,9 @@
 package server.networkinput;
+import card.Card;
 import server.Client;
 import server.Client;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class BlackjackClientInputHandler implements ClientInputHandler {
@@ -12,7 +14,7 @@ public class BlackjackClientInputHandler implements ClientInputHandler {
     }
 
     @Override
-    public void handleInput(Client client, String gameState, String playerHand) {
+    public void handleInput(Client client, String gameState, List<Card> playerHand) {
 
         System.out.println("\n=== Client-" + client.getClientId() + "'s Turn (Blackjack) ===");
         System.out.println("Your Hand: " + playerHand);

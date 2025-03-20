@@ -1,16 +1,20 @@
 package games;
 
+import card.Card;
 import card.CardSkin;
 import deck.Deck;
 import gameaction.GameAction;
 import gamemode.GameMode;
 import playeable.*;
+import server.Client;
 import server.NetworkManager;
 import strategy.AIStrategy;
 import strategy.InputHandler;
 import strategy.PlayerStrategy;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PokerGame implements Game {
     private Deck deck;
@@ -24,10 +28,22 @@ public class PokerGame implements Game {
     private AIStrategy aiStrategy;
     private PlayerStrategy playerStrategy;
     private InputHandler inputHandler;
-
+    private CardSkin skin;
     public PokerGame(GameMode gameMode, NetworkManager networkManager, CardSkin skin) {
         this.gameMode = gameMode;
         this.networkManager = networkManager;
+        this.skin = skin;
+        this.deck = new Deck(skin);
+        this.playerManager = new PlayerManager(this);
+        this.pot = 0;
+        this.currentBet = 0;
+        this.aiStrategy = new AIStrategy();
+        this.playerStrategy = new PlayerStrategy();
+        this.inputHandler = new InputHandler();
+        if (gameMode != null) {
+            gameMode.setGame(this);
+            gameMode.setCardSkin(skin);
+        }
 
     }
 
@@ -68,17 +84,34 @@ public class PokerGame implements Game {
     }
 
     @Override
-    public String getPlayerHand(int playerId) {
+    public List<Card> getPlayerHand(int playerId) {
         for (Playable player : players) {
             if (player.getId() == playerId) {
-                return player.getHand().toString();
+                return player.getHand();
             }
         }
-        return null;
+        return Collections.emptyList();
     }
 
+
     public String getPublicState() {
-        return "Pot: " + pot + ", Current Bet: " + currentBet;
+        StringBuilder handsInfo = new StringBuilder();
+        for (Playable player : playerManager.getPlayers()) {
+            if (handsInfo.length() > 0) {
+                handsInfo.append("; ");
+            }
+            handsInfo.append(player.getName()).append(": ");
+            if (player == currentPlayer) {
+                handsInfo.append(player.getHand().stream()
+                        .map(card -> card.getRank() + " of " + card.getSuit())
+                        .collect(Collectors.joining(", ")));
+            } else {
+                handsInfo.append("Hidden");
+            }
+        }
+
+        return ", Pot: " + pot + ", Current Bet: " + currentBet +
+                ", Hands: " + handsInfo.toString();
     }
 
     @Override
@@ -152,15 +185,34 @@ public class PokerGame implements Game {
     @Override
     public void broadcastState() {
         if (networkManager != null) {
-            String state = getPublicState();
-            networkManager.sendMessage("STATE:" + state);
-        }
-        if (gameMode != null) {
-            String playerHand = currentPlayer != null ? getPlayerHand(currentPlayer instanceof Player ? ((Player) currentPlayer).getId() : -1) : null;
-            gameMode.updateDisplay(playerHand, getPublicState(), isGameOver() ? getWinner() : null);
+            String publicState = getPublicState();
+            networkManager.sendMessage("STATE:" + publicState);
+
+            for (Playable player : playerManager.getPlayers()) {
+                if (player instanceof Player) {
+                    Player p = (Player) player;
+                    Client client = p.getClient();
+                    if (client != null) {
+                        int clientId = p.getId();
+                        List<Card> playerHand = getPlayerHand(clientId);
+                        networkManager.sendMessageToClient
+                                (clientId, "HAND:" +
+                                        playerHand.stream()
+                                            .map(card -> card.getRank() + " of " + card.getSuit())
+                                .collect(Collectors.joining(", ")));
+                    }
+                }
+            }
         }
 
+        if (gameMode != null) {
+            List<Card> playerHand = currentPlayer != null ? getPlayerHand(currentPlayer instanceof Player ? ((Player) currentPlayer).getId() : -1) : null;
+            gameMode.updateDisplay(playerHand, getPublicState(), isGameOver() ? getWinner() : null);
+        }
     }
+
+
+
     @Override
     public boolean isGameOver() {
         int activePlayers = 0;

@@ -12,7 +12,7 @@ private List<Playable> players;
 private Game game;
 private Map<Integer, Playable> playerMap;
 
-    public PlayerManager (){
+    public PlayerManager (Game game){
         this.game = game;
         this.players = new ArrayList<>();
         this.playerMap = new HashMap<>();
