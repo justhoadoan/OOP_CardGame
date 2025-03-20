@@ -90,7 +90,8 @@ public class PokerGame implements Game {
     @Override
     public void playerStand(Playable player) {} // nothing would be done here
 
-    private void handlePlayerTurn() {
+    @Override
+    public void handlePlayerTurn() {
         if (currentPlayer == null) return;
 
         // Game state
@@ -114,15 +115,11 @@ public class PokerGame implements Game {
                     playerRaise(currentPlayer, raiseAmount);
                 } else if (actionName.equals("Fold")) {
                     playerFold(currentPlayer);
-                } else if (actionName.equals("Hit")) {
-                    playerHit(currentPlayer);
-                } else if (actionName.equals("Stand")) {
-                    playerStand(currentPlayer);
                 }
             }
         } else if (currentPlayer instanceof AI) {
             // use AI strategy to decide action
-            GameAction aiAction = aiStrategy.decideAction(this, availableActions);
+            GameAction aiAction = aiStrategy.decidePokerAction(this, availableActions);
             String actionName = aiAction.getActionName();
             System.out.println(currentPlayer.getName() + " (AI) chooses " + actionName);
             if (actionName.equals("Raise")) {
@@ -130,10 +127,6 @@ public class PokerGame implements Game {
                 playerRaise(currentPlayer, raiseAmount);
             } else if (actionName.equals("Fold")) {
                 playerFold(currentPlayer);
-            } else if (actionName.equals("Hit")) {
-                playerHit(currentPlayer);
-            } else if (actionName.equals("Stand")) {
-                playerStand(currentPlayer);
             }
         }
     }

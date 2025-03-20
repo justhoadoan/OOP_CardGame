@@ -30,4 +30,6 @@ public interface Game {
     void broadcastState();
 
     GameType getGameType();
+
+    void handlePlayerTurn();
 }
