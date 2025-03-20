@@ -24,6 +24,7 @@ public class PokerGame implements Game {
     private AIStrategy aiStrategy;
     private PlayerStrategy playerStrategy;
     private InputHandler inputHandler;
+    // create a table to save card which is dealt on table
 
     public PokerGame(GameMode gameMode, NetworkManager networkManager, CardSkin skin) {
         this.gameMode = gameMode;
@@ -39,6 +40,7 @@ public class PokerGame implements Game {
             }
         }
 
+        // pre-flop
         for (int i = 0; i < 2; i++) {
             for (Playable player : players) {
                 if (player instanceof Player) {
@@ -46,11 +48,14 @@ public class PokerGame implements Game {
                 }
             }
         }
+
+
     }
+
 
     @Override
     public void addPlayer(Playable player) {
-        if (player != null) {
+        if (player != null && !players.contains(player)) {
             players.add(player);
         }
     }
@@ -59,9 +64,7 @@ public class PokerGame implements Game {
     public List<Playable> getPlayers() {return players;}
 
     @Override
-    public Playable getCurrentPlayer() {
-        return null;
-    }
+    public Playable getCurrentPlayer() {return currentPlayer;}
 
     @Override
     public String getPlayerHand(int playerId) {
@@ -70,7 +73,7 @@ public class PokerGame implements Game {
                 return player.getHand().toString();
             }
         }
-        return null;
+        return "Not found";
     }
 
     public String getPublicState() {return "Pot: " + pot + ", Current Bet: " + currentBet;}
@@ -90,7 +93,8 @@ public class PokerGame implements Game {
     @Override
     public void playerStand(Playable player) {} // nothing would be done here
 
-    private void handlePlayerTurn() {
+    @Override
+    public void handlePlayerTurn() {
         if (currentPlayer == null) return;
 
         // Game state
@@ -122,7 +126,7 @@ public class PokerGame implements Game {
             }
         } else if (currentPlayer instanceof AI) {
             // use AI strategy to decide action
-            GameAction aiAction = aiStrategy.decideAction(this, availableActions);
+            GameAction aiAction = aiStrategy.decidePokerAction(this, availableActions);
             String actionName = aiAction.getActionName();
             System.out.println(currentPlayer.getName() + " (AI) chooses " + actionName);
             if (actionName.equals("Raise")) {
@@ -162,7 +166,7 @@ public class PokerGame implements Game {
 
 
     void placeBet(Playable player, int amount) {
-        this.pot = amount;
+        this.pot += amount;
         this.currentBet = Math.max(this.currentBet, amount);
     }
 

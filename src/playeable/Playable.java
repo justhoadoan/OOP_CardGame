@@ -13,4 +13,6 @@ public interface Playable {
     void setHand(List<Card> hand);
     void setStatus(boolean status);
     boolean getStatus();
+    void resetHand();
+    void addCard();
 }
