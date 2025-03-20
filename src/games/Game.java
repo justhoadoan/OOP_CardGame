@@ -16,6 +16,7 @@ public interface Game {
     String getPlayerHand(int playerId);
     String getPublicState();
 
+    boolean isGameOver();
     // Player actions
     void playerRaise(Playable player, int raiseAmount);
     void playerFold(Playable player );

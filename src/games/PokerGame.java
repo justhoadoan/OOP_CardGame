@@ -16,7 +16,7 @@ public class PokerGame implements Game {
     private Deck deck;
     private GameMode gameMode;
     private NetworkManager networkManager;
-//  private PlayerManager playerManager;
+  private PlayerManager playerManager;
     private int pot;
     private int currentBet;
     private List<Playable> players;
@@ -46,6 +46,10 @@ public class PokerGame implements Game {
                 }
             }
         }
+
+        currentPlayer = playerManager.getPlayers().get(0);
+        broadcastState();
+        handlePlayerTurn();
     }
 
     @Override
@@ -73,7 +77,9 @@ public class PokerGame implements Game {
         return null;
     }
 
-    public String getPublicState() {return "Pot: " + pot + ", Current Bet: " + currentBet;}
+    public String getPublicState() {
+        return "Pot: " + pot + ", Current Bet: " + currentBet;
+    }
 
     @Override
     public void playerRaise(Playable player, int raiseAmount) {
@@ -145,7 +151,24 @@ public class PokerGame implements Game {
 
     @Override
     public void broadcastState() {
+        if (networkManager != null) {
+            String state = getPublicState();
+            networkManager.sendMessage("STATE:" + state);
+        }
+        if (gameMode != null) {
+            String playerHand = currentPlayer != null ? getPlayerHand(currentPlayer instanceof Player ? ((Player) currentPlayer).getId() : -1) : null;
+            gameMode.updateDisplay(playerHand, getPublicState(), isGameOver() ? getWinner() : null);
+        }
 
+    }
+    @Override
+    public boolean isGameOver() {
+        int activePlayers = 0;
+        for(Playable player : players) {
+            if(player.getStatus())
+                activePlayers++;
+        }
+        return activePlayers == 1;
     }
 
     public GameType getGameType() {return GameType.POKER; }
