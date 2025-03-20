@@ -1,8 +1,9 @@
 package server;
 
 import games.Game;
-import player.Playable;
-import player.Player;
+import games.GameType;
+import playeable.Playable;
+import playeable.Player;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,7 +12,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
-import java.util.stream.Collectors;
+
 import static java.util.Locale.filter;
 
 public class Server implements NetworkManager {
@@ -102,7 +103,7 @@ public class Server implements NetworkManager {
         }
         try {
             String[] parts = message.split(":");
-            if (parts.length != 3) {
+            if (parts.length <= 3) {
                 return;
             }
             String action = parts[1];
@@ -110,19 +111,38 @@ public class Server implements NetworkManager {
             Playable player = game.getPlayers().stream().
                     filter(p -> p instanceof Player && ((Player) p).getId() == clientId).
                     findFirst().orElse(null);
-            if (player != null) {
-                if (action.equals("Raise")) {
-                    game.playerRaise(player);
-                } else if (action.equals("Fold")) {
-                    game.playerFold(player);
-                } else if (action.equals("Hit")) {
-                    game.playerHit(player);
-                } else if (action.equals("Stand")) {
-                    game.playerStand(player);
-                }
+            if (player == null) {
+                System.err.println("Player not found: " + clientId);
+            }
+            switch (action.toLowerCase()) {
+                case "raise":
+                    if (game.getGameType() == GameType.POKER) {
+                        int raiseAmount = Integer.parseInt(parts[3]);
+                        game.playerRaise(player, raiseAmount);
+                    }
+                    break;
+                case "fold":
+                    if (game.getGameType() == GameType.POKER) {
+                        game.playerFold(player);
+                    }
+                    break;
+                case "hit":
+                    if (game.getGameType() == GameType.BLACKJACK) {
+                        game.playerHit(player);
+                    }
+                    break;
+                case "stand":
+                    if (game.getGameType() == GameType.BLACKJACK) {
+                        game.playerStand(player);
+                    }
+                    break;
+                default:
+                    System.err.println("Unsupported action: " + action);
+                    return;
+            }
                 game.broadcastState();
             }
-        }
+
         catch (Exception e) {
             System.err.println("Error processing message: " + message);
         }
