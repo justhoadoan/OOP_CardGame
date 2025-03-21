@@ -1,24 +1,18 @@
 package deck;
 import card.Card;
-
+import card.CardSkin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Deck {
-    public List<Card> cards;
+    private List<Card> cards;
+    private CardSkin skin;
 
-    public Deck() {
+    public Deck(CardSkin skin) {
+        setSkin(skin);
         cards = new ArrayList<>();
-        String[] suits = {"H", "D", "C", "S"};
-        String[] ranks = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
-
-        for (String suit : suits) {
-            for (String rank : ranks) {
-                String imagePath ="resources/cards/"+rank + suit + ".png";
-                cards.add(new Card(suit, rank, imagePath));
-            }
-        }
+        createDeck(skin);
     }
 
     public void shuffle() {
@@ -35,4 +29,34 @@ public class Deck {
     public int size() {
         return cards.size();
     }
+
+    public List<Card> getCards() {
+        return cards;
+    }
+
+    public void setSkin(CardSkin skin) {
+        this.skin = skin;
+    }
+
+    public int getRemainingCards() {
+        return cards.size();
+    }
+
+    private void createDeck(CardSkin skin){
+        String[] suits = {"Hearts", "Diamond", "Clubs", "Spades"};
+        String[] ranks = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
+        for (String suit : suits) {
+            for (String rank : ranks) {
+                String imagePath = skin.getImagePath(rank, suit);
+                cards.add(new Card(suit, rank, skin));
+            }
+        }
+        shuffle();
+    }
+
+    public void reset(){
+        cards.clear();
+        createDeck(skin);
+    }
+    
 }

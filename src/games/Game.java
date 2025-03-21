@@ -1,26 +1,26 @@
 package games;
 
+import card.Card;
 import gamemode.GameMode;
-import player.Playable;
+import playeable.Playable;
 
 import java.util.List;
 
 public interface Game {
     // Game setup
-    void initializeGame();
     void start();
     void addPlayer(Playable player);
     List<Playable> getPlayers();
 
     // Game state
     Playable getCurrentPlayer();
-    String getPlayerHand(int playerId);
+    List<Card> getPlayerHand(int playerId);
     String getPublicState();
-    boolean isGameOver();
 
+    boolean isGameOver();
     // Player actions
-    void playerRaise(Playable player);
-    void playerFold(Playable player);
+    void playerRaise(Playable player, int raiseAmount);
+    void playerFold(Playable player );
     void playerHit(Playable player);
     void playerStand(Playable player);
 
@@ -30,4 +30,8 @@ public interface Game {
 
     // Network communication
     void broadcastState();
+
+    GameType getGameType();
+
+    void handlePlayerTurn();
 }
