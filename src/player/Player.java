@@ -1,8 +1,8 @@
-package playeable;
+package player;
 
-import games.Game;
 import gamemode.GameMode;
 import card.Card;
+import playable.Playable;
 import server.Client;
 
 import java.util.ArrayList;

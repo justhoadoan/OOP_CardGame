@@ -2,8 +2,8 @@ package server;
 
 import games.Game;
 import games.GameType;
-import playeable.Playable;
-import playeable.Player;
+import playable.Playable;
+import playable.Player;
 
 import java.io.BufferedReader;
 import java.io.IOException;
