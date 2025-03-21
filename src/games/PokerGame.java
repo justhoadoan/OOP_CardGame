@@ -26,7 +26,6 @@ public class PokerGame implements Game {
 
     public void start() {
         deck.reset();
-        Card card = deck.drawCard();
         for (Playable player : players) {
             if (player instanceof Player) {
                 ((Player) player).resetHand();
@@ -44,13 +43,13 @@ public class PokerGame implements Game {
 
     @Override
     public void addPlayer(Playable player) {
-
+        if (player != null) {
+            players.add(player);
+        }
     }
 
     @Override
-    public List<Playable> getPlayers() {
-        return List.of();
-    }
+    public List<Playable> getPlayers() {return players;}
 
     @Override
     public Playable getCurrentPlayer() {
@@ -59,15 +58,15 @@ public class PokerGame implements Game {
 
     @Override
     public String getPlayerHand(int playerId) {
-        return "";
+        for (Playable player : players) {
+            if (player.getId() == playerId) {
+                return player.getHand().toString();
+            }
+        }
+        return null;
     }
 
     public String getPublicState() {return "Pot: " + pot + ", Current Bet: " + currentBet;}
-
-    @Override
-    public boolean isGameOver() {
-        return false;
-    }
 
     @Override
     public void playerRaise(Playable player) {
@@ -75,39 +74,21 @@ public class PokerGame implements Game {
     }
 
     @Override
-    public void playerFold(Playable player) {
-
-    }
+    public void playerFold(Playable player) {player.setStatus(false);}
 
     @Override
-    public void playerHit(Playable player) {
-
-    }
+    public void playerHit(Playable player) {} // nothing would be done here
 
     @Override
-    public void playerStand(Playable player) {
+    public void playerStand(Playable player) {} // nothing would be done here
 
+    public String getWinner() {
+        for(Playable player : players) {
+            if(player.getStatus())
+                return player.getName();
+        }
+        return null;
     }
-
-//    public String getWinner() {
-//        return null;
-//    }
-
-//    public void playerRaise(Playable player) {
-//
-//    }
-
-//    public void playerFold(Playable player) {
-//
-//    }
-
-//    public void playerHit(Playable player) {
-//
-//    }
-
-//    public void playerStand(Playable player) {
-//
-//    }
 
     public GameMode getGameMode() {return gameMode;}
 
@@ -118,19 +99,14 @@ public class PokerGame implements Game {
 
     }
 
-    public GameType getGameType() { return GameType.POKER; }
+    public GameType getGameType() {return GameType.POKER; }
 
-//    void broadcastState() {
-//
-//    }
+    void distributePot(Player winner) {winner.addCurrentBalance(pot);}
 
-//    void distributePot(Playable winner) {
-//
-//    }
-
-//    void placeBet(Playable player, int amount) {
-//
-//    }
+    void placeBet(Playable player, int amount) {
+        this.pot = amount;
+        this.currentBet = Math.max(this.currentBet, amount);
+    }
 
     void resetBets() {this.pot = 0; this.currentBet = 0;}
 }
