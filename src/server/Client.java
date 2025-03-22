@@ -30,8 +30,7 @@ public class Client implements NetworkManager {
         this.gameMode = gameMode;
         this.gameType = gameType;
         this.cardSkin = cardSkin;
-        this.inputHandler = ClientInputHandlerFactory.ClientInputHandlerFactory.getHandler(gameType);
-        try {
+        this.inputHandler = ClientInputHandlerFactory.getInstance().getHandler(gameType);        try {
             socket = new Socket(host, port);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));

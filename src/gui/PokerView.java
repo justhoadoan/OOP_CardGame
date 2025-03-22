@@ -20,7 +20,6 @@ public class PokerView extends JPanel implements View{
     private Game game;
     private Client client;
     private CardSkin cardSkin;
-    private ClientInputHandlerFactory inputHandlerFactory;
     private Consumer<String> actionListener;
     private Runnable raiseAction;
     private Runnable foldAction;
@@ -28,7 +27,6 @@ public class PokerView extends JPanel implements View{
     public PokerView(Game game, Client client) {
         this.game = game;
         this.client = client;
-        this.inputHandlerFactory = new ClientInputHandlerFactory();
         initialize();
     }
     public void setCardSkin(CardSkin cardSkin) {
