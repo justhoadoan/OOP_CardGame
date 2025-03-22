@@ -1,4 +1,4 @@
-package playeable;
+package playable;
 
 import games.Game;
 

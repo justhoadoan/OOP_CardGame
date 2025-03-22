@@ -1,6 +1,5 @@
-package playeable;
+package playable;
 
-import games.Game;
 import gamemode.GameMode;
 import card.Card;
 import server.Client;

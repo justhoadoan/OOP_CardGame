@@ -1,7 +1,6 @@
-package playeable;
+package playable;
 
 import card.Card;
-import games.Game;
 
 import java.util.List;
 

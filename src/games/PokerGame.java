@@ -5,7 +5,7 @@ import card.CardSkin;
 import deck.Deck;
 import gameaction.GameAction;
 import gamemode.GameMode;
-import playeable.*;
+import playable.*;
 import server.Client;
 import server.NetworkManager;
 import strategy.AIStrategy;
