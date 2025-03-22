@@ -23,7 +23,7 @@ public class Deck {
         if (cards.isEmpty()) {
             throw new IllegalStateException("No cards left in the deck!");
         }
-        return cards.remove(0);
+        return cards.removeFirst();
     }
 
     public int size() {
@@ -38,16 +38,11 @@ public class Deck {
         this.skin = skin;
     }
 
-    public int getRemainingCards() {
-        return cards.size();
-    }
-
     private void createDeck(CardSkin skin){
         String[] suits = {"Hearts", "Diamond", "Clubs", "Spades"};
         String[] ranks = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
         for (String suit : suits) {
             for (String rank : ranks) {
-                String imagePath = skin.getImagePath(rank, suit);
                 cards.add(new Card(suit, rank, skin));
             }
         }
