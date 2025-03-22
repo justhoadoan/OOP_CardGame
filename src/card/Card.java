@@ -11,7 +11,7 @@ public class Card {
     public Card(String rank, String suit, CardSkin skin) {
         this.suit = suit;
         this.rank = rank;
-        setSkin(skin);
+        this.skin = skin;
         String imagePath = skin.getImagePath(rank, suit);
         this.image = loadAndResizeImage(imagePath, 100, 150); // Resize to 100x150 pixels
     }
@@ -26,10 +26,6 @@ public class Card {
 
     public CardSkin getSkin() {
         return skin;
-    }
-
-    public void setSkin(CardSkin skin) {
-        this.skin = skin;
     }
 
     private ImageIcon loadAndResizeImage(String imagePath, int width, int height) {
