@@ -2,8 +2,8 @@ package server;
 
 import games.Game;
 import games.GameType;
-import player.Playable;
-import player.Player;
+import playable.Playable;
+import playable.Player;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
-import java.util.stream.Collectors;
+
 import static java.util.Locale.filter;
 
 public class Server implements NetworkManager {
@@ -103,7 +103,7 @@ public class Server implements NetworkManager {
         }
         try {
             String[] parts = message.split(":");
-            if (parts.length != 3) {
+            if (parts.length <= 3) {
                 return;
             }
             String action = parts[1];
@@ -111,10 +111,14 @@ public class Server implements NetworkManager {
             Playable player = game.getPlayers().stream().
                     filter(p -> p instanceof Player && ((Player) p).getId() == clientId).
                     findFirst().orElse(null);
+            if (player == null) {
+                System.err.println("Player not found: " + clientId);
+            }
             switch (action.toLowerCase()) {
                 case "raise":
                     if (game.getGameType() == GameType.POKER) {
-                        game.playerRaise(player);
+                        int raiseAmount = Integer.parseInt(parts[3]);
+                        game.playerRaise(player, raiseAmount);
                     }
                     break;
                 case "fold":
@@ -184,6 +188,7 @@ public class Server implements NetworkManager {
         }
 
         public void sendMessage(String message) {
+
             out.println(message);
         }
         public void close() {

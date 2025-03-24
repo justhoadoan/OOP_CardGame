@@ -1,7 +1,8 @@
 package games;
 
+import card.Card;
 import gamemode.GameMode;
-import player.Playable;
+import playable.Playable;
 
 import java.util.List;
 
@@ -13,12 +14,13 @@ public interface Game {
 
     // Game state
     Playable getCurrentPlayer();
-    String getPlayerHand(int playerId);
+    List<Card> getPlayerHand(int playerId);
     String getPublicState();
 
+    boolean isGameOver();
     // Player actions
-    void playerRaise(Playable player);
-    void playerFold(Playable player);
+    void playerRaise(Playable player, int raiseAmount);
+    void playerFold(Playable player );
     void playerHit(Playable player);
     void playerStand(Playable player);
 
@@ -30,4 +32,6 @@ public interface Game {
     void broadcastState();
 
     GameType getGameType();
+
+    void handlePlayerTurn();
 }

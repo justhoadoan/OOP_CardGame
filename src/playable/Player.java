@@ -1,8 +1,8 @@
-package player;
+package playable;
 
-import games.Game;
 import gamemode.GameMode;
 import card.Card;
+import server.Client;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,7 @@ public class Player implements Playable {
     private GameMode gameMode;
     private int currentBalance;
     private boolean status;
+    private Client client;
 
     public Player(String name, int id) {
         this.name = name;
@@ -27,12 +28,6 @@ public class Player implements Playable {
 
     public void setStatus(boolean status) {this.status = status;}
 
-    @Override
-    public void playTurn(Game game) {
-        // Instead of calling `gameMode.executeTurn()`, call the appropriate methods from `GameMode`.
-        gameMode.getPlayerInput(); // Receive input from the player.
-        gameMode.displayGameState(); // Display the game state.
-    }
 
     @Override
     public String getName() {return name;}
@@ -56,7 +51,9 @@ public class Player implements Playable {
     public void resetHand() {hand.clear();}
 
     public int getId() {return id;}
-
+    public Client getClient() {
+        return client;
+    }
     @Override
     public String toString() {
         return "Player{" +
