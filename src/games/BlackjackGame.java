@@ -4,8 +4,8 @@ import card.Card;
 import card.CardSkin;
 import deck.Deck;
 import gamemode.GameMode;
-import playeable.Playable;
-import playeable.Player;
+import playable.Playable;
+import playable.Player;
 import server.NetworkManager;
 import java.util.*;
 
@@ -119,6 +119,16 @@ public class BlackjackGame implements Game {
         }
     }
 
+    @Override
+    public GameMode getGameMode() {
+        return null;
+    }
+
+    @Override
+    public void setGameMode(GameMode gameMode) {
+
+    }
+
     public int calculateScore(List<Card> hand) {
         int score = 0;
         int aceCount = 0;
@@ -194,4 +204,10 @@ public class BlackjackGame implements Game {
     public GameType getGameType() {
         return GameType.BLACKJACK;
     }
+
+    @Override
+    public void handlePlayerTurn() {
+
+    }
+
 }

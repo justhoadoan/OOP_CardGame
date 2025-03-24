@@ -1,7 +1,7 @@
 package games;
 
 import gamemode.GameMode;
-import playeable.Playable;
+import playable.Playable;
 
 import java.util.List;
 

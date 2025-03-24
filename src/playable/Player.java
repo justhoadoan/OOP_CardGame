@@ -1,4 +1,4 @@
-package playeable;
+package playable;
 
 import games.Game;
 import gamemode.GameMode;
@@ -69,4 +69,13 @@ public class Player implements Playable {
                 ", hand=" + hand +
                 '}';
     }
+    @Override
+    public int getCurrentBalance() {
+        return currentBalance;
+    }
+    @Override
+    public void deductCurrentBalance(int amount) {
+        currentBalance -= amount;
+    }
+
 }

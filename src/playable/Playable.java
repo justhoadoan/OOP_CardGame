@@ -1,4 +1,4 @@
-package playeable;
+package playable;
 
 import card.Card;
 import games.Game;
@@ -14,5 +14,11 @@ public interface Playable {
     void setStatus(boolean status);
     boolean getStatus();
     void resetHand();
-    void addCard();
+    void addCard(Card card);
+
+    int getCurrentBalance();
+
+    void deductCurrentBalance(int amount);
+
+    void addCurrentBalance(int payout);
 }

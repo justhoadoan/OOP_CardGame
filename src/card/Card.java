@@ -48,6 +48,19 @@ public class Card {
         return image;
     }
 
+    public int getValue() {
+        switch (rank) {
+            case "Ace":
+                return 11;
+            case "King":
+            case "Queen":
+            case "Jack":
+            case "10":
+                return 10;
+            default:
+                return Integer.parseInt(rank);
+        }
+    }
     @Override
     public String toString() {
         return rank + " of " + suit;
