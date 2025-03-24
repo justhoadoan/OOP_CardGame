@@ -1,5 +1,6 @@
 package games;
 
+import card.Card;
 import gamemode.GameMode;
 import playable.Playable;
 
@@ -13,9 +14,10 @@ public interface Game {
 
     // Game state
     Playable getCurrentPlayer();
-    String getPlayerHand(int playerId);
+    List<Card> getPlayerHand(int playerId);
     String getPublicState();
 
+    boolean isGameOver();
     // Player actions
     void playerRaise(Playable player, int raiseAmount);
     void playerFold(Playable player );

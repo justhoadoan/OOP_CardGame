@@ -188,6 +188,7 @@ public class Server implements NetworkManager {
         }
 
         public void sendMessage(String message) {
+
             out.println(message);
         }
         public void close() {

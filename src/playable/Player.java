@@ -1,6 +1,5 @@
 package playable;
 
-import games.Game;
 import gamemode.GameMode;
 import card.Card;
 import server.Client;
@@ -29,12 +28,6 @@ public class Player implements Playable {
 
     public void setStatus(boolean status) {this.status = status;}
 
-    @Override
-    public void playTurn(Game game) {
-        // Instead of calling `gameMode.executeTurn()`, call the appropriate methods from `GameMode`.
-        gameMode.getPlayerInput(); // Receive input from the player.
-        gameMode.displayGameState(); // Display the game state.
-    }
 
     @Override
     public String getName() {return name;}
