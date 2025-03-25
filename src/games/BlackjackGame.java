@@ -8,6 +8,7 @@ import playeable.Playable;
 import playeable.Player;
 import server.NetworkManager;
 import java.util.*;
+import card.Card;
 
 public class BlackjackGame implements Game {
     private Deck deck;
@@ -23,7 +24,7 @@ public class BlackjackGame implements Game {
     public BlackjackGame(GameMode gameMode, NetworkManager networkManager, CardSkin skin) {
         this.gameMode = gameMode;
         this.networkManager = networkManager;
-        this.dealer = new Player("Dealer", 0); // dealer is a special
+        this.dealer = new Player("Dealer", 0); // dealer is a special player
     }
 
     @Override
@@ -123,7 +124,7 @@ public class BlackjackGame implements Game {
         int score = 0;
         int aceCount = 0;
         for (Card card : hand) {
-            int value = card.getValue();
+            int value = card.getCardValueBlackJack();
             if (value == 1) { // Ace
                 aceCount++;
                 score += 11;
@@ -151,7 +152,7 @@ public class BlackjackGame implements Game {
         if (player.getCurrentBalance() >= amount) {
             playerBets.put(player, amount);
             pot += amount;
-            player.deductCurrentBalance(amount);
+            player.addCurrentBalance(-amount); // tru tien nguoi choi de bet
         }
     }
 
@@ -166,18 +167,6 @@ public class BlackjackGame implements Game {
         pot = 0;
     }
 
-    // Các phương thức không dùng đến (từ Poker)
-    @Override
-    public void playerRaise(Playable player, int raiseAmount) {
-        throw new UnsupportedOperationException("Not supported in Blackjack");
-    }
-
-    @Override
-    public void playerFold(Playable player) {
-        throw new UnsupportedOperationException("Not supported in Blackjack");
-    }
-
-    // Helper method
     private Playable getNextPlayer() {
         int currentIndex = players.indexOf(currentPlayer);
         if (currentIndex == -1) return players.get(0);
@@ -193,5 +182,30 @@ public class BlackjackGame implements Game {
     @Override
     public GameType getGameType() {
         return GameType.BLACKJACK;
+    }
+
+    @Override
+    public void handlePlayerTurn() {
+
+    }
+
+    @Override
+    public GameMode getGameMode() {
+        return null;
+    }
+
+    @Override
+    public void setGameMode(GameMode gameMode) {
+
+    }
+
+    @Override
+    public void playerRaise(Playable player, int raiseAmount) {
+        throw new UnsupportedOperationException("Not supported in Blackjack");
+    }
+
+    @Override
+    public void playerFold(Playable player) {
+        throw new UnsupportedOperationException("Not supported in Blackjack");
     }
 }

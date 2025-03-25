@@ -14,5 +14,7 @@ public interface Playable {
     void setStatus(boolean status);
     boolean getStatus();
     void resetHand();
-    void addCard();
+    void addCard(Card card);
+    int getCurrentBalance();
+    void addCurrentBalance(int amount);
 }

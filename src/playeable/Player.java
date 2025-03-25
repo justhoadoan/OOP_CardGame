@@ -57,6 +57,8 @@ public class Player implements Playable {
 
     public void resetHand() {hand.clear();}
 
+    public int getCurrentBalance() {return currentBalance;}
+
     public int getId() {return id;}
     public Client getClient() {
         return client;

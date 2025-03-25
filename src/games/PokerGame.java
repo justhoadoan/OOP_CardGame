@@ -163,8 +163,6 @@ public class PokerGame implements Game {
 
     void distributePot(Player winner) {winner.addCurrentBalance(pot);}
 
-
-
     void placeBet(Playable player, int amount) {
         this.pot += amount;
         this.currentBet = Math.max(this.currentBet, amount);
