@@ -14,7 +14,7 @@ public interface Game {
 
     // Game state
     Playable getCurrentPlayer();
-    List<Card> getPlayerHand(int playerId);
+    String getPlayerHand(int playerId);
     String getPublicState();
 
     boolean isGameOver();
