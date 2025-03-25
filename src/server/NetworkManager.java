@@ -1,8 +1,10 @@
 package server;
 
+import java.io.IOException;
+
 public interface NetworkManager {
     // Connection management
-    void start();
+    void start() throws IOException;
     void close();
 
     // Message sending
