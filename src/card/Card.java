@@ -16,6 +16,11 @@ public class Card {
         this.image = loadAndResizeImage(imagePath, 100, 150); // Resize to 100x150 pixels
     }
 
+    public Card(String rank, String suit) {
+        this.rank = rank;
+        this.suit = suit;
+    }
+
     public int getCardValueBlackJack() {
         String s = this.rank;
         switch (s) {
