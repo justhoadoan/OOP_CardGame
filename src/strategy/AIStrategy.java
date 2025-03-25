@@ -23,7 +23,7 @@ public class AIStrategy {
         if (game.getGameType() == GameType.POKER) {
             return decidePokerAction((PokerGame) game, availableActions);
         } else if (game.getGameType() == GameType.BLACKJACK) {
-            return decideBlackjackAction((BlackJackGame)game, availableActions);
+            return decideBlackjackAction((BlackJackGame) ackGame)game, availableActions);
         } else {
 
             throw new UnsupportedOperationException("Game type not supported: " + game.getGameType());
