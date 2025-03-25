@@ -1,5 +1,6 @@
 package server;
 
+import gamemode.GraphicMode;
 import games.Game;
 import games.GameType;
 import playable.Playable;
@@ -9,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
@@ -27,6 +29,11 @@ public class Server implements NetworkManager {
             serverSocket = new ServerSocket(port);
             this.game = game;
             isRunning = false;
+            String serverIp = InetAddress.getLocalHost().getHostAddress();
+            System.out.println("Server started at IP: " + serverIp + ", Port: " + port);
+            if (game instanceof GraphicMode) {
+                javax.swing.JOptionPane.showMessageDialog(null, "Server started at IP: " + serverIp + ", Port: " + port, "Server Info", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
 
         } catch (IOException e) {
             System.err.println("Error initializing server on port " + port);
@@ -42,6 +49,7 @@ public class Server implements NetworkManager {
          new Thread(() -> {
              while (isRunning) {
                  try {
+
                      Socket clientSocket = serverSocket.accept();
                      int clientId = nextClientId++;
                      ClientHandler clientHandler = new ClientHandler(clientSocket, this, clientId);

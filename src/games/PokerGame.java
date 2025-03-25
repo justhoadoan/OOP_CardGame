@@ -8,10 +8,9 @@ import gamemode.GameMode;
 import playable.*;
 import server.Client;
 import server.NetworkManager;
-import strategy.AIStrategy;
-import strategy.InputHandler;
-import strategy.PlayerStrategy;
 
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,9 +24,8 @@ public class PokerGame implements Game {
     private int currentBet;
     private List<Playable> players;
     private Playable currentPlayer;
-    private AIStrategy aiStrategy;
-    private PlayerStrategy playerStrategy;
-    private InputHandler inputHandler;
+    private List<Card> communityCards;
+
     private CardSkin skin;
     public PokerGame(GameMode gameMode, NetworkManager networkManager, CardSkin skin) {
         this.gameMode = gameMode;
@@ -35,11 +33,10 @@ public class PokerGame implements Game {
         this.skin = skin;
         this.deck = new Deck(skin);
         this.playerManager = new PlayerManager(this);
+        this.communityCards = new ArrayList<>();
         this.pot = 0;
         this.currentBet = 0;
-        this.aiStrategy = new AIStrategy();
-        this.playerStrategy = new PlayerStrategy();
-        this.inputHandler = new InputHandler();
+
         if (gameMode != null) {
             gameMode.setGame(this);
             gameMode.setCardSkin(skin);
@@ -62,7 +59,6 @@ public class PokerGame implements Game {
                 }
             }
         }
-
         currentPlayer = playerManager.getPlayers().get(0);
         broadcastState();
         handlePlayerTurn();
@@ -74,6 +70,7 @@ public class PokerGame implements Game {
             players.add(player);
         }
     }
+
 
     @Override
     public List<Playable> getPlayers() {return players;}
@@ -92,6 +89,8 @@ public class PokerGame implements Game {
         }
         return Collections.emptyList();
     }
+
+
 
 
     public String getPublicState() {
@@ -113,15 +112,25 @@ public class PokerGame implements Game {
         return ", Pot: " + pot + ", Current Bet: " + currentBet +
                 ", Hands: " + handsInfo.toString();
     }
-
-    @Override
-    public void playerRaise(Playable player, int raiseAmount) {
-
-
+    private boolean isActivePlayer(Playable player) {
+        return player.getStatus();
     }
 
     @Override
-    public void playerFold(Playable player) {player.setStatus(false);}
+    public void playerRaise(Playable player, int raiseAmount) {
+        if (player instanceof Player) {
+            Player p = (Player) player;
+            if (p.getCurrentBalance() >= raiseAmount) {
+                placeBet(player, raiseAmount);
+                p.addCurrentBalance(-raiseAmount);
+            }
+        }
+    }
+
+    @Override
+    public void playerFold(Playable player) {
+        player.setStatus(false);
+    }
 
     @Override
     public void playerHit(Playable player) {} // nothing would be done here
@@ -131,39 +140,7 @@ public class PokerGame implements Game {
 
     @Override
     public void handlePlayerTurn() {
-        if (currentPlayer == null) return;
 
-        // Get the available actions for the current player
-        List<GameAction> availableActions = playerStrategy.getAvailableActions(this);
-
-        if (currentPlayer instanceof Player) {
-            Player player = (Player) currentPlayer;
-            // get input from player
-            GameAction selectedAction = inputHandler.getPlayerAction(player, this, availableActions);
-
-            // process player's action
-            if (selectedAction != null) {
-                // just print out the action for now
-                String actionName = selectedAction.getActionName();
-                if (actionName.equals("Raise")) {
-                    int raiseAmount = selectedAction.getParameter();
-                    playerRaise(currentPlayer, raiseAmount);
-                } else if (actionName.equals("Fold")) {
-                    playerFold(currentPlayer);
-                }
-            }
-        } else if (currentPlayer instanceof AI) {
-            // use AI strategy to decide action
-            GameAction aiAction = aiStrategy.decidePokerAction(this, availableActions);
-            String actionName = aiAction.getActionName();
-            System.out.println(currentPlayer.getName() + " (AI) chooses " + actionName);
-            if (actionName.equals("Raise")) {
-                int raiseAmount = aiAction.getParameter();
-                playerRaise(currentPlayer, raiseAmount);
-            } else if (actionName.equals("Fold")) {
-                playerFold(currentPlayer);
-            }
-        }
     }
 
     public String getWinner() {
