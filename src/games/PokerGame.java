@@ -20,7 +20,7 @@ public class PokerGame implements Game {
     private Deck deck;
     private GameMode gameMode;
     private NetworkManager networkManager;
-  private PlayerManager playerManager;
+    private PlayerManager playerManager;
     private int pot;
     private int currentBet;
     private List<Playable> players;
@@ -67,7 +67,7 @@ public class PokerGame implements Game {
         broadcastState();
         handlePlayerTurn();
     }
-
+    
     @Override
     public void addPlayer(Playable player) {
         if (player != null) {
@@ -132,10 +132,6 @@ public class PokerGame implements Game {
     @Override
     public void handlePlayerTurn() {
         if (currentPlayer == null) return;
-
-        // Game state
-        System.out.println("\n=== " + currentPlayer.getName() + "'s Turn ===");
-        System.out.println("Game State: " + getPublicState());
 
         // Get the available actions for the current player
         List<GameAction> availableActions = playerStrategy.getAvailableActions(this);
@@ -226,8 +222,6 @@ public class PokerGame implements Game {
     public GameType getGameType() {return GameType.POKER; }
 
     void distributePot(Player winner) {winner.addCurrentBalance(pot);}
-
-
 
     void placeBet(Playable player, int amount) {
         this.pot = amount;

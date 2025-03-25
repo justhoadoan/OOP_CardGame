@@ -2,6 +2,7 @@ package playable;
 
 import gamemode.GameMode;
 import card.Card;
+import games.Game;
 import server.Client;
 
 import java.util.ArrayList;
@@ -50,7 +51,13 @@ public class Player implements Playable {
 
     public void resetHand() {hand.clear();}
 
+    public int getCurrentBalance() {return currentBalance;}
+
     public int getId() {return id;}
+
+    @Override
+    public void playTurn(Game game) {}
+
     public Client getClient() {
         return client;
     }
@@ -62,4 +69,8 @@ public class Player implements Playable {
                 ", hand=" + hand +
                 '}';
     }
+    public void deductCurrentBalance(int amount) {
+        currentBalance -= amount;
+    }
+
 }
