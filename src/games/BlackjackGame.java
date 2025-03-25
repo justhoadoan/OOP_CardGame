@@ -68,13 +68,13 @@ public class BlackjackGame implements Game {
     public Playable getCurrentPlayer() {return currentPlayer;}
 
     @Override
-    public String getPlayerHand(int playerId) {
+    public List<Card> getPlayerHand(int playerId) {
         for (Playable player : players) {
             if (player.getId() == playerId) {
-                return player.getHand().toString();
+                return player.getHand();
             }
         }
-        return "Not found";
+        return Collections.emptyList();
     }
 
     public String getPublicState() {
