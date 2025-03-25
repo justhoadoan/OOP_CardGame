@@ -1,4 +1,5 @@
-package playeable;
+package playable;
 
 public class AI {
+
 }

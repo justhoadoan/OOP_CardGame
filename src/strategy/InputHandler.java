@@ -4,7 +4,7 @@ import gameaction.GameAction;
 import gamemode.GameMode;
 import gamemode.NonGraphicMode;
 import games.Game;
-import playeable.Player;
+import playable.Player;
 import server.Client;
 
 import java.util.List;

@@ -14,7 +14,6 @@ public class Deck {
         cards = new ArrayList<>();
         createDeck(skin);
     }
-
     public void shuffle() {
         Collections.shuffle(cards);
     }
