@@ -4,84 +4,89 @@ package server;
 import card.Card;
 import card.CardSkin;
 import gamemode.GameMode;
-import gamemode.NonGraphicMode;
 import games.GameType;
-import server.networkinput.ClientInputHandler;
-import server.networkinput.ClientInputHandlerFactory;
+import input.InputHandler;
+
 
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Client implements NetworkManager {
+    private String serverIp = null;
+    private int serverPort = 0;
+    private final GameMode gameMode;
+    private final GameType gameType;
+    private CardSkin cardSkin = null;
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    private GameMode gameMode;
-    private int clientId;
+    private String clientId;
 
-    private ClientInputHandler inputHandler;
-    private GameType gameType;
-    private CardSkin cardSkin;
-
-    public Client(String host, int port, GameMode gameMode, GameType gameType) {
+    public Client(String host, int port, GameMode gameMode, GameType gameType, CardSkin skin) {
+        this.serverIp = serverIp;
+        this.serverPort = serverPort;
         this.gameMode = gameMode;
         this.gameType = gameType;
         this.cardSkin = cardSkin;
-        this.inputHandler = ClientInputHandlerFactory.getInstance().getHandler(gameType);        try {
-            socket = new Socket(host, port);
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.clientId = -1;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void setClientId(int clientId) {
 
-        this.clientId = clientId;
+        this.clientId = String.valueOf(clientId);
     }
 
-    public int getClientId() {
+    public String getClientId() {
         return clientId;
     }
 
     @Override
-    public void start() {
-        new Thread(() -> {
-            try {
-                String message;
-                List<Card> playerHand = new ArrayList<>();
-                while ((message = in.readLine()) != null) {
-                    if (message.startsWith("STATE:")) {
-                        String state = message.substring(6);
-                        gameMode.updateDisplay(null, state, null);
+    public void start() throws IOException {
+        socket = new Socket(serverIp, serverPort);
+        out = new PrintWriter(socket.getOutputStream(), true);
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-                        if (gameMode instanceof NonGraphicMode) {
-                            inputHandler.handleInput(this, state, playerHand);
-                        }
-                    } else if (message.startsWith("HAND:")) {
-                        String hand = message.substring(5);
-                        if (!hand.isEmpty()) {
-                            String[] cards = hand.split(",");
-                            for (String cardStr : cards) {
-                                playerHand.add(createCardFromString(cardStr));
-                            }
-                        }
+        setClientId(Integer.parseInt(in.readLine()));
+        String message;
+        while ((message = in.readLine()) != null) {
+            processMessage(message);
 
-                        if (gameMode != null) {
-                            gameMode.updateDisplay(playerHand, null, null);
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
+        }
     }
+
+    private void processMessage(String message) {
+        String[] parts = message.split(":");
+        if (parts.length == 0) return;
+
+        switch (parts[0]) {
+            case "HAND":
+                List<Card> playerHand = new ArrayList<>();
+                for (int i = 1; i < parts.length; i += 2) {
+                    String rank = parts[i];
+                    String suit = parts[i + 1];
+                    playerHand.add(new Card(suit, rank, cardSkin));
+                }
+                gameMode.updateDisplay(playerHand, null, null);
+                handlePlayerAction();
+                break;
+            case "STATE":
+                String publicState = parts[1];
+                gameMode.updateDisplay(null, publicState, null);
+                handlePlayerAction();
+                break;
+            case "WINNER":
+                String winner = parts[1];
+                gameMode.updateDisplay(null, null, winner);
+                break;
+        }
+    }
+    private void handlePlayerAction() {
+        InputHandler inputHandler = gameMode.getInputHandler();
+        String action = inputHandler.getPlayerAction();
+        inputHandler.processAction(action);
+    }
+
 
     @Override
     public void sendMessage(String message) {
