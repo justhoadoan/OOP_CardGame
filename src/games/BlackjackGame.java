@@ -184,9 +184,7 @@ public class BlackjackGame implements Game {
     }
 
     @Override
-    public void handlePlayerTurn() {
-
-    }
+    public String handlePlayerTurn() {return null;}
 
     @Override
     public GameMode getGameMode() {

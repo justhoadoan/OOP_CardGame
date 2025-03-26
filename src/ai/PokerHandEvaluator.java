@@ -78,4 +78,17 @@ public class PokerHandEvaluator {
             default: return Integer.parseInt(card.getRank());
         }
     }
+
+    public static final List<HandRank> HAND_RANK_ORDER = Arrays.asList(
+            HandRank.HIGH_CARD,
+            HandRank.ONE_PAIR,
+            HandRank.TWO_PAIR,
+            HandRank.THREE_OF_A_KIND,
+            HandRank.STRAIGHT,
+            HandRank.FLUSH,
+            HandRank.FULL_HOUSE,
+            HandRank.FOUR_OF_A_KIND,
+            HandRank.STRAIGHT_FLUSH,
+            HandRank.ROYAL_FLUSH
+    );
 }

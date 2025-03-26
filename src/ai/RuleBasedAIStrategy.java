@@ -55,7 +55,6 @@ public class RuleBasedAIStrategy implements AIStrategy  {
 
     enum HandStrength { STRONG, MEDIUM, DRAWING, WEAK }
 
-
     private int rankToValue(String rank) {
         switch (rank) {
             case "Ace":

@@ -1,5 +1,7 @@
 package games;
 
+import ai.PokerHandEvaluator;
+import ai.PokerHandEvaluator.HandRank;
 import card.Card;
 import card.CardSkin;
 import deck.Deck;
@@ -8,11 +10,12 @@ import gamemode.GameMode;
 import playable.*;
 import server.Client;
 import server.NetworkManager;
-
+import input.PokerActionProcessor;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class PokerGame implements Game {
@@ -52,25 +55,82 @@ public class PokerGame implements Game {
             }
         }
 
+        // pre-flop + bet
         for (int i = 0; i < 2; i++) {
-            for (Playable player : players) {
-                if (player instanceof Player) {
-                    ((Player) player).addCard(deck.drawCard());
+            allPlayerDraw();
+        }
+        allPlayerBet();
+        currentPlayer = playerManager.getPlayers().get(0);
+        broadcastState();
+
+        // flop + bet
+        deck.drawCard(); // remove 1 card
+        for(int i = 1; i <= 3; i++) {communityCards.add(deck.drawCard());}
+        allPlayerBet();
+
+        // turn + bet
+        deck.drawCard();
+        communityCards.add(deck.drawCard());
+        allPlayerBet();
+
+        // river + bet
+        deck.drawCard();
+        communityCards.add(deck.drawCard());
+        allPlayerBet();
+
+        // evaluate who is winner
+        int maxRankIdx = 0;
+        Playable winner = null;
+        for (Playable player : players) {
+            if (player instanceof Player) {
+                HandRank handRank = PokerHandEvaluator.evaluateHand(player.getHand());
+                int rankIndex = PokerHandEvaluator.HAND_RANK_ORDER.indexOf(handRank);
+                if(maxRankIdx  == Math.max(maxRankIdx , rankIndex) ) {
+                    maxRankIdx = rankIndex;
+                    winner = player;
                 }
             }
         }
-        currentPlayer = playerManager.getPlayers().get(0);
-        broadcastState();
-        handlePlayerTurn();
+
+        // get other loser's status off
+        for (Playable player : players) {
+            if (player instanceof Player) {
+                if(player.getStatus() && (player.getId() != winner.getId())) {
+                    player.setStatus(false);
+                }
+            }
+        }
+
+        String winnerName = winner.getName();
+        int winnerId = winner.getId();
     }
-    
+
+    public void allPlayerDraw() {
+        for (Playable player : players) {
+            if (player instanceof Player) {
+                ((Player) player).addCard(deck.drawCard());
+            }
+        }
+    }
+
+    public void allPlayerBet() {
+        for (Playable player : players) {
+            if (player instanceof Player) {
+                String action = handlePlayerTurn();
+                PokerActionProcessor processor = new PokerActionProcessor();
+                Player p = (Player) player;
+                Client client = p.getClient();
+                processor.processAction(action, this, client);
+            }
+        }
+    }
+
     @Override
     public void addPlayer(Playable player) {
         if (player != null) {
             players.add(player);
         }
     }
-
 
     @Override
     public List<Playable> getPlayers() {return players;}
@@ -89,9 +149,6 @@ public class PokerGame implements Game {
         }
         return Collections.emptyList();
     }
-
-
-
 
     public String getPublicState() {
         StringBuilder handsInfo = new StringBuilder();
@@ -128,9 +185,7 @@ public class PokerGame implements Game {
     }
 
     @Override
-    public void playerFold(Playable player) {
-        player.setStatus(false);
-    }
+    public void playerFold(Playable player) {player.setStatus(false);}
 
     @Override
     public void playerHit(Playable player) {} // nothing would be done here
@@ -139,8 +194,17 @@ public class PokerGame implements Game {
     public void playerStand(Playable player) {} // nothing would be done here
 
     @Override
-    public void handlePlayerTurn() {
+    public String handlePlayerTurn() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(currentPlayer.getName() + ", enter your action (raise, fold): ");
+        String action = scanner.nextLine().trim().toLowerCase();
 
+        while (!action.equals("raise") && !action.equals("fold")) {
+            System.out.println("Invalid action. Please enter 'raise' or 'fold': ");
+            action = scanner.nextLine().trim().toLowerCase();
+        }
+
+        return action;
     }
 
     public String getWinner() {

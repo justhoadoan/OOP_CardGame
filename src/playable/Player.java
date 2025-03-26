@@ -29,7 +29,6 @@ public class Player implements Playable {
 
     public void setStatus(boolean status) {this.status = status;}
 
-
     @Override
     public String getName() {return name;}
 
@@ -58,9 +57,7 @@ public class Player implements Playable {
     @Override
     public void playTurn(Game game) {}
 
-    public Client getClient() {
-        return client;
-    }
+    public Client getClient() {return client;}
     @Override
     public String toString() {
         return "Player{" +

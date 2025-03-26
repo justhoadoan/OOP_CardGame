@@ -33,5 +33,5 @@ public interface Game {
 
     GameType getGameType();
 
-    void handlePlayerTurn();
+    String handlePlayerTurn();
 }
