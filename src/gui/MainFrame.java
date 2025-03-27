@@ -152,7 +152,7 @@ public class MainFrame extends Application {
 
         // Set up the scene
         Scene scene = new Scene(layout, 400, 400);
-        File cssFile = new File("/Project_OOP/OOP_CardGame/resources/style.css");
+        File cssFile = new File("./OOP_CardGame/src/gui/style.css");
         scene.getStylesheets().add(cssFile.toURI().toString());
         primaryStage.setScene(scene);
         primaryStage.show();
