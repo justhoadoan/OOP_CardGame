@@ -6,7 +6,7 @@ import playable.Player;
 import java.util.List;
 
 public interface GameState {
-    public Player getplayer();
+    Player getplayer();
     List<Card> getPlayerHand();
     List<Card> getCommunityCards();
     int getPot();

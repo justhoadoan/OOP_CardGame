@@ -54,8 +54,7 @@ public class Player implements Playable {
 
     public int getId() {return id;}
 
-    @Override
-    public void playTurn(Game game) {}
+
 
     public Client getClient() {return client;}
     @Override
