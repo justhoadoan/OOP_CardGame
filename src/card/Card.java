@@ -1,19 +1,20 @@
 package card;
-import java.awt.Image;
-import javax.swing.*;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class Card {
     private String suit;
     private String rank;
     private CardSkin skin;
-    private ImageIcon image;
+    private ImageView imageView;
 
     public Card(String rank, String suit, CardSkin skin) {
         this.suit = suit;
         this.rank = rank;
         this.skin = skin;
         String imagePath = skin.getImagePath(rank, suit);
-        this.image = loadAndResizeImage(imagePath, 100, 150); // Resize to 100x150 pixels
+        this.imageView = loadAndResizeImage(imagePath, 100, 150); // Resize to 100x150 pixels
     }
 
     public Card(String rank, String suit) {
@@ -66,20 +67,23 @@ public class Card {
         return skin;
     }
 
-    private ImageIcon loadAndResizeImage(String imagePath, int width, int height) {
+    private ImageView loadAndResizeImage(String imagePath, int width, int height) {
         // Load the original image
-        ImageIcon originalIcon = new ImageIcon(imagePath);
-        Image originalImage = originalIcon.getImage();
+        Image originalImage = new Image(imagePath);
+
+        // Create an ImageView and set the image
+        ImageView imageView = new ImageView(originalImage);
 
         // Resize the image
-        Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        imageView.setFitWidth(width);
+        imageView.setFitHeight(height);
+        imageView.setPreserveRatio(true);
 
-        // Return the resized image as an ImageIcon
-        return new ImageIcon(resizedImage);
+        return imageView;
     }
 
-    public ImageIcon getImage() {
-        return image;
+    public ImageView getImageView() {
+        return imageView;
     }
 
     public int getValue() {
@@ -95,6 +99,7 @@ public class Card {
                 return Integer.parseInt(rank);
         }
     }
+
     @Override
     public String toString() {
         return rank + " of " + suit;

@@ -1,0 +1,53 @@
+.choice-box {
+    -fx-border-color: #BA9454;
+    -fx-border-radius: 5px; /* Adjust the value to make the corners more or less rounded */
+    -fx-background-radius: 5px; /* Make the background corners match the border radius */
+    -fx-pref-height: 27.0;
+    -fx-pref-width: 143.0;
+}
+
+#mainMenuPane {
+    -fx-border-color: #D48E62;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.text-common {
+    -fx-fill: #523C1D;
+    -fx-font-family: "Arial Rounded MT Bold";
+    -fx-font-size: 15.0;
+}
+
+.button {
+    -fx-background-color: linear-gradient(to right, #966F35, #302311);
+    -fx-text-fill: WHITE;
+    -fx-font-family: "Arial Rounded MT Bold";
+    -fx-font-size: 15.0;
+    -fx-mnemonic-parsing: false;
+    -fx-pref-height: 25.0;
+    -fx-pref-width: 120.0;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+}
+
+.text-field {
+    -fx-border-color: #BA9454;
+    -fx-border-width: 0.5px;
+}
+
+/* Hover effect */
+.button:hover {
+    -fx-background-color: linear-gradient(to right, #B58840, #453627); /* Lighter shades */
+    -fx-cursor: hand; /* Changes cursor to pointer */
+    -fx-scale-x: 1.05; /* Slightly enlarges button */
+    -fx-scale-y: 1.05;
+}
+
+/* Pressed effect */
+.button:pressed {
+    -fx-background-color: linear-gradient(to right, #7D5A2E, #25190D);
+    -fx-scale-x: 0.95; /* Shrinks slightly when clicked */
+    -fx-scale-y: 0.95;
+}
+
+

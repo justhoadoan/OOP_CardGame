@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.SubScene?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="menu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.OnlineMenu">
+    <children>
+        <ImageView fitHeight="406.0" fitWidth="609.0" layoutX="-6.0" layoutY="-3.0" pickOnBounds="true">
+            <image>
+                <Image url="@background.jpg" />
+            </image>
+        </ImageView>
+        <Pane fx:id="mainMenuPane" layoutX="111.0" layoutY="106.0" prefHeight="227.0" prefWidth="368.0" stylesheets="@menu.css">
+            <effect>
+                <Blend />
+            </effect>
+            <children>
+                <SubScene height="227.0" opacity="0.64" width="368.0">
+                    <root>
+                        <Region style="-fx-border-radius: 5px; -fx-background-radius: 5px; -fx-border-color: #D48E62; -fx-border-width: 2px;" />
+                    </root>
+                </SubScene>
+                <Button fx:id="backOnlineMenu" layoutX="81.0" layoutY="175.0" text="Back" onAction="#backToMainMenu">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="15.0" />
+                    </font></Button>
+            <Button fx:id="startOnlineMenu" layoutX="243.0" layoutY="175.0" text="Start">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="15.0" />
+               </font>
+            </Button>
+            <Text layoutX="145.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-common" text="Poisition" />
+            <Text layoutX="68.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-common" text="Server Port" />
+            <Text layoutX="238.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-common" text="Server IP" />
+            <ChoiceBox fx:id="positionChoiceBox" layoutX="109.0" layoutY="31.0" prefWidth="150.0" />
+            <TextField layoutX="35.0" layoutY="101.0" />
+            <TextField layoutX="196.0" layoutY="101.0" />
+            </children>
+        </Pane>
+        <ImageView fitHeight="74.0" fitWidth="298.0" layoutX="153.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@menuFrame.png" />
+            </image>
+        </ImageView>
+        <Text fill="#f4e0b7" layoutX="194.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MENU GAME" wrappingWidth="230.38348388671875">
+            <font>
+                <Font name="Garamond Bold" size="35.0" />
+            </font>
+        </Text>
+    </children>
+</AnchorPane>
