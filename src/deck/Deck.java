@@ -10,22 +10,36 @@ public class Deck {
     private CardSkin skin;
 
     public Deck(CardSkin skin) {
-        setSkin(skin);
+        this.skin = skin;
         cards = new ArrayList<>();
-        createDeck(skin);
+        reset();
     }
+
+    public void reset() {
+        cards.clear();
+        String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+        String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
+
+        for (String suit : suits) {
+            for (String rank : ranks) {
+                cards.add(new Card(rank, suit, null)); // Không cần skin để tạo card
+            }
+        }
+        shuffle();
+    }
+
     public void shuffle() {
         Collections.shuffle(cards);
     }
 
     public Card drawCard() {
         if (cards.isEmpty()) {
-            throw new IllegalStateException("No cards left in the deck!");
+            return null;
         }
-        return cards.removeFirst();
+        return cards.remove(0);
     }
 
-    public int size() {
+    public int remainingCards() {
         return cards.size();
     }
 
@@ -36,21 +50,4 @@ public class Deck {
     public void setSkin(CardSkin skin) {
         this.skin = skin;
     }
-
-    private void createDeck(CardSkin skin){
-        String[] suits = {"Hearts", "Diamond", "Clubs", "Spades"};
-        String[] ranks = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
-        for (String suit : suits) {
-            for (String rank : ranks) {
-                cards.add(new Card(rank, suit, skin));
-            }
-        }
-        shuffle();
-    }
-
-    public void reset(){
-        cards.clear();
-        createDeck(skin);
-    }
-    
 }

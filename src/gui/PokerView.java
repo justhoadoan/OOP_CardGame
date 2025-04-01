@@ -4,15 +4,15 @@ import card.Card;
 import card.CardSkin;
 import games.Game;
 import games.GameType;
+import input.InputHandler;
+import input.PokerActionProcessor;
 import server.Client;
-
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import java.util.function.Consumer;
 
-public class PokerView extends JPanel implements View{
+public class PokerView extends JPanel {
     private JPanel mainPanel;
     private JPanel allHandsPanel;
     private JLabel publicInfoLabel;
@@ -20,20 +20,24 @@ public class PokerView extends JPanel implements View{
     private Game game;
     private Client client;
     private CardSkin cardSkin;
-    private Consumer<String> actionListener;
-    private Runnable raiseAction;
-    private Runnable foldAction;
+    private InputHandler inputHandler;
 
     public PokerView(Game game, Client client) {
         this.game = game;
         this.client = client;
+      //  this.inputHandler = new PokerActionProcessor();
         initialize();
     }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
     public void setCardSkin(CardSkin cardSkin) {
         this.cardSkin = cardSkin;
     }
-    @Override
-    public void initialize() {
+
+    private void initialize() {
         setLayout(new BorderLayout());
         mainPanel = new JPanel(new BorderLayout());
         add(mainPanel, BorderLayout.CENTER);
@@ -45,109 +49,86 @@ public class PokerView extends JPanel implements View{
 
         publicInfoLabel = new JLabel("Game State: ");
         publicInfoLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-        mainPanel.add(publicInfoLabel, BorderLayout.EAST);
+        mainPanel.add(publicInfoLabel, BorderLayout.CENTER);
 
+        setupActionButtons();
+    }
+
+    private void setupActionButtons() {
         actionPanel = new JPanel(new FlowLayout());
-
         JButton raiseButton = new JButton("Raise");
         JButton foldButton = new JButton("Fold");
 
+        raiseButton.addActionListener(e -> handleRaise());
+        foldButton.addActionListener(e -> handleFold());
+
         actionPanel.add(raiseButton);
         actionPanel.add(foldButton);
-
         mainPanel.add(actionPanel, BorderLayout.SOUTH);
-        raiseButton.addActionListener(e -> {
-            if (raiseAction != null) {
-                raiseAction.run();
-            } else {
-                String raiseAmountStr = JOptionPane.showInputDialog(this, "Enter raise amount:", "Raise", JOptionPane.QUESTION_MESSAGE);
-                try {
-                    int raiseAmount = Integer.parseInt(raiseAmountStr);
-                    if (client != null) {
-                        // Use client's sendMessage directly instead of handler
-                        client.sendMessage("Raise:" + client.getClientId() + ":" + raiseAmount);
-                    } else if (game != null) {
-                        game.playerRaise(game.getCurrentPlayer(), raiseAmount);
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Please enter a valid raise amount", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-        foldButton.addActionListener(e -> {
-            if (foldAction != null) {
-                foldAction.run();
-            } else {
-                if (client != null) {
-                    client.sendMessage("Fold:" + client.getClientId());
-                } else if (game != null) {
-                    game.playerFold(game.getCurrentPlayer());
-                }
-            }
-        });
-
     }
 
-    @Override
-    public void updateDisplay(String playerInfo, String publicState, List<Card> playerHand) {
-        publicInfoLabel.setText("Game State: " + publicState);
+    private void handleRaise() {
+        String amountStr = JOptionPane.showInputDialog(this, "Enter raise amount:", "Raise", JOptionPane.QUESTION_MESSAGE);
+        try {
+            int amount = Integer.parseInt(amountStr);
+            if (client != null) {
+                client.sendMessage("ACTION:Raise:" + client.getClientId() + ":" + amount);
+            } else if (game != null) {
+                game.playerRaise(game.getCurrentPlayer(), amount);
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid amount", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void handleFold() {
+        if (client != null) {
+            client.sendMessage("ACTION:Fold:" + client.getClientId());
+        } else if (game != null) {
+            game.playerFold(game.getCurrentPlayer());
+        }
+    }
+
+    public void updateDisplay(List<Card> playerHand, String publicState, String winner) {
+        if (winner != null) {
+            showResult("Winner: " + winner);
+            return;
+        }
+
         allHandsPanel.removeAll();
-
-
-        String[] players = playerInfo.split("\n");
-        for (String player : players) {
-            JPanel playerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            playerPanel.add(new JLabel(player));
-
-
-            if (playerHand != null && player.contains("Client-" + client.getClientId())) {
-                for (Card card : playerHand) {
-                    ImageIcon cardImage = new ImageIcon(cardSkin.getImagePath(card.getRank(), card.getSuit()));
-
-                    Image image = cardImage.getImage().getScaledInstance(80, 120, Image.SCALE_SMOOTH);
-                    JLabel cardLabel = new JLabel(new ImageIcon(image));
-                    playerPanel.add(cardLabel);
+        
+        // Display player's hand if available
+        if (playerHand != null && !playerHand.isEmpty()) {
+            JPanel handPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            handPanel.add(new JLabel("Your Hand: "));
+            
+            for (Card card : playerHand) {
+                if (cardSkin != null) {
+                    ImageIcon cardImage = card.getCardImage();
+                    if (cardImage != null) {
+                        Image image = cardImage.getImage().getScaledInstance(80, 120, Image.SCALE_SMOOTH);
+                        handPanel.add(new JLabel(new ImageIcon(image)));
+                    }
                 }
             }
+            allHandsPanel.add(handPanel);
+        }
 
-            else if (player.contains("Client-")) {
-
-                int numCards = countCardsInPlayerInfo(player);
-                for (int i = 0; i < numCards; i++) {
-                    ImageIcon cardBackImage = new ImageIcon(cardSkin.getImagePath("BACK", ""));
-                    Image image = cardBackImage.getImage().getScaledInstance(80, 120, Image.SCALE_SMOOTH);
-                    JLabel cardLabel = new JLabel(new ImageIcon(image));
-                    playerPanel.add(cardLabel);
-                }
-            }
-
-            allHandsPanel.add(playerPanel);
+        // Update public state
+        if (publicState != null) {
+            publicInfoLabel.setText(publicState);
         }
 
         revalidate();
         repaint();
     }
 
-    private int countCardsInPlayerInfo(String playerInfo) {
-
-        int startIndex = playerInfo.indexOf("[");
-        int endIndex = playerInfo.indexOf("]");
-        if (startIndex == -1 || endIndex == -1) return 0;
-
-        String cards = playerInfo.substring(startIndex + 1, endIndex);
-        if (cards.trim().isEmpty()) return 0;
-        return cards.split(",").length;
-    }
-
-    @Override
-    public void setActionButtons(String button1Text, Runnable action1, String button2Text, Runnable action2) {
-        raiseAction = action1;
-        foldAction = action2;
-    }
-
-    @Override
     public void showResult(String result) {
         JOptionPane.showMessageDialog(this, result, "Game Over", JOptionPane.INFORMATION_MESSAGE);
         actionPanel.setVisible(false);
+    }
+
+    public InputHandler getInputHandler() {
+        return inputHandler;
     }
 }

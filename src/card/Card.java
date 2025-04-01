@@ -1,20 +1,29 @@
 package card;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javax.swing.*;
+import java.awt.*;
 
 public class Card {
-    private String suit;
     private String rank;
+    private String suit;
     private CardSkin skin;
-    private ImageView imageView;
+    private ImageIcon cardImage;
 
     public Card(String rank, String suit, CardSkin skin) {
-        this.suit = suit;
         this.rank = rank;
+        this.suit = suit;
         this.skin = skin;
-        String imagePath = skin.getImagePath(rank, suit);
-        this.imageView = loadAndResizeImage(imagePath, 100, 150); // Resize to 100x150 pixels
+        
+        // Chỉ tải ảnh nếu có CardSkin (GraphicMode)
+        if (skin != null) {
+            try {
+                String imagePath = skin.getImagePath(rank, suit);
+                cardImage = new ImageIcon(imagePath);
+            } catch (Exception e) {
+                System.err.println("Error loading card image: " + e.getMessage());
+                cardImage = null;
+            }
+        }
     }
 
     public Card(String rank, String suit) {
@@ -67,36 +76,20 @@ public class Card {
         return skin;
     }
 
-    private ImageView loadAndResizeImage(String imagePath, int width, int height) {
-        // Load the original image
-        Image originalImage = new Image(imagePath);
-
-        // Create an ImageView and set the image
-        ImageView imageView = new ImageView(originalImage);
-
-        // Resize the image
-        imageView.setFitWidth(width);
-        imageView.setFitHeight(height);
-        imageView.setPreserveRatio(true);
-
-        return imageView;
+    public ImageIcon getCardImage() {
+        return cardImage;
     }
 
-    public ImageView getImageView() {
-        return imageView;
-    }
-
-    public int getValue() {
-        switch (rank) {
-            case "Ace":
-                return 11;
-            case "King":
-            case "Queen":
-            case "Jack":
-            case "10":
-                return 10;
-            default:
-                return Integer.parseInt(rank);
+    public void setSkin(CardSkin skin) {
+        this.skin = skin;
+        if (skin != null) {
+            try {
+                String imagePath = skin.getImagePath(rank, suit);
+                cardImage = new ImageIcon(imagePath);
+            } catch (Exception e) {
+                System.err.println("Error loading card image: " + e.getMessage());
+                cardImage = null;
+            }
         }
     }
 

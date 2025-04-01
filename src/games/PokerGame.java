@@ -31,7 +31,7 @@ public class PokerGame implements Game {
         this.gameMode = gameMode;
         this.networkManager = networkManager;
         this.skin = skin;
-        this.deck = new Deck(skin);
+        this.deck = new Deck(null);
         this.players = new ArrayList<>();
         this.playerManager = new PlayerManager(this);
         this.communityCards = new ArrayList<>();
@@ -41,7 +41,9 @@ public class PokerGame implements Game {
 
         if (gameMode != null) {
             gameMode.setGame(this);
-            gameMode.setCardSkin(skin);
+            if (skin != null) {
+                gameMode.setCardSkin(skin);
+            }
         }
 
     }
@@ -136,8 +138,6 @@ public class PokerGame implements Game {
 
     public void allPlayerDraw() {
         // Check if deck has enough cards
-
-        
         for (Playable player : players) {
             // Handle both Player and AI instances
             if (player.getStatus()) {
