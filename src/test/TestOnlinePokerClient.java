@@ -66,27 +66,11 @@ public class TestOnlinePokerClient {
                 if (currentPlayer != null && currentPlayer.getId() == Integer.parseInt(client.getClientId())) {
                     System.out.println("\nYour turn!");
                     
-                    // Get player action
-                    System.out.println("Enter action (raise/fold): ");
-                    String action = scanner.nextLine().trim().toLowerCase();
+                    // Get player action using PokerActionProcessor
+                    String action = processor.getPlayerAction();
                     
-                    while (!action.equals("raise") && !action.equals("fold")) {
-                        System.out.println("Invalid action. Please enter 'raise' or 'fold': ");
-                        action = scanner.nextLine().trim().toLowerCase();
-                    }
-                    
-                    if (action.equals("raise")) {
-                        System.out.println("Enter raise amount: ");
-                        try {
-                            int amount = Integer.parseInt(scanner.nextLine().trim());
-                            client.sendMessage("ACTION:Raise:" + client.getClientId() + ":" + amount);
-                        } catch (NumberFormatException e) {
-                            System.out.println("Invalid amount. Using default of 10");
-                            client.sendMessage("ACTION:Raise:" + client.getClientId() + ":10");
-                        }
-                    } else {
-                        client.sendMessage("ACTION:Fold:" + client.getClientId());
-                    }
+                    // Process the action using PokerActionProcessor
+                    processor.processAction(action, game, client);
                 }
                 
                 // Check if game is over
