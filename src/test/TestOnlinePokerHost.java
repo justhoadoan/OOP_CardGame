@@ -41,8 +41,7 @@ public class TestOnlinePokerHost {
             server.start();
             System.out.println("Waiting for players to connect...");
             System.out.println("Enter 'start' when all players are connected to begin the game.");
-            
-            // Đợi người chơi nhập lệnh start
+
             String command;
             do {
                 command = scanner.nextLine().trim().toLowerCase();
