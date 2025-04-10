@@ -6,19 +6,24 @@
     -fx-pref-width: 143.0;
 }
 
-#mainMenuPane {
-    -fx-border-color: #D48E62;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-}
-
 .text-common {
     -fx-fill: #523C1D;
     -fx-font-family: "Arial Rounded MT Bold";
     -fx-font-size: 15.0;
 }
 
-.button {
+.text-menu {
+    -fx-fill: #f4e0b7;
+    -fx-font-family: "Garamond Bold";
+    -fx-font-size: 35.0;
+}
+
+.text-field {
+    -fx-border-color: #BA9454;
+    -fx-border-width: 0.5px;
+}
+
+.menu-button {
     -fx-background-color: linear-gradient(to right, #966F35, #302311);
     -fx-text-fill: WHITE;
     -fx-font-family: "Arial Rounded MT Bold";
@@ -30,13 +35,8 @@
     -fx-background-radius: 20px;
 }
 
-.text-field {
-    -fx-border-color: #BA9454;
-    -fx-border-width: 0.5px;
-}
-
 /* Hover effect */
-.button:hover {
+.menu-button:hover {
     -fx-background-color: linear-gradient(to right, #B58840, #453627); /* Lighter shades */
     -fx-cursor: hand; /* Changes cursor to pointer */
     -fx-scale-x: 1.05; /* Slightly enlarges button */
@@ -44,10 +44,22 @@
 }
 
 /* Pressed effect */
-.button:pressed {
+.menu-button:pressed {
     -fx-background-color: linear-gradient(to right, #7D5A2E, #25190D);
     -fx-scale-x: 0.95; /* Shrinks slightly when clicked */
     -fx-scale-y: 0.95;
 }
+
+.play-button {
+    -fx-background-color: linear-gradient(to right, #966F35, #302311);
+    -fx-text-fill: #F5F5F5;
+    -fx-font-family: "Arial Rounded MT Bold";
+    -fx-font-size: 15.0;
+    -fx-mnemonic-parsing: false;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+
 
 

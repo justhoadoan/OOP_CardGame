@@ -12,10 +12,10 @@ package gui;
     public class MainFrame extends Application {
         @Override
         public void start(Stage primaryStage) throws IOException {
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/gui/mainMenu.fxml")));
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/gui/MainMenu.fxml")));
             Pane mainMenuPane = loader.load();
 
-            // Get the controller for mainMenu.fxml
+            // Get the controller for MainMenu.fxml
             MainMenu mainMenuController = loader.getController();
             mainMenuController.setStage(primaryStage);
 
