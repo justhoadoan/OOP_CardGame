@@ -13,24 +13,15 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainMenu {
-    @FXML
-    private Button nextMainMenu;
-    @FXML
-    private Pane skinPane;
-    @FXML
-    private Pane mainMenuPane;
-    @FXML
-    private Pane typePane;
-    @FXML
-    private ChoiceBox<String> gameChoiceBox;
-    @FXML
-    private ChoiceBox<String> cardSkinChoiceBox;
-    @FXML
-    private ChoiceBox<String> gameModeChoiceBox;
-    @FXML
-    private ChoiceBox<String> typeChoiceBox;
-    @FXML
-    private Stage stage;
+    @FXML private Button nextMainMenu;
+    @FXML private Pane skinPane;
+    @FXML private Pane mainMenuPane;
+    @FXML private Pane typePane;
+    @FXML private ChoiceBox<String> gameChoiceBox;
+    @FXML private ChoiceBox<String> cardSkinChoiceBox;
+    @FXML private ChoiceBox<String> gameModeChoiceBox;
+    @FXML private ChoiceBox<String> typeChoiceBox;
+    @FXML private Stage stage;
 
 
     @FXML

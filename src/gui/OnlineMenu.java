@@ -17,16 +17,11 @@ import javax.imageio.IIOException;
 import java.io.IOException;
 
 public class OnlineMenu {
-    @FXML
-    private ChoiceBox<String> positionChoiceBox;
-    @FXML
-    private Pane mainMenuPane;
-    @FXML
-    private Button backOnlineMenu;
-    @FXML
-    private Button startOnlineMenu;
-    @FXML
-    private Stage stage;
+    @FXML private ChoiceBox<String> positionChoiceBox;
+    @FXML private Pane mainMenuPane;
+    @FXML private Button backOnlineMenu;
+    @FXML private Button startOnlineMenu;
+    @FXML private Stage stage;
 
     public void setStage(Stage stage) {
         this.stage = stage;

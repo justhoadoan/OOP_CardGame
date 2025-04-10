@@ -16,7 +16,7 @@
         <children>
             <ImageView fitHeight="406.0" fitWidth="609.0" layoutX="-6.0" layoutY="-3.0" pickOnBounds="true">
                 <image>
-                    <Image url="@background.jpg" />
+                    <Image url="@Background.jpg" />
                 </image>
             </ImageView>
             <Pane fx:id="mainMenuPane" layoutX="111.0" layoutY="106.0" prefHeight="227.0" prefWidth="368.0" stylesheets="@menu.css">
@@ -44,13 +44,9 @@
             </Pane>
             <ImageView fitHeight="74.0" fitWidth="298.0" layoutX="153.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="@menuFrame.png" />
+                    <Image url="@MenuFrame.png" />
                 </image>
             </ImageView>
-            <Text fill="#f4e0b7" layoutX="194.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MENU GAME" wrappingWidth="230.38348388671875">
-                <font>
-                    <Font name="Garamond Bold" size="35.0" />
-                </font>
-            </Text>
+            <Text layoutX="194.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MENU GAME" wrappingWidth="230.38348388671875" styleClass="text-menu"/>
         </children>
 </AnchorPane>
