@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
@@ -11,10 +13,18 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class PokerGame {
+    @FXML private ImageView communityCard1;
+    @FXML private ImageView communityCard2;
+    @FXML private ImageView communityCard3;
+    @FXML private ImageView communityCard4;
+    @FXML private ImageView communityCard5;
+    @FXML private ImageView playerCard1;
+    @FXML private ImageView playerCard2;
+    //@FXML private HBox communityHBox;
     @FXML private TextField raiseField;
     @FXML private Slider raiseSlider;
     @FXML private StackPane opponentDeck;
-    @FXML private StackPane playerDeck;
+    //@FXML private StackPane playerDeck;
     @FXML private Label player;
     @FXML private Label playerMoney;
     @FXML private Label opponentName;
