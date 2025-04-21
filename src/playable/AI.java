@@ -61,7 +61,6 @@ public class AI implements Playable {
     @Override
     public void resetHand() {
         hand.clear();
-
     }
 
     @Override

@@ -1,5 +1,7 @@
+// Package declaration for the server
 package server;
 
+// Import statements for various classes and interfaces used in the server
 import gamemode.GraphicMode;
 import games.Game;
 import games.GameType;
@@ -18,15 +20,23 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+// Import static method for filtering locales
 import static java.util.Locale.filter;
 
+// Server class implementing NetworkManager interface
 public class Server implements NetworkManager {
+    // Server socket to listen for client connections
     private ServerSocket serverSocket;
+    // Game instance to manage game logic
     private Game game;
+    // Map to store client handlers by client ID
     private Map<Integer, ClientHandler> clientHandlers;
+    // Flag to indicate if the server is running
     private volatile boolean isRunning;
+    // Counter for assigning client IDs
     private int nextClientId;
-    
+
+    // Constructor to initialize the server with a port and game instance
     public Server(int port, Game game) {
         try {
             this.nextClientId = 0;
@@ -34,16 +44,17 @@ public class Server implements NetworkManager {
             serverSocket = new ServerSocket(port);
             this.game = game;
             isRunning = false;
-            
+
             // Get local IP address
             String serverIp = getLocalIpAddress();
             System.out.println("Server started at IP: " + serverIp + ", Port: " + port);
-            
+
+            // Show server info in a dialog if the game is in graphic mode
             if (game instanceof GraphicMode) {
-                javax.swing.JOptionPane.showMessageDialog(null, 
-                    "Server started at IP: " + serverIp + ", Port: " + port, 
-                    "Server Info", 
-                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(null,
+                        "Server started at IP: " + serverIp + ", Port: " + port,
+                        "Server Info",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (IOException e) {
             System.err.println("Error initializing server on port " + port);
@@ -51,7 +62,8 @@ public class Server implements NetworkManager {
             throw new RuntimeException("Failed to initialize server", e);
         }
     }
-    
+
+    // Method to get the local IP address of the server
     private String getLocalIpAddress() {
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
@@ -60,7 +72,7 @@ public class Server implements NetworkManager {
                 // Skip loopback and virtual interfaces
                 if (iface.isLoopback() || !iface.isUp() || iface.isVirtual() || iface.isPointToPoint())
                     continue;
-                
+
                 Enumeration<InetAddress> addresses = iface.getInetAddresses();
                 while (addresses.hasMoreElements()) {
                     InetAddress addr = addresses.nextElement();
@@ -77,16 +89,19 @@ public class Server implements NetworkManager {
         return "127.0.0.1";
     }
 
+    // Method to set the game instance
     public void setGame(Game game) {
         this.game = game;
     }
 
+    // Method to start the server
     @Override
     public void start() {
         isRunning = true;
         new Thread(() -> {
             while (isRunning) {
                 try {
+                    // Accept client connections
                     Socket clientSocket = serverSocket.accept();
                     int clientId = nextClientId++;
                     ClientHandler clientHandler = new ClientHandler(clientSocket, this, clientId);
@@ -108,10 +123,11 @@ public class Server implements NetworkManager {
         }).start();
     }
 
+    // Method to close the server and all client connections
     @Override
     public void close() {
-        try{
-            for(ClientHandler clientHandler : clientHandlers.values()) {
+        try {
+            for (ClientHandler clientHandler : clientHandlers.values()) {
                 clientHandler.close();
             }
             clientHandlers.clear();
@@ -124,13 +140,15 @@ public class Server implements NetworkManager {
         }
     }
 
+    // Method to send a message to all clients
     @Override
     public void sendMessage(String message) {
-        for(ClientHandler clientHandler : clientHandlers.values()) {
+        for (ClientHandler clientHandler : clientHandlers.values()) {
             clientHandler.sendMessage(message);
         }
     }
 
+    // Method to send a message to a specific client by ID
     @Override
     public void sendMessageToClient(int clientId, String message) {
         ClientHandler handler = clientHandlers.get(clientId);
@@ -139,6 +157,7 @@ public class Server implements NetworkManager {
         }
     }
 
+    // Method to receive and process messages from clients
     @Override
     public void receiveMessage(String message) {
         if (game == null || message == null || !message.startsWith("ACTION:")) {
@@ -151,9 +170,9 @@ public class Server implements NetworkManager {
             }
             String action = parts[1];
             int clientId = Integer.parseInt(parts[2]);
-            Playable player = game.getPlayers().stream().
-                    filter(p -> p instanceof Player && ((Player) p).getId() == clientId).
-                    findFirst().orElse(null);
+            Playable player = game.getPlayers().stream()
+                    .filter(p -> p instanceof Player && ((Player) p).getId() == clientId)
+                    .findFirst().orElse(null);
             if (player == null) {
                 System.err.println("Player not found: " + clientId);
             }
@@ -189,7 +208,7 @@ public class Server implements NetworkManager {
         }
     }
 
-    // clienthandler to control the clients
+    // Inner class to handle client connections
     private class ClientHandler extends Thread {
         private Socket socket;
         private Server server;
@@ -198,6 +217,7 @@ public class Server implements NetworkManager {
         private int clientId;
         private volatile boolean isRunning;
 
+        // Constructor to initialize the client handler
         public ClientHandler(Socket socket, Server server, int clientId) {
             this.socket = socket;
             this.server = server;
@@ -211,6 +231,7 @@ public class Server implements NetworkManager {
             }
         }
 
+        // Method to run the client handler thread
         @Override
         public void run() {
             isRunning = true;
@@ -226,10 +247,12 @@ public class Server implements NetworkManager {
             }
         }
 
+        // Method to send a message to the client
         public void sendMessage(String message) {
             out.println(message);
         }
 
+        // Method to close the client connection
         public void close() {
             try {
                 isRunning = false;
@@ -242,4 +265,3 @@ public class Server implements NetworkManager {
         }
     }
 }
-

@@ -9,6 +9,11 @@ public class Deck {
     private List<Card> cards;
     private CardSkin skin;
 
+    public Deck() {
+        cards = new ArrayList<>();
+        reset();
+    }
+
     public Deck(CardSkin skin) {
         this.skin = skin;
         cards = new ArrayList<>();

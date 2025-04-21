@@ -17,7 +17,6 @@ public class PokerState implements GameState {
         this.communityCards = CommunityCards;
     }
 
-    @Override
     public List<Card> getCommunityCards() {
         return communityCards;
     }
