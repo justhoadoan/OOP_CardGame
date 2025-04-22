@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -13,19 +14,31 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainMenu {
-    @FXML private Button nextMainMenu;
-    @FXML private Pane skinPane;
-    @FXML private Pane mainMenuPane;
-    @FXML private Pane typePane;
-    @FXML private ChoiceBox<String> gameChoiceBox;
-    @FXML private ChoiceBox<String> cardSkinChoiceBox;
-    @FXML private ChoiceBox<String> gameModeChoiceBox;
-    @FXML private ChoiceBox<String> typeChoiceBox;
-    @FXML private Stage stage;
+    @FXML
+    private Button nextMainMenu;
+    @FXML
+    private Pane skinPane;
+    @FXML
+    private Pane mainMenuPane;
+    @FXML
+    private Pane typePane;
+    @FXML
+    private ChoiceBox<String> gameChoiceBox;
+    @FXML
+    private ChoiceBox<String> cardSkinChoiceBox;
+    @FXML
+    private ChoiceBox<String> gameModeChoiceBox;
+    @FXML
+    private ChoiceBox<String> typeChoiceBox;
+    @FXML
+    private Stage stage;
 
 
     @FXML
     public void initialize() {
+        // Reset button
+
+        // Initialize the choice boxes with options
         gameChoiceBox.setItems(FXCollections.observableArrayList("Poker", "BlackJack"));
         cardSkinChoiceBox.setItems(FXCollections.observableArrayList("Traditional", "Realistic", "Animated"));
         gameModeChoiceBox.setItems(FXCollections.observableArrayList("Graphic", "Non-Graphic"));
@@ -59,35 +72,57 @@ public class MainMenu {
     }
 
     public void Next() {
-        if (typeChoiceBox.getValue().equals("Online")) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("OnlineMenu.fxml"));
-            try {
+        try {
+            FXMLLoader loader;
+
+            if (typeChoiceBox.getValue().equals("Online")) {
+                loader = new FXMLLoader(getClass().getResource("OnlineMenu.fxml"));
                 Scene scene = new Scene(loader.load());
+
+                // Get controller and reset state
+                OnlineMenu controller = loader.getController();
+                controller.resetState(); // You define this in the controller
+
                 stage.setScene(scene);
                 stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        }
-        else if (gameChoiceBox.getValue().equals("BlackJack")) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("BlackJackOffline.fxml"));
-            try {
+//            else if (gameChoiceBox.getValue().equals("BlackJack")) {
+//                loader = new FXMLLoader(getClass().getResource("BlackJackOffline.fxml"));
+//                Scene scene = new Scene(loader.load());
+//
+//                BlackJackOffline controller = loader.getController();
+//                controller.resetState();
+//
+//                stage.setScene(scene);
+//                stage.show();
+//            }
+            else {
+                loader = new FXMLLoader(getClass().getResource("PokerAIOffline.fxml"));
                 Scene scene = new Scene(loader.load());
+
+                PokerAIOffline controller = loader.getController();
+                controller.resetState();
+
                 stage.setScene(scene);
                 stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        else {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("PokerAIOffline.fxml"));
-            try {
-                Scene scene = new Scene(loader.load());
-                stage.setScene(scene);
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    }
+
+    // reset state method
+    @FXML
+    public void resetState() {
+        gameChoiceBox.getSelectionModel().clearSelection();
+        cardSkinChoiceBox.getSelectionModel().clearSelection();
+        gameModeChoiceBox.getSelectionModel().clearSelection();
+        typeChoiceBox.getSelectionModel().clearSelection();
+        skinPane.setVisible(false);
+        typePane.setVisible(false);
+        mainMenuPane.setVisible(true);
+        nextMainMenu.setVisible(true);
+        // reset button
+        nextMainMenu.setDisable(false);
     }
 }
