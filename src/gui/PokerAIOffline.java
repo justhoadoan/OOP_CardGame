@@ -17,22 +17,39 @@ public class PokerAIOffline {
     @FXML private Pane mainMenuPane;
     @FXML private Button backOnlineMenu;
     @FXML private Button startOnlineMenu;
-    @FXML private ChoiceBox positionChoiceBox;
+    @FXML private ChoiceBox typeChoiceBox;
+    @FXML private Stage stage;
 
     @FXML
     public void initialize() {
-        positionChoiceBox.getItems().addAll("Rule based", "Monte Carlo");
+        // Initialize the choice boxes with options
+        typeChoiceBox.getItems().addAll("Rule based", "Monte Carlo");
     }
 
     @FXML
     private void backToMainMenu(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainMenu.fxml"));
         Parent root = loader.load();
+        MainMenu controller = loader.getController();
 
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
-
         stage.setScene(scene);
         stage.show();
+
+        controller.setStage(stage); // important!
+        controller.resetState();    // now it's safe to call
+    }
+
+    // reset state method
+    @FXML
+    public void resetState() {
+        typeChoiceBox.getSelectionModel().clearSelection();
+        mainMenuPane.setVisible(true);
+        startOnlineMenu.setVisible(true);
+        backOnlineMenu.setVisible(true);
+        // reset button
+        backOnlineMenu.setDisable(false);
+        startOnlineMenu.setDisable(false);
     }
 }
