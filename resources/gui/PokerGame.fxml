@@ -13,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" stylesheets="@menu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PokerGame">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" stylesheets="@menu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PokerGameGui">
     <children>
         <ImageView fitHeight="400.0" fitWidth="600.0" layoutX="-6.0" layoutY="-3.0" pickOnBounds="true">
             <image>
@@ -65,12 +65,12 @@
             <Slider fx:id="raiseSlider" layoutX="13.0" layoutY="41.0" />
          </children>
       </Pane>
-      <Button layoutX="360.0" layoutY="353.0" prefHeight="27.0" prefWidth="61.0" styleClass="play-button" text="Fold">
+      <Button fx:id="foldButton" layoutX="360.0" layoutY="353.0" prefHeight="27.0" prefWidth="61.0" styleClass="play-button" text="Fold">
           <font>
               <Font name="Arial Rounded MT Bold" size="15.0" />
           </font>
       </Button>
-      <Button layoutX="360.0" layoutY="320.0" prefHeight="28.0" prefWidth="61.0" styleClass="play-button" text="Raise">
+      <Button  fx:id="raiseButton" layoutX="360.0" layoutY="320.0" prefHeight="28.0" prefWidth="61.0" styleClass="play-button" text="Raise">
           <font>
               <Font name="Arial Rounded MT Bold" size="15.0" />
           </font>

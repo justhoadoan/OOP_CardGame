@@ -13,6 +13,8 @@ public interface GameMode {
     void setCardSkin(CardSkin skin);
     void updateDisplay(List<Card> playerHand, String publicState, String winner);
 
+    String getGameState();
+
     InputHandler getInputHandler();
 
 

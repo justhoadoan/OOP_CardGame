@@ -30,7 +30,7 @@
                         </root>
                     </SubScene>
                     <Button styleClass="menu-button" fx:id="backOnlineMenu" layoutX="39.0" layoutY="176.0" onAction="#backToMainMenu" text="Back"/>
-                    <Button styleClass="menu-button" fx:id="startOnlineMenu" layoutX="202.0" layoutY="175.0" text="Start"/>
+                    <Button styleClass="menu-button" fx:id="startOnlineMenu" layoutX="202.0" layoutY="175.0" onAction="#startGame" text="Start"/>
                     <Text layoutX="140.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-common" text="AI Algorithm" />
                     <ChoiceBox fx:id="typeChoiceBox" layoutX="113.0" layoutY="96.0" prefWidth="150.0" />
                 </children>

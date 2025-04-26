@@ -1,6 +1,6 @@
 package server;
 
-import gamemode.GraphicMode;
+
 import games.Game;
 import games.GameType;
 import playable.Playable;
@@ -38,13 +38,11 @@ public class Server implements NetworkManager {
             // Get local IP address
             String serverIp = getLocalIpAddress();
             System.out.println("Server started at IP: " + serverIp + ", Port: " + port);
-            
-            if (game instanceof GraphicMode) {
-                javax.swing.JOptionPane.showMessageDialog(null, 
+            javax.swing.JOptionPane.showMessageDialog(null,
                     "Server started at IP: " + serverIp + ", Port: " + port, 
                     "Server Info", 
                     javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            }
+
         } catch (IOException e) {
             System.err.println("Error initializing server on port " + port);
             e.printStackTrace();

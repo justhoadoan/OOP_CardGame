@@ -1,6 +1,6 @@
 package input;
 
-import gamemode.GraphicMode;
+
 import games.Game;
 import games.PokerGame;
 import playable.Player;
@@ -92,24 +92,8 @@ public class PokerActionProcessor implements ActionProcessor {
 
     private String promtForAmount(Client client, Game game, Player player) {
         Scanner scanner = new Scanner(System.in);
-        String amountStr;
-        boolean isGraphicMode = game.getGameMode() instanceof GraphicMode;
-        if (isGraphicMode) {
-            amountStr = JOptionPane.showInputDialog("Enter amount to raise");
-        }
-        else {
-            System.out.println("Enter amount to raise");
-            amountStr = scanner.nextLine().trim();
-        }
-        while (!isValidAmount(amountStr, player)){
-            if (isGraphicMode) {
-                amountStr = JOptionPane.showInputDialog("Invalid amount. Enter amount to raise");
-            }
-            else {
-                System.out.println("Invalid amount. Enter amount to raise");
-                amountStr = scanner.nextLine().trim();
-            }
-        }
+        String amountStr = null;
+
         return amountStr;
     }
     private static boolean isValidAmount(String amountStr, Player player) {

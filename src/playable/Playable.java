@@ -17,4 +17,8 @@ public interface Playable {
     void addCard(Card card);
     int getCurrentBalance();
     void addCurrentBalance(int amount);
+
+    int getCurrentBet();
+
+    void setCurrentBet(int i);
 }

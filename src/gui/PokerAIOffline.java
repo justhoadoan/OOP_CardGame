@@ -19,12 +19,14 @@ public class PokerAIOffline {
     @FXML private Button startOnlineMenu;
     @FXML private ChoiceBox typeChoiceBox;
     @FXML private Stage stage;
-
+    private String selectedSkin;
     @FXML
     public void initialize() {
         // Initialize the choice boxes with options
+        typeChoiceBox.setValue("Rule based");
         typeChoiceBox.getItems().addAll("Rule based", "Monte Carlo");
     }
+
 
     @FXML
     private void backToMainMenu(ActionEvent event) throws IOException {
@@ -39,6 +41,30 @@ public class PokerAIOffline {
 
         controller.setStage(stage); // important!
         controller.resetState();    // now it's safe to call
+    }
+
+
+    public void setSelectedSkin(String skin) {
+        this.selectedSkin = skin;
+    }
+
+    @FXML
+    private void startGame(ActionEvent event) throws IOException {
+        String aiStrategy = (String) typeChoiceBox.getValue();
+        if (aiStrategy == null) {
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("PokerGame.fxml"));
+        Parent root = loader.load();
+
+        PokerGameGui controller = loader.getController();
+        controller.setupGame(selectedSkin, aiStrategy, false);
+
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
     // reset state method
