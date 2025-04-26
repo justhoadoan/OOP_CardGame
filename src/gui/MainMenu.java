@@ -68,6 +68,7 @@ public class MainMenu {
     }
 
     public void setStage(Stage stage) {
+
         this.stage = stage;
     }
 
@@ -86,21 +87,12 @@ public class MainMenu {
                 stage.setScene(scene);
                 stage.show();
             }
-//            else if (gameChoiceBox.getValue().equals("BlackJack")) {
-//                loader = new FXMLLoader(getClass().getResource("BlackJackOffline.fxml"));
-//                Scene scene = new Scene(loader.load());
-//
-//                BlackJackOffline controller = loader.getController();
-//                controller.resetState();
-//
-//                stage.setScene(scene);
-//                stage.show();
-//            }
             else {
                 loader = new FXMLLoader(getClass().getResource("PokerAIOffline.fxml"));
                 Scene scene = new Scene(loader.load());
 
                 PokerAIOffline controller = loader.getController();
+                controller.setSelectedSkin(cardSkinChoiceBox.getValue());
                 controller.resetState();
 
                 stage.setScene(scene);
@@ -111,7 +103,6 @@ public class MainMenu {
         }
     }
 
-    // reset state method
     @FXML
     public void resetState() {
         gameChoiceBox.getSelectionModel().clearSelection();
@@ -122,7 +113,7 @@ public class MainMenu {
         typePane.setVisible(false);
         mainMenuPane.setVisible(true);
         nextMainMenu.setVisible(true);
-        // reset button
+
         nextMainMenu.setDisable(false);
     }
 }

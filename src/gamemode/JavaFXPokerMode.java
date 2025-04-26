@@ -1,0 +1,154 @@
+package gamemode;
+
+import card.Card;
+import card.CardSkin;
+import games.PokerGame;
+import input.InputHandler;
+import javafx.application.Platform;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
+import playable.Playable;
+import test.TestImagePath;
+
+import java.io.InputStream;
+import java.util.List;
+import java.util.Objects;
+
+public class JavaFXPokerMode implements GameMode {
+    private final ImageView[] communityCards;
+    private final ImageView[][] playerCards;
+    private final Label[] playerNames;
+    private final Label[] playerMoney;
+    private final Text potMoney;
+    private PokerGame game;
+    private CardSkin cardSkin;
+    private final boolean isOnlineMode;
+    private final int playerId;
+    private InputHandler inputHandler;
+
+    public JavaFXPokerMode(ImageView[] communityCards,
+                           ImageView[][] playerCards,
+                           Label[] playerNames,
+                           Label[] playerMoney,
+                           Text potMoney,
+                           boolean isOnlineMode,
+                           int playerId) {
+        this.communityCards = communityCards;
+        this.playerCards = playerCards;
+        this.playerNames = playerNames;
+        this.playerMoney = playerMoney;
+        this.potMoney = potMoney;
+        this.isOnlineMode = isOnlineMode;
+        this.playerId = playerId;
+    }
+
+    @Override
+    public void setGame(PokerGame game) {
+        this.game = game;
+    }
+
+    @Override
+    public void setCardSkin(CardSkin skin) {
+        this.cardSkin = skin;
+        if (game != null) {
+            updateDisplay(null, game.getPublicState(), null);
+        }
+    }
+
+    @Override
+    public void updateDisplay(List<Card> playerHand, String publicState, String winner) {
+        Platform.runLater(() -> {
+            updateCommunityCards();
+            updateAllPlayerCards(playerHand);
+            updatePlayerInfo();
+            updatePotMoney();
+            if (winner != null) {
+                showWinner(winner);
+            }
+        });
+    }
+
+    private void updateCommunityCards() {
+        if (game == null) return;
+        List<Card> community = game.getCommunityCards();
+        for (int i = 0; i < communityCards.length; i++) {
+            if (i < community.size()) {
+                Card card = community.get(i);
+                if (cardSkin != null) {
+                    card.setSkin(cardSkin);
+                    String imagePath = cardSkin.getImagePath(card.getRank(), card.getSuit());
+                    Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
+                    communityCards[i].setImage(cardImage);
+                    communityCards[i].setVisible(true);
+                }
+            } else {
+                communityCards[i].setVisible(false);
+            }
+        }
+    }
+
+    private void updateAllPlayerCards(List<Card> currentPlayerHand) {
+        if (game == null) return;
+        List<Playable> players = game.getPlayers();
+
+        for (int i = 0; i < playerCards.length && i < players.size(); i++) {
+            Playable player = players.get(i);
+            boolean isCurrentPlayerHand = player.getId() == playerId;
+
+            for (int j = 0; j < playerCards[i].length; j++) {
+                if (isCurrentPlayerHand) {
+                    if (currentPlayerHand != null && j < currentPlayerHand.size()) {
+                        Card card = currentPlayerHand.get(j);
+                        String path = cardSkin.getImagePath(card.getRank(), card.getSuit());
+                        Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path)));
+                        playerCards[i][j].setImage(cardImage);
+                    }
+                } else {
+                    String backPath = cardSkin.getImagePath("Opponent", "");
+                    Image backImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(backPath)));
+                    playerCards[i][j].setImage(backImage);
+                }
+                playerCards[i][j].setVisible(true);
+            }
+        }
+    }
+    private void updatePlayerInfo() {
+        if (game == null) return;
+        List<Playable> players = game.getPlayers();
+
+        for (int i = 0; i < playerNames.length && i < players.size(); i++) {
+            Playable player = players.get(i);
+            playerNames[i].setText(player.getName());
+            playerMoney[i].setText(player.getStatus() ? "$" + player.getCurrentBalance() : "Folded");
+        }
+    }
+
+    private void updatePotMoney() {
+        if (game == null) return;
+        potMoney.setText("$" + game.getPot());
+    }
+
+    private void showWinner(String winner) {
+        // Optional: Add winner announcement UI
+    }
+
+    @Override
+    public String getGameState() {
+        return game != null ? game.getPublicState() : "";
+    }
+
+    @Override
+    public InputHandler getInputHandler() {
+        return inputHandler;
+    }
+
+    public void setInputHandler(InputHandler handler) {
+        this.inputHandler = handler;
+    }
+
+    public Object getGame() {
+        return game;
+    }
+}

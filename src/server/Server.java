@@ -1,6 +1,6 @@
 package server;
 
-import gamemode.GraphicMode;
+
 import games.Game;
 import games.GameType;
 import playable.Playable;
@@ -11,8 +11,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Locale.filter;
@@ -20,56 +23,88 @@ import static java.util.Locale.filter;
 public class Server implements NetworkManager {
     private ServerSocket serverSocket;
     private Game game;
-    Map<Integer, ClientHandler> clientHandlers;
+    private Map<Integer, ClientHandler> clientHandlers;
     private volatile boolean isRunning;
     private int nextClientId;
+    
     public Server(int port, Game game) {
         try {
-            this.nextClientId=0;
+            this.nextClientId = 0;
+            this.clientHandlers = new HashMap<>();
             serverSocket = new ServerSocket(port);
             this.game = game;
             isRunning = false;
-            String serverIp = InetAddress.getLocalHost().getHostAddress();
+            
+            // Get local IP address
+            String serverIp = getLocalIpAddress();
             System.out.println("Server started at IP: " + serverIp + ", Port: " + port);
-            if (game instanceof GraphicMode) {
-                javax.swing.JOptionPane.showMessageDialog(null, "Server started at IP: " + serverIp + ", Port: " + port, "Server Info", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            }
+            javax.swing.JOptionPane.showMessageDialog(null,
+                    "Server started at IP: " + serverIp + ", Port: " + port, 
+                    "Server Info", 
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
 
         } catch (IOException e) {
             System.err.println("Error initializing server on port " + port);
+            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize server", e);
         }
     }
+    
+    private String getLocalIpAddress() {
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface iface = interfaces.nextElement();
+                // Skip loopback and virtual interfaces
+                if (iface.isLoopback() || !iface.isUp() || iface.isVirtual() || iface.isPointToPoint())
+                    continue;
+                
+                Enumeration<InetAddress> addresses = iface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress addr = addresses.nextElement();
+                    // Only return IPv4 addresses
+                    if (addr.getAddress().length == 4) {
+                        return addr.getHostAddress();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Fallback to localhost if no IP found
+        return "127.0.0.1";
+    }
+
     public void setGame(Game game) {
         this.game = game;
     }
 
     @Override
     public void start() {
-         isRunning = true;
-         new Thread(() -> {
-             while (isRunning) {
-                 try {
-
-                     Socket clientSocket = serverSocket.accept();
-                     int clientId = nextClientId++;
-                     ClientHandler clientHandler = new ClientHandler(clientSocket, this, clientId);
-                     clientHandlers.put(clientId, clientHandler);
-                     clientHandler.start();
-                     System.out.println("Client " + clientId + " connected");
-                     if (game != null) {
-                         Player newPlayer = new Player("Client-" + clientId, clientId);
-                         game.addPlayer((Playable) newPlayer);
-                         clientHandler.sendMessage("STATE:" + game.getPublicState());
-                     }
-                 } catch (IOException e) {
-                     if (isRunning) {
-                         System.err.println("Accept failed: " + e.getMessage());
-                     }
-                 }
-             }
-         }).start();
+        isRunning = true;
+        new Thread(() -> {
+            while (isRunning) {
+                try {
+                    Socket clientSocket = serverSocket.accept();
+                    int clientId = nextClientId++;
+                    ClientHandler clientHandler = new ClientHandler(clientSocket, this, clientId);
+                    clientHandlers.put(clientId, clientHandler);
+                    clientHandler.start();
+                    System.out.println("Client " + clientId + " connected");
+                    if (game != null) {
+                        Player newPlayer = new Player("Client-" + clientId, clientId);
+                        game.addPlayer(newPlayer);
+                        clientHandler.sendMessage("STATE:" + game.getPublicState());
+                    }
+                } catch (IOException e) {
+                    if (isRunning) {
+                        System.err.println("Accept failed: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
-
 
     @Override
     public void close() {
@@ -91,7 +126,6 @@ public class Server implements NetworkManager {
     public void sendMessage(String message) {
         for(ClientHandler clientHandler : clientHandlers.values()) {
             clientHandler.sendMessage(message);
-
         }
     }
 
@@ -101,7 +135,6 @@ public class Server implements NetworkManager {
         if (handler != null) {
             handler.sendMessage(message);
         }
-
     }
 
     @Override
@@ -148,13 +181,10 @@ public class Server implements NetworkManager {
                     System.err.println("Unsupported action: " + action);
                     return;
             }
-                game.broadcastState();
-            }
-
-        catch (Exception e) {
+            game.broadcastState();
+        } catch (Exception e) {
             System.err.println("Error processing message: " + message);
         }
-
     }
 
     // clienthandler to control the clients
@@ -189,16 +219,15 @@ public class Server implements NetworkManager {
                 }
             } catch (IOException e) {
                 System.err.println("Error reading input from client " + clientId);
-
             } finally {
                 close();
             }
         }
 
         public void sendMessage(String message) {
-
             out.println(message);
         }
+
         public void close() {
             try {
                 isRunning = false;

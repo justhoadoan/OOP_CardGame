@@ -29,7 +29,6 @@ public class Player implements Playable {
 
     public void setStatus(boolean status) {this.status = status;}
 
-
     @Override
     public String getName() {return name;}
 
@@ -49,18 +48,25 @@ public class Player implements Playable {
 
     public void addCurrentBalance(int currentBalance) {this.currentBalance += currentBalance;}
 
+    @Override
+    public int getCurrentBet() {
+        return 0; // Not applicable for Player class
+    }
+
+    @Override
+    public void setCurrentBet(int i) {
+        // Not applicable for Player class
+    }
+
     public void resetHand() {hand.clear();}
 
     public int getCurrentBalance() {return currentBalance;}
 
     public int getId() {return id;}
 
-    @Override
-    public void playTurn(Game game) {}
 
-    public Client getClient() {
-        return client;
-    }
+
+    public Client getClient() {return client;}
     @Override
     public String toString() {
         return "Player{" +

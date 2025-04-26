@@ -11,10 +11,15 @@ public class CardSkin {
     }
 
     public String getSkinName() {
+
+        return skinName;
+    }
+    public String getImagePath(String rank, String suit) {
+        return "/cards/" + skinName + "/" + rank + suit + ".png";
+    }
+
+    public String getName() {
         return skinName;
     }
 
-    public String getImagePath(String rank, String suit) {
-            return "resources/cards/" + skinName + "/" + rank + suit + ".png";
-    }
 }

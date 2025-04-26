@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface Playable {
     int getId();
-    void playTurn(Game game);
+
     String getName();
     List<Card> getHand();
     void setHand(List<Card> hand);
@@ -17,4 +17,8 @@ public interface Playable {
     void addCard(Card card);
     int getCurrentBalance();
     void addCurrentBalance(int amount);
+
+    int getCurrentBet();
+
+    void setCurrentBet(int i);
 }

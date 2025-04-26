@@ -8,7 +8,6 @@ import playable.Playable;
 import playable.Player;
 import server.NetworkManager;
 import java.util.*;
-import card.Card;
 
 public class BlackjackGame implements Game {
     private Deck deck;
@@ -185,9 +184,7 @@ public class BlackjackGame implements Game {
     }
 
     @Override
-    public void handlePlayerTurn() {
-
-    }
+    public String handlePlayerTurn() {return null;}
 
     @Override
     public GameMode getGameMode() {
