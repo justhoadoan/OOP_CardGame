@@ -82,6 +82,16 @@ public class AI implements Playable {
 
     }
 
+    @Override
+    public int getCurrentBet() {
+        return 0;
+    }
+
+    @Override
+    public void setCurrentBet(int i) {
+
+    }
+
     public void setCurrentBalance(int balance) {
         this.currentBalance = balance;
     }

@@ -8,16 +8,16 @@ public class Card {
     private String suit;
     private CardSkin skin;
     private ImageIcon cardImage;
+    private String imagePath;
 
     public Card(String rank, String suit, CardSkin skin) {
         this.rank = rank;
         this.suit = suit;
         this.skin = skin;
-        
-        // Chỉ tải ảnh nếu có CardSkin (GraphicMode)
+
         if (skin != null) {
             try {
-                String imagePath = skin.getImagePath(rank, suit);
+                imagePath = skin.getImagePath(rank, suit);
                 cardImage = new ImageIcon(imagePath);
             } catch (Exception e) {
                 System.err.println("Error loading card image: " + e.getMessage());
@@ -25,6 +25,11 @@ public class Card {
             }
         }
     }
+    public String getImagePath() {
+
+        return this.imagePath;
+    }
+
 
     public Card(String rank, String suit) {
         this.rank = rank;
@@ -77,6 +82,7 @@ public class Card {
     }
 
     public ImageIcon getCardImage() {
+
         return cardImage;
     }
 

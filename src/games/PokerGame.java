@@ -48,93 +48,109 @@ public class PokerGame implements Game {
 
     }
 
+
+
     public void start() {
+        initializeGame();
+        dealInitialCards();
+    }
+    public void progressGame() {
+        if (isGameOver()) {
+            determineWinner();
+            return;
+        }
+
+        // Deal community cards
+        if (communityCards.isEmpty()) {
+            // Flop
+
+            dealCommunityCards(3);
+            allPlayerBet();
+        } else if (communityCards.size() == 3) {
+            // Turn
+            dealCommunityCards(1);
+            allPlayerBet();
+        } else if (communityCards.size() == 4) {
+            // River
+            dealCommunityCards(1);
+            allPlayerBet();
+        } else {
+            determineWinner();
+            return;
+        }
+
+        // After dealing cards, let players bet
+
+        broadcastState();
+    }
+    private void initializeGame() {
         deck.reset();
         pot = 0;
         currentBet = 0;
         communityCards.clear();
-        
-        if (players.isEmpty()) {
-            System.out.println("Cannot start game: No players available");
-            return;
-        }
-        
-        // Reset all players' hands and status
+
+        // Reset all players
         for (Playable player : players) {
             player.resetHand();
             player.setStatus(true);
         }
-        
-        currentPlayer = players.get(0);
 
-        // pre-flop + bet
+        currentPlayer = players.get(0);
+        broadcastState(); // Initial state
+    }
+    private void dealInitialCards() {
+        // Deal 2 cards to each player
         for (int i = 0; i < 2; i++) {
-            allPlayerDraw();
+            for (Playable player : players) {
+                if (player.getStatus()) {
+                    Card card = deck.drawCard();
+                    player.addCard(card);
+                }
+            }
         }
-        
-        // Chỉ hiển thị game state cho người chơi thật sau khi chia bài ban đầu
-        if (currentPlayer instanceof Player) {
-            broadcastState();
+        broadcastState(); // Show dealt cards
+    }
+
+
+    private void dealCommunityCards(int count) {
+        try {
+            deck.drawCard(); // Burn card
+            for (int i = 0; i < count; i++) {
+                Card card = deck.drawCard();
+                if (card != null) {
+                    communityCards.add(card);
+                }
+            }
+            broadcastState(); // Show community cards
+        } catch (Exception e) {
+            System.err.println("Error dealing community cards: " + e.getMessage());
         }
-        
-        // flop + bet
-        deck.drawCard(); // remove 1 card
-        for(int i = 1; i <= 3; i++) {
-            communityCards.add(deck.drawCard());
-        }
-        allPlayerBet();
-        
-        // turn + bet
-        deck.drawCard();
-        communityCards.add(deck.drawCard());
-        allPlayerBet();
-        
-        // river + bet
-        deck.drawCard();
-        communityCards.add(deck.drawCard());
-        allPlayerBet();
-        
-        // evaluate who is winner
-        int maxRankIdx = 0;
+    }
+
+
+    private void determineWinner() {
         Playable winner = null;
+        HandRank bestRank = null;
+
         for (Playable player : players) {
-            if (player.getStatus()) {  // Check all active players, not just Player instances
-                HandRank handRank = PokerHandEvaluator.evaluateHand(player.getHand());
-                int rankIndex = PokerHandEvaluator.HAND_RANK_ORDER.indexOf(handRank);
-                if (rankIndex >= maxRankIdx) {  // Use >= instead of comparing max
-                    maxRankIdx = rankIndex;
+            if (player.getStatus()) {
+                HandRank currentRank = PokerHandEvaluator.evaluateHand(player.getHand());
+                if (bestRank == null || currentRank.compareTo(bestRank) > 0) {
+                    bestRank = currentRank;
                     winner = player;
                 }
             }
         }
 
         if (winner != null) {
-            // Set winner as the only active player
-            for (Playable player : players) {
-                player.setStatus(player.getId() == winner.getId());
-            }
-            
-            System.out.println("Winner: " + winner.getName() + " with hand rank: " + 
-                              PokerHandEvaluator.HAND_RANK_ORDER.get(maxRankIdx));
-                              
-            // Distribute pot to winner
             if (winner instanceof Player) {
-                distributePot((Player)winner);
+                distributePot((Player) winner);
             } else if (winner instanceof AI) {
-                // Handle AI winner
-                ((AI)winner).addCurrentBalance(pot);
+                ((AI) winner).addCurrentBalance(pot);
             }
-        }
-        
-        // Chỉ broadcast state ở cuối game để thông báo người thắng
-        broadcastState();
-
-        // Check after each betting round if we have active players
-        if (countActivePlayers() == 0) {
-            System.out.println("Game over: No active players remaining");
-            return;
         }
     }
+
 
     public void allPlayerDraw() {
         // Check if deck has enough cards
@@ -162,70 +178,54 @@ public class PokerGame implements Game {
     }
 
     private void allPlayerBet() {
-        // Check if there are any active players
         List<Playable> activePlayers = players.stream()
-            .filter(Playable::getStatus)
-            .collect(Collectors.toList());
-        
-        if (activePlayers.isEmpty()) {
-            System.out.println("No active players to bet");
-            return;
-        }
-        
-        for (Playable player : activePlayers) {
-            if (player.getStatus()) {
+                .filter(Playable::getStatus)
+                .collect(Collectors.toList());
+
+        if (activePlayers.isEmpty()) return;
+
+        boolean bettingComplete = false;
+        while (!bettingComplete) {
+            bettingComplete = true;
+
+            for (Playable player : activePlayers) {
+                if (!player.getStatus()) continue;
+
                 currentPlayer = player;
-                
-                // Chỉ broadcast state trước và sau lượt của người chơi thật
-                boolean isHumanPlayer = player instanceof Player;
-                
-                // Hiển thị state trước khi người chơi thật hành động
-                if (isHumanPlayer) {
-                    broadcastState();
+
+                if (player instanceof AI) {
+                    handleAIAction((AI) player);
                 }
 
-                try {
-                    if (player instanceof AI) {
-                        AI ai = (AI) player;
-                        // Make sure AI has a hand to evaluate
-                        if (ai.getHand() == null || ai.getHand().isEmpty()) {
-                            System.out.println("AI " + ai.getName() + " has no cards to evaluate");
-                            continue;
-                        }
-                        
-                        PokerState state = new PokerState(
-                                new Player(ai.getName(), ai.getId()),
-                                pot,
-                                currentBet,
-                                communityCards
-                        );
+                if (isGameOver()) return;
 
-                        AIStrategy strategy = aiFactory.getAIStrategy(ai.getStrategyType());
-                        if (strategy != null) {
-                            String action = strategy.getAction(state);
-                            PokerActionProcessor processor = new PokerActionProcessor();
-                            processor.processAction(action, this, null);
-                        }
-                    } else {
-                        PokerActionProcessor processor = new PokerActionProcessor();
-                        String action = handlePlayerTurn();
-                        processor.processAction(action, this, null);
-                    }
-                } catch (Exception e) {
-                    System.out.println("Error during player bet: " + e.getMessage());
-                    e.printStackTrace();
-                }
-
-                // Chỉ hiển thị state sau khi người chơi thật hành động
-                if (isHumanPlayer) {
-                    broadcastState();
+                if (player.getStatus() && player.getCurrentBet() < currentBet) {
+                    bettingComplete = false;
                 }
             }
         }
-        
-        // Không cần broadcast state ở cuối vòng cược nữa
+
+        for (Playable player : players) {
+            player.setCurrentBet(0);
+        }
+        currentBet = 0;
     }
 
+    private void handleAIAction(AI ai) {
+        PokerState state = new PokerState(
+                new Player(ai.getName(), ai.getId()),
+                pot,
+                currentBet,
+                communityCards
+        );
+
+        AIStrategy strategy = aiFactory.getAIStrategy(ai.getStrategyType());
+        if (strategy != null) {
+            String action = strategy.getAction(state);
+            PokerActionProcessor processor = new PokerActionProcessor();
+            processor.processAction(action, this, null);
+        }
+    }
     @Override
     public void addPlayer(Playable player) {
         if (player != null) {
@@ -305,6 +305,7 @@ public class PokerGame implements Game {
                 ((AI) player).addCurrentBalance(-raiseAmount);
             }
         }
+        broadcastState();
     }
 
     @Override
@@ -365,22 +366,14 @@ public class PokerGame implements Game {
             }
         }
         
-        // Chỉ cập nhật hiển thị khi:
-        // 1. Lượt của người chơi thật (không phải AI)
-        // 2. Đã kết thúc game (để hiển thị người thắng)
+
         if (gameMode != null) {
-            // Chỉ hiển thị bài của người chơi thật (là Player, không phải AI)
             boolean isHumanPlayer = currentPlayer instanceof Player;
             List<Card> playerHand = null;
-            
-            // Chỉ lấy bài nếu là người chơi thật
+
             if (isHumanPlayer) {
                 playerHand = getPlayerHand(((Player) currentPlayer).getId());
             }
-            
-            // Chỉ gọi updateDisplay trong 2 trường hợp:
-            // 1. Khi là lượt của người chơi thật (playerHand != null)
-            // 2. Khi game đã kết thúc (để hiển thị người thắng)
             if (isHumanPlayer || isGameOver()) {
                 gameMode.updateDisplay(playerHand, getPublicState(), isGameOver() ? getWinner() : null);
             }
@@ -408,7 +401,9 @@ public class PokerGame implements Game {
         this.currentBet = Math.max(this.currentBet, amount);
     }
 
-    void resetBets() {this.pot = 0; this.currentBet = 0;}
+    void resetBets() {
+        this.pot = 0; this.currentBet = 0;
+    }
 
     private int countActivePlayers() {
         int count = 0;
@@ -418,6 +413,14 @@ public class PokerGame implements Game {
             }
         }
         return count;
+    }
+
+    public List<Card> getCommunityCards() {
+        return communityCards;
+    }
+
+    public String getPot() {
+        return String.valueOf(pot);
     }
 
     // Add a method to check if deck is empty

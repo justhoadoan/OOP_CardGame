@@ -26,11 +26,11 @@ public class Client implements NetworkManager {
 
     // Constructor
     public Client(String host, int port, GameMode gameMode, GameType gameType, CardSkin skin) {
-        this.serverIp = serverIp;
-        this.serverPort = serverPort;
+        this.serverIp = host;
+        this.serverPort = port;
         this.gameMode = gameMode;
         this.gameType = gameType;
-        this.cardSkin = cardSkin;
+        this.cardSkin = skin;
     }
 
     // Set client ID

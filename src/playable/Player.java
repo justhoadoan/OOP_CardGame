@@ -48,6 +48,16 @@ public class Player implements Playable {
 
     public void addCurrentBalance(int currentBalance) {this.currentBalance += currentBalance;}
 
+    @Override
+    public int getCurrentBet() {
+        return 0; // Not applicable for Player class
+    }
+
+    @Override
+    public void setCurrentBet(int i) {
+        // Not applicable for Player class
+    }
+
     public void resetHand() {hand.clear();}
 
     public int getCurrentBalance() {return currentBalance;}
