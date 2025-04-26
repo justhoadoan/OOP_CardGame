@@ -82,6 +82,7 @@ public class PokerGameGui {
         raiseSlider.setMin(0);
         raiseSlider.setMax(1000);
         raiseSlider.setValue(100);
+        raiseField.setText("100");
         // Set consistent card sizes
         setCardSize(communityCard1, communityCard2, communityCard3, communityCard4, communityCard5);
         setCardSize(player1Card1, player1Card2);
@@ -162,36 +163,54 @@ public class PokerGameGui {
             game.addPlayer(aiPlayer);
 
             game.start();
+            updateMoneyDisplays();
         }
     }
 
     private void setupEventHandlers() {
         PokerActionProcessor processor = new PokerActionProcessor();
 
+        // Setup raise slider and field sync
+        raiseSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            raiseField.setText(String.valueOf(newVal.intValue()));
+        });
+
+        raiseField.textProperty().addListener((obs, oldVal, newVal) -> {
+            try {
+                int value = Integer.parseInt(newVal);
+                if (value >= raiseSlider.getMin() && value <= raiseSlider.getMax()) {
+                    raiseSlider.setValue(value);
+                }
+            } catch (NumberFormatException ignored) {}
+        });
+
+        // Setup raise button
         raiseButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
                 try {
                     int amount = Integer.parseInt(raiseField.getText());
-                    if (amount > 0) {
-                        processor.processAction("raise", game, null);
+                    int playerBalance = game.getCurrentPlayer().getCurrentBalance();
+
+                    if (amount > 0 && amount <= playerBalance) {
+                        processor.processAction("raise:" + amount, game, null);
                         updateMoneyDisplays();
                         game.progressGame();
-                        // Progress game after action
                     }
                 } catch (NumberFormatException ex) {
-                    // Handle invalid input
+                    // Show error message
+                    System.err.println("Invalid raise amount");
                 }
             }
         });
 
+        // Setup fold button
         foldButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
                 processor.processAction("fold", game, null);
-                game.progressGame(); // Progress game after action
+                updateMoneyDisplays();
+                game.progressGame();
             }
         });
-
-        setupSliderAndTextField();
     }
     private void updateMoneyDisplays() {
         if (game != null) {

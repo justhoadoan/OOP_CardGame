@@ -54,21 +54,12 @@ public class PokerActionProcessor implements ActionProcessor {
                     ((PokerGame) game).playerFold(ai);
                 }
             } else if (currentPlayer instanceof Player) {
-                // Xử lý human player
-                Player player = (Player) currentPlayer;
-                
                 if (action.equals("raise")) {
-                    String amountStr = promtForAmount(null, game, player);
-                    try {
-                        int amount = Integer.parseInt(amountStr);
-                        ((PokerGame) game).playerRaise(player, amount);
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid amount, using default of 10");
-                        ((PokerGame) game).playerRaise(player, 10);
-                    }
-                } else {
-                    ((PokerGame) game).playerFold(player);
+                    ((PokerGame) game).playerRaise(currentPlayer, Integer.parseInt(action.split(":")[1]));
+                } else if (action.equals("fold")) {
+                    ((PokerGame) game).playerFold((Player) currentPlayer);
                 }
+
             }
         }
     }
@@ -91,21 +82,7 @@ public class PokerActionProcessor implements ActionProcessor {
     }
 
     private String promtForAmount(Client client, Game game, Player player) {
-        Scanner scanner = new Scanner(System.in);
-        String amountStr = null;
-
-        return amountStr;
-    }
-    private static boolean isValidAmount(String amountStr, Player player) {
-        if (amountStr == null || amountStr.isEmpty()) {
-            return false;
-        }
-        try {
-            int amount = Integer.parseInt(amountStr);
-            return amount > 0 && amount <= player.getCurrentBalance();
-        } catch (NumberFormatException e) {
-            return false;
-        }
+    return "";
     }
     public String getPlayerAction() {
         Scanner scanner = new Scanner(System.in);
