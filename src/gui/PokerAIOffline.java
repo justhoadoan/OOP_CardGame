@@ -39,8 +39,8 @@ public class PokerAIOffline {
         stage.setScene(scene);
         stage.show();
 
-        controller.setStage(stage); // important!
-        controller.resetState();    // now it's safe to call
+        controller.setStage(stage);
+        controller.resetState();
     }
 
 

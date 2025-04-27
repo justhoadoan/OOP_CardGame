@@ -54,6 +54,7 @@ public class MainMenu {
                 skinPane.setVisible(true);
             } else {
                 skinPane.setVisible(false);
+                cardSkinChoiceBox.setValue("Basic");
             }
         });
 
