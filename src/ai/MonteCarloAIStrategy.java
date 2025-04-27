@@ -8,7 +8,7 @@ public class MonteCarloAIStrategy implements AIStrategy {
 
     public String getAction(GameState state) {
         List<Card> hand = state.getPlayerHand();
-        List<Card> communityCards = state.getCommunityCards();
+        List<Card> communityCards = ((PokerState) state).getCommunityCards();
         int pot = state.getPot();
         int currentBet = state.getCurrentBet();
 

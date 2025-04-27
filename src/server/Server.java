@@ -2,7 +2,6 @@
 package server;
 
 // Import statements for various classes and interfaces used in the server
-import gamemode.GraphicMode;
 import games.Game;
 import games.GameType;
 import playable.Playable;
@@ -50,12 +49,10 @@ public class Server implements NetworkManager {
             System.out.println("Server started at IP: " + serverIp + ", Port: " + port);
 
             // Show server info in a dialog if the game is in graphic mode
-            if (game instanceof GraphicMode) {
-                javax.swing.JOptionPane.showMessageDialog(null,
-                        "Server started at IP: " + serverIp + ", Port: " + port,
-                        "Server Info",
-                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            }
+            javax.swing.JOptionPane.showMessageDialog(null,
+                    "Server started at IP: " + serverIp + ", Port: " + port,
+                    "Server Info",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException e) {
             System.err.println("Error initializing server on port " + port);
             e.printStackTrace();
