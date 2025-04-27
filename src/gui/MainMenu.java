@@ -1,25 +1,30 @@
 package gui;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class MainMenu {
+
+    @FXML
+    private StackPane rootPane;
     @FXML
     private Button nextMainMenu;
     @FXML
     private Pane skinPane;
     @FXML
-    private Pane mainMenuPane;
+    private AnchorPane mainMenuPane;
     @FXML
     private Pane typePane;
     @FXML
@@ -30,77 +35,85 @@ public class MainMenu {
     private ChoiceBox<String> gameModeChoiceBox;
     @FXML
     private ChoiceBox<String> typeChoiceBox;
-    @FXML
-    private Stage stage;
 
+    private Stage stage;
 
     @FXML
     public void initialize() {
-        // Reset button
-
-        // Initialize the choice boxes with options
+        // Initialize choice boxes
         gameChoiceBox.setItems(FXCollections.observableArrayList("Poker", "BlackJack"));
         cardSkinChoiceBox.setItems(FXCollections.observableArrayList("Traditional", "Realistic", "Animated"));
         gameModeChoiceBox.setItems(FXCollections.observableArrayList("Graphic", "Non-Graphic"));
         typeChoiceBox.setItems(FXCollections.observableArrayList("Online", "Offline"));
 
-        // skinPane and typePane initially invisible
+        // Initially hide optional panes
         skinPane.setVisible(false);
         typePane.setVisible(false);
 
-        // Set visibility of skinPane based on gameModeChoiceBox value
+        // Handle Graphic/Non-Graphic selection
         gameModeChoiceBox.setOnAction(e -> {
-            if (gameModeChoiceBox.getValue().equals("Graphic")) {
-                skinPane.setVisible(true);
-            } else {
-                skinPane.setVisible(false);
-            }
+            skinPane.setVisible("Graphic".equals(gameModeChoiceBox.getValue()));
         });
 
-        // Set visibility of typePane based on gameChoiceBox value
+        // Handle Poker/Blackjack selection
         gameChoiceBox.setOnAction(e -> {
-            if (gameChoiceBox.getValue().equals("Poker")) {
-                typePane.setVisible(true);
-            } else {
-                typePane.setVisible(false);
-            }
+            typePane.setVisible("Poker".equals(gameChoiceBox.getValue()));
         });
     }
 
     public void setStage(Stage stage) {
-
         this.stage = stage;
     }
 
-    public void Next() {
-        try {
+    @FXML
+    public void Next() throws IOException {
+            // Get stage from current scene
+            Stage stage = (Stage) cardSkinChoiceBox.getScene().getWindow(); // Use any @FXML injected node
+
             FXMLLoader loader;
+            AnchorPane contentPane; // The root element to scale
+            Scene scene;
 
-            if (typeChoiceBox.getValue().equals("Online")) {
-                loader = new FXMLLoader(getClass().getResource("OnlineMenu.fxml"));
-                Scene scene = new Scene(loader.load());
+            if ("Online".equals(typeChoiceBox.getValue())) {
+                loader = new FXMLLoader(getClass().getResource("/gui/OnlineMenu.fxml"));
+                StackPane rootPane = loader.load();
+                scene = new Scene(rootPane);
 
-                // Get controller and reset state
                 OnlineMenu controller = loader.getController();
-                controller.resetState(); // You define this in the controller
-
-                stage.setScene(scene);
-                stage.show();
-            }
-            else {
-                loader = new FXMLLoader(getClass().getResource("PokerAIOffline.fxml"));
-                Scene scene = new Scene(loader.load());
+                controller.resetState();
+                contentPane = controller.getOnlineMenuPane(); // Expose via getter in OnlineMenu
+            } else {
+                loader = new FXMLLoader(getClass().getResource("/gui/PokerAIOffline.fxml"));
+                StackPane rootPane = loader.load();
+                scene = new Scene(rootPane);
 
                 PokerAIOffline controller = loader.getController();
                 controller.setSelectedSkin(cardSkinChoiceBox.getValue());
                 controller.resetState();
-
-                stage.setScene(scene);
-                stage.show();
+                contentPane = controller.getOfflineMenuPane(); // Expose via getter in PokerAIOffline
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+            // === SCALING LOGIC ===
+            if (contentPane != null) {
+                // Ensure design dimensions are set in FXML
+                final double DESIGN_WIDTH = contentPane.getPrefWidth();
+                final double DESIGN_HEIGHT = contentPane.getPrefHeight();
+
+                Scale scale = new Scale(1, 1);
+                contentPane.getTransforms().add(scale);
+
+                // Uniform scaling binding
+                scale.xProperty().bind(Bindings.min(
+                        scene.widthProperty().divide(DESIGN_WIDTH),
+                        scene.heightProperty().divide(DESIGN_HEIGHT)
+                ));
+                scale.yProperty().bind(scale.xProperty());
+            } else {
+                throw new RuntimeException("Main content pane not found in controller");
+            }
+
+            stage.setScene(scene);
+            stage.show();
     }
 
     @FXML
@@ -113,7 +126,10 @@ public class MainMenu {
         typePane.setVisible(false);
         mainMenuPane.setVisible(true);
         nextMainMenu.setVisible(true);
-
         nextMainMenu.setDisable(false);
+    }
+
+    public AnchorPane getMainMenuPane() {
+        return mainMenuPane;
     }
 }

@@ -4,25 +4,26 @@ import card.CardSkin;
 import gamemode.JavaFXPokerMode;
 import games.PokerGame;
 import input.PokerActionProcessor;
-import input.PokerButtonHandler;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import playable.AI;
 import playable.Playable;
 import playable.Player;
-import server.Client;
 import server.NetworkManager;
 
 import java.util.List;
 
 public class PokerGameGui {
+    @FXML private AnchorPane gamePane;
+    @FXML private StackPane rootPane;
     @FXML private ImageView communityCard1;
     @FXML private ImageView communityCard2;
     @FXML private ImageView communityCard3;
@@ -246,5 +247,9 @@ public class PokerGameGui {
 
     public JavaFXPokerMode getGameMode() {
         return gameMode;
+    }
+
+    public AnchorPane getGamePane() {
+        return gamePane;
     }
 }

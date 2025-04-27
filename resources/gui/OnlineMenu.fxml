@@ -12,15 +12,18 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.StackPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="menu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.OnlineMenu">
+
+<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.OnlineMenu" alignment="TOP_LEFT">
+    <AnchorPane fx:id="onlineMenuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@menu.css">
     <children>
         <ImageView fitHeight="406.0" fitWidth="609.0" layoutX="-6.0" layoutY="-3.0" pickOnBounds="true">
             <image>
                 <Image url="@Background.jpg" />
             </image>
         </ImageView>
-        <Pane fx:id="mainMenuPane" layoutX="111.0" layoutY="106.0" prefHeight="227.0" prefWidth="368.0" stylesheets="@menu.css">
+        <Pane layoutX="111.0" layoutY="106.0" prefHeight="227.0" prefWidth="368.0" stylesheets="@menu.css">
             <effect>
                 <Blend />
             </effect>
@@ -59,3 +62,4 @@
         </Text>
     </children>
 </AnchorPane>
+</StackPane>

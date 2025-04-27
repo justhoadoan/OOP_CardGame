@@ -12,10 +12,10 @@ public class Deck {
     public Deck(CardSkin skin) {
         this.skin = skin;
         cards = new ArrayList<>();
-        reset();
+        createNewDeck();
     }
 
-    public void reset() {
+    public void createNewDeck() {
         cards.clear();
         String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
         String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
