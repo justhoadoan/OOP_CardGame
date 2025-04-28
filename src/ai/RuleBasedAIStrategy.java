@@ -11,7 +11,7 @@ public class RuleBasedAIStrategy implements AIStrategy  {
         try {
             // Safety checks for null or empty collections
             List<Card> playerHand = state.getPlayerHand();
-            List<Card> communityCards = state.getCommunityCards();
+            List<Card> communityCards = ((PokerState) state).getCommunityCards();
             if (playerHand == null) playerHand = new ArrayList<>();
             if (communityCards == null) communityCards = new ArrayList<>();
 

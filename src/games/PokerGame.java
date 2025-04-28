@@ -304,6 +304,7 @@ public class PokerGame implements Game {
                 ((AI) player).addCurrentBalance(-raiseAmount);
             }
         }
+        broadcastState();
     }
 
     @Override
@@ -364,22 +365,14 @@ public class PokerGame implements Game {
             }
         }
         
-        // Chỉ cập nhật hiển thị khi:
-        // 1. Lượt của người chơi thật (không phải AI)
-        // 2. Đã kết thúc game (để hiển thị người thắng)
+
         if (gameMode != null) {
-            // Chỉ hiển thị bài của người chơi thật (là Player, không phải AI)
             boolean isHumanPlayer = currentPlayer instanceof Player;
             List<Card> playerHand = null;
-            
-            // Chỉ lấy bài nếu là người chơi thật
+
             if (isHumanPlayer) {
                 playerHand = getPlayerHand(((Player) currentPlayer).getId());
             }
-            
-            // Chỉ gọi updateDisplay trong 2 trường hợp:
-            // 1. Khi là lượt của người chơi thật (playerHand != null)
-            // 2. Khi game đã kết thúc (để hiển thị người thắng)
             if (isHumanPlayer || isGameOver()) {
                 gameMode.updateDisplay(playerHand, getPublicState(), isGameOver() ? getWinner() : null);
             }

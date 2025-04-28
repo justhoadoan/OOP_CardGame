@@ -8,7 +8,7 @@ import java.util.List;
 public interface GameState {
     Player getplayer();
     List<Card> getPlayerHand();
-    List<Card> getCommunityCards();
+
     int getPot();
     int getCurrentBet();
 }
