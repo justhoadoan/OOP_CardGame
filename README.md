@@ -17,8 +17,10 @@ Simple console interface, easily extendable for new card game rules.
 🛠️ Technologies Used
 
 Java 8 or higher
+
 Java Collections Framework (ArrayList, List, etc.)
 
 JavaFx
 
 Basic OOP architecture
+
