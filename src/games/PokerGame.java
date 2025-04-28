@@ -5,7 +5,6 @@ import ai.PokerHandEvaluator.HandRank;
 import card.Card;
 import card.CardSkin;
 import deck.Deck;
-import gameaction.GameAction;
 import gamemode.GameMode;
 import playable.*;
 import server.Client;
@@ -84,7 +83,7 @@ public class PokerGame implements Game {
         broadcastState();
     }
     private void initializeGame() {
-        deck.reset();
+        deck.createNewDeck();
         pot = 0;
         currentBet = 0;
         communityCards.clear();

@@ -9,11 +9,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.layout.StackPane?>
-<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PokerAIOffline" alignment="TOP_LEFT">
+<StackPane fx:id="rootPane" alignment="TOP_LEFT" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PokerAIOffline">
     <AnchorPane fx:id="offlineMenuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@menu.css">
         <children>
             <ImageView fitHeight="406.0" fitWidth="609.0" layoutX="-6.0" layoutY="-3.0" pickOnBounds="true">
@@ -31,8 +30,8 @@
                             <Region style="-fx-border-radius: 5px; -fx-background-radius: 5px; -fx-border-color: #D48E62; -fx-border-width: 2px;" />
                         </root>
                     </SubScene>
-                    <Button styleClass="menu-button" fx:id="backOnlineMenu" layoutX="39.0" layoutY="176.0" onAction="#backToMainMenu" text="Back"/>
-                    <Button styleClass="menu-button" fx:id="startOnlineMenu" layoutX="202.0" layoutY="175.0" onAction="#startGame" text="Start"/>
+                    <Button fx:id="backOnlineMenu" layoutX="39.0" layoutY="176.0" onAction="#backToMainMenu" styleClass="menu-button" text="Back" />
+                    <Button fx:id="startOnlineMenu" layoutX="202.0" layoutY="175.0" onAction="#startGame" styleClass="menu-button" text="Start" />
                     <Text layoutX="140.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-common" text="AI Algorithm" />
                     <ChoiceBox fx:id="typeChoiceBox" layoutX="113.0" layoutY="96.0" prefWidth="150.0" />
                 </children>
@@ -42,7 +41,7 @@
                     <Image url="@MenuFrame.png" />
                 </image>
             </ImageView>
-            <Text layoutX="194.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MENU GAME" wrappingWidth="230.38348388671875" styleClass="text-menu"/>
+            <Text layoutX="180.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-menu" text="MENU GAME" wrappingWidth="243.0501708984375" />
         </children>
 </AnchorPane>
 </StackPane>

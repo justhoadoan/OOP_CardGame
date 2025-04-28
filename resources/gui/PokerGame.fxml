@@ -13,25 +13,25 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PokerGameGui" alignment="TOP_LEFT">
+<StackPane fx:id="rootPane" alignment="TOP_LEFT" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PokerGameGui">
     <AnchorPane fx:id="gamePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@menu.css">
     <children>
-        <ImageView fitHeight="400.0" fitWidth="600.0" layoutX="-6.0" layoutY="-3.0" pickOnBounds="true">
+        <ImageView fitHeight="408.0" fitWidth="608.0" layoutX="-6.0" layoutY="-3.0" pickOnBounds="true">
             <image>
                 <Image url="@Background.jpg" />
             </image>
         </ImageView>
-      <ImageView fitHeight="129.0" fitWidth="200.0" layoutX="190.0" layoutY="18.0">
+      <ImageView fitHeight="129.0" fitWidth="200.0" layoutX="201.0" layoutY="4.0">
          <image>
             <Image url="@show_emma.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="326.0" fitWidth="453.0" layoutX="63.0" layoutY="46.0">
+      <ImageView fitHeight="326.0" fitWidth="453.0" layoutX="74.0" layoutY="32.0">
          <image>
             <Image url="@Table.png" />
          </image>
       </ImageView>
-      <HBox layoutX="160.0" layoutY="186.0" prefHeight="89.0" prefWidth="246.0">
+      <HBox layoutX="171.0" layoutY="172.0" prefHeight="89.0" prefWidth="246.0">
          <children>
             <ImageView fx:id="communityCard1" pickOnBounds="true" styleClass="cards">
                <image>
@@ -60,23 +60,28 @@
             </ImageView>
          </children>
       </HBox>
-      <Pane layoutX="159.0" layoutY="320.0" prefHeight="62.0" prefWidth="198.0" style="-fx-background-color: linear-gradient(to right, #966F35, #302311); -fx-border-radius: 10px; -fx-background-radius: 10px;">
+      <Pane layoutX="188.0" layoutY="311.0" prefHeight="70.0" prefWidth="176.0" style="-fx-background-color: linear-gradient(to right, #966F35, #302311); -fx-border-radius: 10px; -fx-background-radius: 10px;">
          <children>
-            <TextField fx:id="raiseField" layoutX="31.0" layoutY="7.0" prefHeight="27.0" prefWidth="93.0" />
-            <Slider fx:id="raiseSlider" layoutX="13.0" layoutY="41.0" />
-            <Button fx:id="raiseButton" layoutX="133.0" layoutY="6.0" prefHeight="28.0" prefWidth="61.0" styleClass="play-button" text="Raise">
-               <font>
-                  <Font name="Arial Rounded MT Bold" size="15.0" />
-               </font>
-            </Button>
+            <TextField fx:id="raiseField" layoutX="21.0" layoutY="21.0" prefHeight="28.0" prefWidth="132.0" />
+            <Slider fx:id="raiseSlider" layoutX="9.0" layoutY="52.0" prefHeight="14.0" prefWidth="153.0" />
+               <Text fill="WHITE" layoutX="11.0" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Money to raise" textAlignment="CENTER" wrappingWidth="149.1366729736328">
+                  <font>
+                     <Font name="Bookman Old Style Bold Italic" size="14.0" />
+                  </font>
+               </Text>
          </children>
       </Pane>
-      <Button fx:id="foldButton" layoutX="360.0" layoutY="353.0" prefHeight="27.0" prefWidth="61.0" styleClass="play-button" text="Fold">
+      <Button fx:id="raiseButton" layoutX="375.0" layoutY="335.0" prefHeight="5.0" prefWidth="47.0" styleClass="play-button" text="Raise">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="foldButton" layoutX="375.0" layoutY="311.0" prefHeight="19.0" prefWidth="47.0" styleClass="play-button" text="Fold">
           <font>
               <Font name="Arial Rounded MT Bold" size="15.0" />
           </font>
       </Button>
-      <Button fx:id="callButton" layoutX="360.0" layoutY="320.0" prefHeight="28.0" prefWidth="61.0" styleClass="play-button" text="Call">
+      <Button fx:id="callButton" layoutX="376.0" layoutY="359.0" prefHeight="13.0" prefWidth="46.0" styleClass="play-button" text="Call">
           <font>
               <Font name="Arial Rounded MT Bold" size="15.0" />
           </font>
@@ -109,7 +114,7 @@
             </Label>
          </children>
       </Pane>
-      <StackPane layoutX="202.0" layoutY="139.0" prefHeight="41.0" prefWidth="170.0">
+      <StackPane layoutX="213.0" layoutY="125.0" prefHeight="41.0" prefWidth="170.0">
          <children>
               <ImageView fitHeight="41.0" fitWidth="169.0" pickOnBounds="true">
                   <image>
