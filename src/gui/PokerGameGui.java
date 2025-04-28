@@ -14,6 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import playable.AI;
 import playable.Playable;
 import playable.Player;
@@ -252,4 +253,17 @@ public class PokerGameGui {
     public AnchorPane getGamePane() {
         return gamePane;
     }
+
+    public void continueGame() {
+        Stage stage = (Stage) rootPane.getScene().getWindow();
+        boolean continueGame = DialogHelper.askToContinue(stage);
+        if (continueGame) {
+            // Reset game state
+            initialize();
+        } else {
+            // maybe close the application or go back to main menu
+            stage.close();
+        }
+    }
+
 }

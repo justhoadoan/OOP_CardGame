@@ -14,13 +14,12 @@
 <?import javafx.scene.text.Text?>
 
 <StackPane fx:id="rootPane" alignment="TOP_LEFT" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PokerGameGui">
-    <AnchorPane fx:id="gamePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@menu.css">
+    <AnchorPane fx:id="gamePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: transparent;" stylesheets="@menu.css">
     <children>
-        <ImageView fitHeight="408.0" fitWidth="608.0" layoutX="-6.0" layoutY="-3.0" pickOnBounds="true">
+        <ImageView fitHeight="407.0" fitWidth="607.0" layoutX="-6.0" layoutY="-3.0" pickOnBounds="true" style="-fx-background-color: transparent;">
             <image>
-                <Image url="@Background.jpg" />
-            </image>
-        </ImageView>
+               <Image url="@Background.jpg" />
+            </image></ImageView>
       <ImageView fitHeight="129.0" fitWidth="200.0" layoutX="201.0" layoutY="4.0">
          <image>
             <Image url="@show_emma.png" />
@@ -60,30 +59,30 @@
             </ImageView>
          </children>
       </HBox>
-      <Pane layoutX="188.0" layoutY="311.0" prefHeight="70.0" prefWidth="176.0" style="-fx-background-color: linear-gradient(to right, #966F35, #302311); -fx-border-radius: 10px; -fx-background-radius: 10px;">
+      <Pane layoutX="188.0" layoutY="311.0" prefHeight="70.0" prefWidth="176.0" style="-fx-background-color: linear-gradient(to right, #966F35, #302311); -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-border-color: white;-fx-border-width: 1px; -fx-background-insets: 0.5px;">
          <children>
             <TextField fx:id="raiseField" layoutX="21.0" layoutY="21.0" prefHeight="28.0" prefWidth="132.0" />
             <Slider fx:id="raiseSlider" layoutX="9.0" layoutY="52.0" prefHeight="14.0" prefWidth="153.0" />
                <Text fill="WHITE" layoutX="11.0" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Money to raise" textAlignment="CENTER" wrappingWidth="149.1366729736328">
                   <font>
-                     <Font name="Bookman Old Style Bold Italic" size="14.0" />
+                     <Font name="Asul" size="14.0" />
                   </font>
                </Text>
          </children>
       </Pane>
-      <Button fx:id="raiseButton" layoutX="375.0" layoutY="335.0" prefHeight="5.0" prefWidth="47.0" styleClass="play-button" text="Raise">
+      <Button fx:id="raiseButton" layoutX="375.0" layoutY="335.0" prefHeight="5.0" prefWidth="47.0" style="-fx-font-family: 'Asul';" styleClass="play-button" text="Raise">
          <font>
-            <Font name="Arial Rounded MT Bold" size="15.0" />
+            <Font name="Asul" size="12.0" />
          </font>
       </Button>
-      <Button fx:id="foldButton" layoutX="375.0" layoutY="311.0" prefHeight="19.0" prefWidth="47.0" styleClass="play-button" text="Fold">
+      <Button fx:id="foldButton" layoutX="375.0" layoutY="311.0" prefHeight="19.0" prefWidth="47.0" style="-fx-font-family: 'Asul';" styleClass="play-button" text="Fold">
           <font>
-              <Font name="Arial Rounded MT Bold" size="15.0" />
+              <Font name="Asul" size="12.0" />
           </font>
       </Button>
-      <Button fx:id="callButton" layoutX="376.0" layoutY="359.0" prefHeight="13.0" prefWidth="46.0" styleClass="play-button" text="Call">
+      <Button fx:id="callButton" layoutX="376.0" layoutY="359.0" prefHeight="13.0" prefWidth="46.0" style="-fx-font-family: 'Asul';" styleClass="play-button" text="Call">
           <font>
-              <Font name="Arial Rounded MT Bold" size="15.0" />
+              <Font name="Asul" size="12.0" />
           </font>
       </Button>
       <Pane fx:id="player1CardArea" layoutX="469.0" layoutY="267.0" prefHeight="117.0" prefWidth="100.0">
@@ -107,11 +106,7 @@
                <font>
                   <Font size="10.0" />
                </font></Label>
-            <Label fx:id="player1Money" alignment="CENTER" layoutX="-3.0" layoutY="69.0" prefHeight="35.0" prefWidth="98.0" style="-fx-text-fill: #F4E0B7;" text="\$36000">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
+             <Label fx:id="player1Money" alignment="CENTER" layoutX="3.0" layoutY="69.0" prefHeight="35.0" prefWidth="95.0" style="-fx-font-size: 16;" styleClass="text-money" text="\$36000" />
          </children>
       </Pane>
       <StackPane layoutX="213.0" layoutY="125.0" prefHeight="41.0" prefWidth="170.0">
@@ -121,7 +116,7 @@
                       <Image url="@MenuFrame.png" />
                   </image>
               </ImageView>
-             <Text fx:id="potMoney" styleClass="text-menu" text="\$500000" textAlignment="CENTER" wrappingWidth="124.0" />
+             <Text fx:id="potMoney" style="-fx-font-size: 22; -fx-font-family: 'KoPub Batang'; -fx-fill: #f4e0b7;" text="\$500000" textAlignment="CENTER" wrappingWidth="124.0" />
          </children>
       </StackPane>
       <Pane fx:id="player2CardArea" layoutX="23.0" layoutY="25.0" prefHeight="117.0" prefWidth="100.0">
@@ -146,11 +141,7 @@
                   <Font size="10.0" />
                </font>
             </Label>
-            <Label fx:id="player2Money" alignment="CENTER" layoutX="-3.0" layoutY="54.0" prefHeight="35.0" prefWidth="106.0" style="-fx-text-fill: #F4E0B7;" text="\$36000">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
+             <Label fx:id="player2Money" alignment="CENTER" layoutX="4.0" layoutY="54.0" prefHeight="35.0" prefWidth="95.0" style="-fx-font-size: 16;" styleClass="text-money" text="\$36000" />
          </children>
       </Pane>
       <Pane fx:id="player3CardArea" layoutX="470.0" layoutY="28.0" prefHeight="117.0" prefWidth="100.0">
@@ -175,11 +166,7 @@
                   <Font size="10.0" />
                </font>
             </Label>
-            <Label fx:id="player3Money" alignment="CENTER" layoutX="-3.0" layoutY="54.0" prefHeight="35.0" prefWidth="106.0" style="-fx-text-fill: #F4E0B7;" text="\$36000">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
+             <Label fx:id="player3Money" alignment="CENTER" layoutX="4.0" layoutY="54.0" prefHeight="35.0" prefWidth="95.0" style="-fx-font-size: 16;" styleClass="text-money" text="\$36000" />
          </children>
       </Pane>
       <Pane fx:id="player4CardArea" layoutX="20.0" layoutY="259.0" prefHeight="117.0" prefWidth="100.0">
@@ -204,11 +191,7 @@
                   <Font size="10.0" />
                </font>
             </Label>
-            <Label fx:id="player4Money" alignment="CENTER" layoutX="-1.0" layoutY="69.0" prefHeight="35.0" prefWidth="98.0" style="-fx-text-fill: #F4E0B7;" text="\$36000">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
+             <Label fx:id="player4Money" alignment="CENTER" layoutX="3.0" layoutY="69.0" prefHeight="35.0" prefWidth="95.0" style="-fx-font-size: 16;" styleClass="text-money" text="\$36000" />
          </children>
       </Pane>
     </children>
