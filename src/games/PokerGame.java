@@ -5,7 +5,6 @@ import ai.PokerHandEvaluator.HandRank;
 import card.Card;
 import card.CardSkin;
 import deck.Deck;
-import gameaction.GameAction;
 import gamemode.GameMode;
 import playable.*;
 import server.Client;
@@ -53,20 +52,15 @@ public class PokerGame implements Game {
     public void start() {
         initializeGame();
         dealInitialCards();
+        dealCommunityCards(3);  // Deal flop immediately at game start
+        broadcastState();
     }
     public void progressGame() {
         if (isGameOver()) {
-            determineWinner();
             return;
         }
 
-        // Deal community cards
-        if (communityCards.isEmpty()) {
-            // Flop
-
-            dealCommunityCards(3);
-            allPlayerBet();
-        } else if (communityCards.size() == 3) {
+        else if (communityCards.size() == 3) {
             // Turn
             dealCommunityCards(1);
             allPlayerBet();
@@ -78,9 +72,6 @@ public class PokerGame implements Game {
             determineWinner();
             return;
         }
-
-        // After dealing cards, let players bet
-
         broadcastState();
     }
     private void initializeGame() {
@@ -131,7 +122,6 @@ public class PokerGame implements Game {
     private void determineWinner() {
         Playable winner = null;
         HandRank bestRank = null;
-
         for (Playable player : players) {
             if (player.getStatus()) {
                 HandRank currentRank = PokerHandEvaluator.evaluateHand(player.getHand());
@@ -141,12 +131,11 @@ public class PokerGame implements Game {
                 }
             }
         }
-
         if (winner != null) {
             if (winner instanceof Player) {
                 distributePot((Player) winner);
             } else if (winner instanceof AI) {
-                ((AI) winner).addCurrentBalance(pot);
+               distributePot(distributePot((AI) winner));
             }
         }
     }
@@ -183,14 +172,12 @@ public class PokerGame implements Game {
                 .collect(Collectors.toList());
 
         if (activePlayers.isEmpty()) return;
-
         boolean bettingComplete = false;
         while (!bettingComplete) {
             bettingComplete = true;
 
             for (Playable player : activePlayers) {
                 if (!player.getStatus()) continue;
-
                 currentPlayer = player;
 
                 if (player instanceof AI) {
@@ -394,7 +381,9 @@ public class PokerGame implements Game {
 
     public GameType getGameType() {return GameType.POKER; }
 
-    void distributePot(Player winner) {winner.addCurrentBalance(pot);}
+    Playable distributePot(Playable winner) {winner.addCurrentBalance(pot);
+        return winner;
+    }
 
     void placeBet(Playable player, int amount) {
         this.pot += amount;
