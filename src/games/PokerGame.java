@@ -135,7 +135,7 @@ public class PokerGame implements Game {
             if (winner instanceof Player) {
                 distributePot((Player) winner);
             } else if (winner instanceof AI) {
-               distributePot(distributePot((AI) winner));
+                distributePot(distributePot((AI) winner));
             }
         }
     }
@@ -152,7 +152,7 @@ public class PokerGame implements Game {
                         System.out.println("No more cards to draw");
                         return;
                     }
-                    
+
                     if (player instanceof Player) {
                         ((Player) player).addCard(card);
                     } else if (player instanceof AI) {
@@ -274,7 +274,7 @@ public class PokerGame implements Game {
     @Override
     public void playerRaise(Playable player, int raiseAmount) {
         int currentBalance = 0;
-        
+
         if (player instanceof Player) {
             Player p = (Player) player;
             currentBalance = p.getCurrentBalance();
@@ -282,10 +282,10 @@ public class PokerGame implements Game {
             AI ai = (AI) player;
             currentBalance = ai.getCurrentBalance();
         }
-        
+
         if (currentBalance >= raiseAmount) {
             placeBet(player, raiseAmount);
-            
+
             if (player instanceof Player) {
                 ((Player) player).addCurrentBalance(-raiseAmount);
             } else if (player instanceof AI) {
@@ -307,9 +307,9 @@ public class PokerGame implements Game {
     @Override
     public String handlePlayerTurn() {
 
-            // Delegate input handling to PokerActionProcessor
-            PokerActionProcessor processor = new PokerActionProcessor();
-            return processor.getPlayerAction();
+        // Delegate input handling to PokerActionProcessor
+        PokerActionProcessor processor = new PokerActionProcessor();
+        return processor.getPlayerAction();
 
     }
     public void addAIPlayer(String name, String strategyType) {
@@ -346,13 +346,13 @@ public class PokerGame implements Game {
                         networkManager.sendMessageToClient
                                 (clientId, "HAND:" +
                                         playerHand.stream()
-                                            .map(card -> card.getRank() + " of " + card.getSuit())
-                                .collect(Collectors.joining(", ")));
+                                                .map(card -> card.getRank() + " of " + card.getSuit())
+                                                .collect(Collectors.joining(", ")));
                     }
                 }
             }
         }
-        
+
 
         if (gameMode != null) {
             boolean isHumanPlayer = currentPlayer instanceof Player;
