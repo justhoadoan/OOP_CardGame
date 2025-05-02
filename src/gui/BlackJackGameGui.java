@@ -128,7 +128,9 @@ public class BlackJackGameGui {
         if (game == null) return;
 
         // Get the current player's hand
-        List<Card> hand = game.getCurrentPlayer().getHand();
+        List<Card> hand;
+        if(game.getCurrentPlayer() == game.getDealer()) hand = game.getPlayerBeforeDealer().getHand();
+        else hand = game.getCurrentPlayer().getHand();
 
         // Update the player's card images
         ImageView[] playerCards = {playerCard1, playerCard2, playerCard3, playerCard4, playerCard5};
@@ -149,7 +151,10 @@ public class BlackJackGameGui {
         if (game == null) return;
 
         // Get the current player's hand
-        List<Card> hand = game.getCurrentPlayer().getHand();
+        List<Card> hand;
+        if(game.getCurrentPlayer() == game.getDealer()) hand = game.getPlayerBeforeDealer().getHand();
+        else hand = game.getCurrentPlayer().getHand();
+
 
         // Calculate the player's score
         int playerScore = game.calculateScore(hand);

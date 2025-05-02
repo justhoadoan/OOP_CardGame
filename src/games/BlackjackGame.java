@@ -19,6 +19,7 @@ public class BlackjackGame implements Game {
     private int pot;
     private boolean dealerTurn;
     private Playable dealer;
+    private Playable playerBeforeDealer;
 
     public BlackjackGame(GameMode gameMode, NetworkManager networkManager, CardSkin skin) {
         this.gameMode = gameMode;
@@ -48,9 +49,13 @@ public class BlackjackGame implements Game {
         // First deal
         for (int i = 0; i < 2; i++) {
             for (Playable player : players) {
-                player.addCard(deck.drawCard());
+                if (player != dealer) {
+                    player.addCard(deck.drawCard());
+                }
             }
         }
+        dealer.addCard(deck.drawCard());
+        dealer.addCard(deck.drawCard());
 
         // Set the current player to the first player (excluding the dealer)
         for (Playable player : players) {
@@ -72,11 +77,25 @@ public class BlackjackGame implements Game {
     public List<Playable> getPlayers() {return players;}
 
     @Override
+    public void nextPlayer() {
+        currentPlayer = getNextPlayer();
+        if (currentPlayer == null || currentPlayer == dealer) {
+            currentPlayer = dealer;
+            playDealerTurn();
+        }
+    }
+
+    @Override
     public Playable getCurrentPlayer() {
         if (currentPlayer == null) {
             throw new IllegalStateException("Current player is not set.");
         }
         return currentPlayer;
+    }
+
+    @Override
+    public Playable getPlayerBeforeDealer() {
+        return playerBeforeDealer;
     }
 
     @Override
@@ -95,7 +114,9 @@ public class BlackjackGame implements Game {
 
 //    @Override
     public boolean isGameOver() {
-        return dealerTurn && calculateScore(dealer.getHand()) >= 17;
+        return (dealerTurn && calculateScore(dealer.getHand()) >= 17)
+                || players.stream().allMatch(player -> player.getHand().size() >= 5)
+                || players.stream().allMatch(player -> calculateScore(player.getHand()) > 21);
     }
 
 //    @Override
@@ -110,22 +131,31 @@ public class BlackjackGame implements Game {
 
             if (!isBust && (dealerScore > 21 || playerScore > dealerScore)) {
                 distributePot(player);
-                winners.append(player.getName()).append(", ");
+                winners.append(player.getName()).append(" ");
+            }
+            if(!isBust && playerScore == dealerScore) {
+                return "Draw!";
             }
         }
-        return winners.length() > 0 ? winners.toString() : "Dealer wins!";
+        return !winners.isEmpty() ? winners.toString() : "Dealer wins!";
     }
 
     @Override
     public void playerHit(Playable player) {
-        if (!dealerTurn && player.getHand().size() < 5) {
+        if (!dealerTurn && player.getHand().size() <= 5) {
             Card drawnCard = deck.drawCard();
             ((Player) player).addCard(drawnCard);
             System.out.println("Player " + player.getName() + " drew: " + drawnCard);
             System.out.println("Player's hand: " + player.getHand());
             System.out.println("Deck size: " + deck.getRemainingCards());
             if (calculateScore(player.getHand()) > 21) {
+                System.out.println("Player " + player.getName() + " is bust!");
                 currentPlayer = getNextPlayer(); // player bust
+                if (currentPlayer == null || currentPlayer == dealer) {
+                    playerBeforeDealer = player;
+                    currentPlayer = dealer;
+                    playDealerTurn();
+                }
             }
         }
     }
@@ -133,9 +163,19 @@ public class BlackjackGame implements Game {
     @Override
     public void playerStand(Playable player) {
         currentPlayer = getNextPlayer();
-        if (currentPlayer == null) {
+        if (currentPlayer == null || currentPlayer == dealer) {
+            currentPlayer = dealer;
             playDealerTurn();
         }
+    }
+
+    private Playable getNextPlayer() {
+        int currentIndex = players.indexOf(currentPlayer);
+        if (currentIndex == -1) return players.get(0); // Start with the first player
+        int nextIndex = currentIndex + 1;
+
+        if (nextIndex >= players.size() - 1) {return null;}
+        return players.get(nextIndex);
     }
 
     public int calculateScore(List<Card> hand) {
@@ -160,10 +200,23 @@ public class BlackjackGame implements Game {
     }
 
     private void playDealerTurn() {
+        if(areAllPlayersBust()) {
+            System.out.println("All players are bust. Dealer wins!");
+            return;
+        }
         dealerTurn = true;
         while (calculateScore(dealer.getHand()) < 17) {
             dealer.addCard(deck.drawCard());
         }
+    }
+
+    private boolean areAllPlayersBust() {
+        for (Playable player : players) {
+            if (player != dealer && calculateScore(player.getHand()) <= 21) {
+                return false; // At least one player is not bust
+            }
+        }
+        return true; // All players are bust
     }
 
     public void placeInitialBet(Playable player, int amount) {
@@ -183,13 +236,6 @@ public class BlackjackGame implements Game {
     public void resetBets() {
         playerBets.clear();
         pot = 0;
-    }
-
-    private Playable getNextPlayer() {
-        int currentIndex = players.indexOf(currentPlayer);
-        if (currentIndex == -1) return players.get(0);
-        int nextIndex = (currentIndex + 1) % players.size();
-        return nextIndex == 0 ? null : players.get(nextIndex); // Kết thúc khi đến dealer
     }
 
     @Override

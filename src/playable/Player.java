@@ -40,7 +40,13 @@ public class Player implements Playable {
 
     public void setGameMode(GameMode gameMode) {this.gameMode = gameMode;}
 
-    public void addCard(Card card) {hand.add(card);}
+    @Override
+    public void addCard(Card card) {
+        if (this.hand == null) {
+            this.hand = new ArrayList<>();
+        }
+        this.hand.add(card);
+    }
 
     public void removeCard(Card card) {hand.remove(card);}
 
@@ -58,7 +64,7 @@ public class Player implements Playable {
         // Not applicable for Player class
     }
 
-    public void resetHand() {hand.clear();}
+    public void resetHand() {this.hand = new ArrayList<>();}
 
     public int getCurrentBalance() {return currentBalance;}
 
