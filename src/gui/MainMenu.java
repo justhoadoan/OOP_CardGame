@@ -1,5 +1,6 @@
 package gui;
 
+import games.BlackjackGame;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -76,28 +77,25 @@ public class MainMenu {
         try {
             FXMLLoader loader;
 
-            if (typeChoiceBox.getValue().equals("Online")) {
+            if (typeChoiceBox.getValue() != null && typeChoiceBox.getValue().equals("Online")) {
                 loader = new FXMLLoader(getClass().getResource("OnlineMenu.fxml"));
                 Scene scene = new Scene(loader.load());
 
-                // Get controller and reset state
                 OnlineMenu controller = loader.getController();
-                controller.resetState(); // You define this in the controller
+                controller.resetState();
 
                 stage.setScene(scene);
                 stage.show();
-            }
-//            else if (gameChoiceBox.getValue().equals("BlackJack")) {
-//                loader = new FXMLLoader(getClass().getResource("BlackJackOffline.fxml"));
-//                Scene scene = new Scene(loader.load());
-//
-//                BlackJackOffline controller = loader.getController();
-//                controller.resetState();
-//
-//                stage.setScene(scene);
-//                stage.show();
-//            }
-            else {
+            } else if (gameChoiceBox.getValue() != null && gameChoiceBox.getValue().equals("BlackJack")) {
+                loader = new FXMLLoader(getClass().getResource("BlackJackBet.fxml"));
+                Scene scene = new Scene(loader.load());
+
+                BlackJackBetGui controller = loader.getController();
+                controller.initialize(); // Ensure this method is implemented in BlackJackBetGui
+
+                stage.setScene(scene);
+                stage.show();
+            } else {
                 loader = new FXMLLoader(getClass().getResource("PokerAIOffline.fxml"));
                 Scene scene = new Scene(loader.load());
 

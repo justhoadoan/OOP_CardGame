@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BlackJackBetGui">
    <children>
       <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -51,7 +51,7 @@
                         <Image url="@name.png" />
                      </image>
                   </ImageView>
-                  <Text fill="WHITE" layoutX="43.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="62.67010498046875">
+                  <Text fill="WHITE" layoutX="43.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Player" textAlignment="CENTER" wrappingWidth="62.67010498046875">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -67,11 +67,11 @@
                      <effect>
                         <DropShadow />
                      </effect></Text>
-                  <Slider layoutX="24.0" layoutY="79.0" prefHeight="14.0" prefWidth="234.0" />
-                  <TextField layoutX="28.0" layoutY="46.0" prefHeight="25.0" prefWidth="85.0" />
+                  <Slider fx:id="betSlider" layoutX="24.0" layoutY="79.0" prefHeight="14.0" prefWidth="234.0" />
+                  <TextField fx:id="betTextField" layoutX="28.0" layoutY="46.0" prefHeight="25.0" prefWidth="85.0" />
                </children>
             </Pane>
-            <Button layoutX="220.0" layoutY="275.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 50%, #a8e063, #3ca55c),    linear-gradient(from 0% 100% to 0% 50%, #56ab2f, #3ca55c);;" text="Deal" textFill="WHITE">
+            <Button fx:id="dealButton" layoutX="220.0" layoutY="275.0" mnemonicParsing="false" onAction="#handleDeal" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 50%, #a8e063, #3ca55c), linear-gradient(from 0% 100% to 0% 50%, #56ab2f, #3ca55c);" text="Deal" textFill="WHITE">
                <font>
                   <Font name="CharlemagneStd-Bold" size="15.0" />
                </font>

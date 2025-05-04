@@ -12,7 +12,8 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.control.Label?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BlackJackGameGui">
    <children>
       <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -38,7 +39,7 @@
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <Text fill="#f4e0b7" layoutX="58.0" layoutY="35.0" stroke="#7b4d15" strokeType="OUTSIDE" text="18" textAlignment="CENTER" wrappingWidth="35.199981689453125">
+                  <Text fx:id="dealerScoreText" fill="#f4e0b7" layoutX="58.0" layoutY="35.0" stroke="#7b4d15" strokeType="OUTSIDE" text="18" textAlignment="CENTER" wrappingWidth="35.199981689453125">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
@@ -46,6 +47,7 @@
                         <DropShadow />
                      </effect>
                   </Text>
+                  <Label fx:id="winnerLabel" text="Winner: " layoutX="50" layoutY="400"></Label>
                </children>
             </Pane>
             <Pane layoutX="317.0" layoutY="193.0" prefHeight="100.0" prefWidth="150.0">
@@ -60,12 +62,12 @@
                         <Image url="@name.png" />
                      </image>
                   </ImageView>
-                  <Text fill="WHITE" layoutX="43.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="62.67010498046875">
+                  <Text fill="WHITE" layoutX="43.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Player" textAlignment="CENTER" wrappingWidth="62.67010498046875">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <Text fill="#f4e0b7" layoutX="54.0" layoutY="63.0" stroke="#7b4d15" strokeType="OUTSIDE" text="21" textAlignment="CENTER" wrappingWidth="35.199981689453125">
+                  <Text fx:id="playerScoreText" fill="#f4e0b7" layoutX="54.0" layoutY="63.0" stroke="#7b4d15" strokeType="OUTSIDE" text="21" textAlignment="CENTER" wrappingWidth="35.199981689453125">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
@@ -77,7 +79,7 @@
             </Pane>
             <HBox alignment="CENTER" layoutX="290.0" layoutY="279.0" prefHeight="60.0" prefWidth="200.0" spacing="20.0">
                <children>
-                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 50%, #a8e063, #3ca55c),    linear-gradient(from 0% 100% to 0% 50%, #56ab2f, #3ca55c);;" text="Stand" textFill="WHITE">
+                  <Button fx:id="standButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 50%, #a8e063, #3ca55c),    linear-gradient(from 0% 100% to 0% 50%, #56ab2f, #3ca55c);;" text="Stand" textFill="WHITE">
                      <font>
                         <Font name="CharlemagneStd-Bold" size="13.0" />
                      </font>
@@ -85,7 +87,7 @@
                         <DropShadow blurType="ONE_PASS_BOX" height="15.0" offsetY="2.0" radius="3.25" spread="0.46" width="0.0" />
                      </effect>
                   </Button>
-                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 50%, #a8e063, #3ca55c),    linear-gradient(from 0% 100% to 0% 50%, #56ab2f, #3ca55c);;" text="Hit" textFill="WHITE">
+                  <Button fx:id="hitButton" onAction="#handleHit" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: linear-gradient(from 0% 0% to 0% 50%, #a8e063, #3ca55c),    linear-gradient(from 0% 100% to 0% 50%, #56ab2f, #3ca55c);;" text="Hit" textFill="WHITE">
                      <font>
                         <Font name="CharlemagneStd-Bold" size="15.0" />
                      </font>
@@ -97,7 +99,7 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" layoutX="191.0" layoutY="24.0" prefHeight="90.0" prefWidth="316.0" spacing="10.0">
                <children>
-                  <ImageView fitHeight="75.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="dealerCard1" fitHeight="75.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../cards/animated/JackHearts.png" />
                      </image>
@@ -108,7 +110,7 @@
                         <DropShadow />
                      </effect>
                   </ImageView>
-                  <ImageView fitHeight="75.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="dealerCard2" fitHeight="75.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../cards/animated/Opponent.png" />
                      </image>
@@ -116,7 +118,7 @@
                         <DropShadow />
                      </effect>
                   </ImageView>
-                  <ImageView fitHeight="75.0" fitWidth="55.0" layoutX="72.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="dealerCard3" fitHeight="75.0" fitWidth="55.0" layoutX="72.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../cards/realistic/Opponent.png" />
                      </image>
@@ -124,7 +126,7 @@
                         <DropShadow />
                      </effect>
                   </ImageView>
-                  <ImageView fitHeight="75.0" fitWidth="55.0" layoutX="136.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="dealerCard4" fitHeight="75.0" fitWidth="55.0" layoutX="136.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../cards/basic/Opponent.png" />
                      </image>
@@ -132,7 +134,7 @@
                         <DropShadow />
                      </effect>
                   </ImageView>
-                  <ImageView fitHeight="75.0" fitWidth="55.0" layoutX="196.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="dealerCard5" fitHeight="75.0" fitWidth="55.0" layoutX="196.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../cards/traditional/Opponent.png" />
                      </image>
@@ -152,7 +154,7 @@
                         <Image url="@MenuFrame.png" />
                      </image>
                   </ImageView>
-                  <Text fill="#f4e0b7" layoutX="60.0" layoutY="35.0" stroke="#7b4d15" strokeType="OUTSIDE" text="\$100" textAlignment="CENTER" wrappingWidth="80.0">
+                  <Text fx:id="betValueText" fill="#f4e0b7" layoutX="60.0" layoutY="35.0" stroke="#7b4d15" strokeType="OUTSIDE" text="\$100" textAlignment="CENTER" wrappingWidth="80.0">
                      <font>
                         <Font name="System Bold" size="30.0" />
                      </font>
@@ -164,7 +166,7 @@
             </Pane>
             <StackPane layoutX="19.0" layoutY="184.0" prefHeight="158.0" prefWidth="253.0">
                <children>
-                  <ImageView fitHeight="75.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="playerCard1" fitHeight="75.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../cards/realistic/9Clubs.png" />
                      </image>
@@ -175,7 +177,7 @@
                         <Insets right="140.0" top="70.0" />
                      </StackPane.margin>
                   </ImageView>
-                  <ImageView fitHeight="75.0" fitWidth="55.0" layoutX="182.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="playerCard2" fitHeight="75.0" fitWidth="55.0" layoutX="182.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../cards/animated/KingSpades.png" />
                      </image>
@@ -186,7 +188,7 @@
                         <Insets right="70.0" top="35.0" />
                      </StackPane.margin>
                   </ImageView>
-                  <ImageView fitHeight="75.0" fitWidth="55.0" layoutX="147.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="playerCard3" fitHeight="75.0" fitWidth="55.0" layoutX="147.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../cards/basic/2Diamonds.png" />
                      </image>
@@ -197,7 +199,7 @@
                         <Insets />
                      </StackPane.margin>
                   </ImageView>
-                  <ImageView fitHeight="75.0" fitWidth="55.0" layoutX="112.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="playerCard4" fitHeight="75.0" fitWidth="55.0" layoutX="112.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../cards/realistic/JackSpades.png" />
                      </image>
@@ -208,7 +210,7 @@
                         <Insets bottom="35.0" left="70.0" />
                      </StackPane.margin>
                   </ImageView>
-                  <ImageView fitHeight="75.0" fitWidth="55.0" layoutX="182.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="playerCard5" fitHeight="75.0" fitWidth="55.0" layoutX="182.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../cards/traditional/QueenClubs.png" />
                      </image>
