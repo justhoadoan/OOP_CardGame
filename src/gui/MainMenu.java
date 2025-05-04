@@ -76,32 +76,28 @@ public class MainMenu {
     public void Next() {
         try {
             FXMLLoader loader;
+            String selectedSkin = cardSkinChoiceBox.getValue();
 
             if (typeChoiceBox.getValue() != null && typeChoiceBox.getValue().equals("Online")) {
                 loader = new FXMLLoader(getClass().getResource("OnlineMenu.fxml"));
                 Scene scene = new Scene(loader.load());
-
                 OnlineMenu controller = loader.getController();
                 controller.resetState();
-
                 stage.setScene(scene);
                 stage.show();
             } else if (gameChoiceBox.getValue() != null && gameChoiceBox.getValue().equals("BlackJack")) {
                 loader = new FXMLLoader(getClass().getResource("BlackJackBet.fxml"));
                 Scene scene = new Scene(loader.load());
-
                 BlackJackBetGui controller = loader.getController();
-                controller.initialize(); // Ensure this method is implemented in BlackJackBetGui
-
+                controller.initialize();
                 stage.setScene(scene);
                 stage.show();
             } else {
                 loader = new FXMLLoader(getClass().getResource("PokerAIOffline.fxml"));
                 Scene scene = new Scene(loader.load());
-
                 PokerAIOffline controller = loader.getController();
+                controller.setSelectedSkin(selectedSkin); // Pass the selected skin
                 controller.resetState();
-
                 stage.setScene(scene);
                 stage.show();
             }
