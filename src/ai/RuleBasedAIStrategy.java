@@ -11,7 +11,7 @@ public class RuleBasedAIStrategy implements AIStrategy  {
         try {
             // Safety checks for null or empty collections
             List<Card> playerHand = state.getPlayerHand();
-            List<Card> communityCards = state.getCommunityCards();
+            List<Card> communityCards = ((PokerState) state).getCommunityCards();
             if (playerHand == null) playerHand = new ArrayList<>();
             if (communityCards == null) communityCards = new ArrayList<>();
 
@@ -25,16 +25,27 @@ public class RuleBasedAIStrategy implements AIStrategy  {
             // Weak hands - fold
             if (handStrength > 1) {
                 return "raise";
-            } else if (handStrength == 1 && currentBet < 20) {
+            }
+            else if(handStrength == 1 && currentBet < player.getCurrentBalance() / 10) {
                 return "raise";
-            } else {
+            }
+            else if (handStrength == 0 && isSuitedConnectors(playerHand)) {
+                return "raise";
+            }
+            else if (handStrength == 0 && currentBet > player.getCurrentBalance() / 5) {
+                return "fold";
+            }
+            else if (handStrength == 0 && currentBet < player.getCurrentBalance() / 5) {
+                return "raise";
+            }
+            else {
                 return "fold";
             }
         } catch (Exception e) {
             System.out.println("Error in AI strategy: " + e.getMessage());
             e.printStackTrace();
             // Default to folding in case of errors
-            return "fold";
+            return "raise";
         }
     }
 
@@ -53,7 +64,7 @@ public class RuleBasedAIStrategy implements AIStrategy  {
         }
         
         // Basic evaluation:
-        if (isPair(allCards)) return 2;
+        if (isPair(allCards) || isFlush(allCards) || isStraight(allCards)) return 2;
         
         // Check for high card value
         int highestValue = 0;
@@ -65,7 +76,7 @@ public class RuleBasedAIStrategy implements AIStrategy  {
         }
         
         // For high cards: 10 or above is decent
-        return highestValue >= 10 ? 1 : 0;
+        return highestValue >= 3 ? 1 : 0;
     }
 
     private boolean isPair(List<Card> hand) {
@@ -83,6 +94,28 @@ public class RuleBasedAIStrategy implements AIStrategy  {
         
         // Kiểm tra xem có rank nào xuất hiện 2 lần không
         return rankCount.values().stream().anyMatch(count -> count == 2);
+    }
+
+    private boolean isFlush(List<Card> cards) {
+        if (cards == null || cards.size() < 5) return false;
+        Map<String, Integer> suitCount = new HashMap<>();
+        for (Card card : cards) {
+            suitCount.put(card.getSuit(), suitCount.getOrDefault(card.getSuit(), 0) + 1);
+        }
+        return suitCount.values().stream().anyMatch(count -> count >= 5);
+    }
+
+    private boolean isStraight(List<Card> cards) {
+        if (cards == null || cards.isEmpty()) return false;
+        List<Integer> values = cards.stream()
+                .map(this::getCardValue)
+                .distinct()
+                .sorted()
+                .toList();
+        for (int i = 0; i <= values.size() - 5; i++) {
+            if (values.get(i + 4) - values.get(i) == 4) return true;
+        }
+        return false;
     }
 
     private int getCardValue(Card card) {
@@ -110,8 +143,6 @@ public class RuleBasedAIStrategy implements AIStrategy  {
                 Math.abs(rankToValue(hand.get(0).getRank()) - rankToValue(hand.get(1).getRank())) == 1;
     }
 
-    enum HandStrength { STRONG, MEDIUM, DRAWING, WEAK }
-
     private int rankToValue(String rank) {
         switch (rank) {
             case "Ace":
@@ -126,5 +157,6 @@ public class RuleBasedAIStrategy implements AIStrategy  {
                 return Integer.parseInt(rank);
         }
     }
+
 }
 

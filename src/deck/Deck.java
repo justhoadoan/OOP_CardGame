@@ -9,6 +9,11 @@ public class Deck {
     private List<Card> cards;
     private CardSkin skin;
 
+    public Deck() {
+        cards = new ArrayList<>();
+        reset();
+    }
+
     public Deck(CardSkin skin) {
         this.skin = skin;
         cards = new ArrayList<>();
@@ -49,5 +54,9 @@ public class Deck {
 
     public void setSkin(CardSkin skin) {
         this.skin = skin;
+    }
+
+    public int getRemainingCards() {
+        return cards.size(); // Assuming 'cards' is the list of remaining cards in the deck
     }
 }

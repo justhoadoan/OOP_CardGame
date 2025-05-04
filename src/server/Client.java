@@ -1,12 +1,11 @@
 package server;
 
-
+// Import statements
 import card.Card;
 import card.CardSkin;
 import gamemode.GameMode;
 import games.GameType;
 import input.InputHandler;
-
 
 import java.io.*;
 import java.net.*;
@@ -14,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Client implements NetworkManager {
+    // Server connection details
     private String serverIp = null;
     private int serverPort = 0;
     private final GameMode gameMode;
@@ -24,6 +24,7 @@ public class Client implements NetworkManager {
     private BufferedReader in;
     private String clientId;
 
+    // Constructor
     public Client(String host, int port, GameMode gameMode, GameType gameType, CardSkin skin) {
         this.serverIp = host;
         this.serverPort = port;
@@ -32,35 +33,39 @@ public class Client implements NetworkManager {
         this.cardSkin = skin;
     }
 
+    // Set client ID
     public void setClientId(int clientId) {
-
         this.clientId = String.valueOf(clientId);
     }
 
+    // Get client ID
     public String getClientId() {
         return clientId;
     }
 
     @Override
     public void start() throws IOException {
+        // Establish connection to server
         socket = new Socket(serverIp, serverPort);
         out = new PrintWriter(socket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
+        // Set client ID from server response
         setClientId(Integer.parseInt(in.readLine()));
         String message;
         while ((message = in.readLine()) != null) {
             processMessage(message);
-
         }
     }
 
+    // Process incoming messages from server
     private void processMessage(String message) {
         String[] parts = message.split(":");
         if (parts.length == 0) return;
 
         switch (parts[0]) {
             case "HAND":
+                // Process HAND message
                 List<Card> playerHand = new ArrayList<>();
                 for (int i = 1; i < parts.length; i += 2) {
                     String rank = parts[i];
@@ -71,41 +76,45 @@ public class Client implements NetworkManager {
                 handlePlayerAction();
                 break;
             case "STATE":
+                // Process STATE message
                 String publicState = parts[1];
                 gameMode.updateDisplay(null, publicState, null);
                 handlePlayerAction();
                 break;
             case "WINNER":
+                // Process WINNER message
                 String winner = parts[1];
                 gameMode.updateDisplay(null, null, winner);
                 break;
         }
     }
+
+    // Handle player actions
     private void handlePlayerAction() {
         InputHandler inputHandler = gameMode.getInputHandler();
         String action = inputHandler.getPlayerAction();
         inputHandler.processAction(action);
     }
 
-
     @Override
     public void sendMessage(String message) {
-
+        // Send message to server
         out.println(message);
     }
 
     @Override
     public void sendMessageToClient(int clientId, String message) {
-        // doesn't apply to client
+        // Doesn't apply to client
     }
 
     @Override
     public void receiveMessage(String message) {
-        // doesn't apply to client
+        // Doesn't apply to client
     }
 
     @Override
     public void close() {
+        // Close resources
         try {
             if (in != null) in.close();
             if (out != null) out.close();
@@ -114,6 +123,8 @@ public class Client implements NetworkManager {
             e.printStackTrace();
         }
     }
+
+    // Create a Card object from a string representation
     private Card createCardFromString(String cardStr) {
         String[] parts = cardStr.split(" of ");
         String rank = parts[0];

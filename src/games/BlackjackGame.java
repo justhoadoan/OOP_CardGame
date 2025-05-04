@@ -23,7 +23,10 @@ public class BlackjackGame implements Game {
     public BlackjackGame(GameMode gameMode, NetworkManager networkManager, CardSkin skin) {
         this.gameMode = gameMode;
         this.networkManager = networkManager;
-        this.dealer = new Player("Dealer", 0); // dealer is a special player
+        this.dealer = new Player("Dealer", 0); // Dealer is a special player
+        this.players = new ArrayList<>(); // Initialize the players list
+        this.playerBets = new HashMap<>(); // Initialize the playerBets map
+        this.deck = new Deck(); // Initialize the deck
     }
 
     @Override
@@ -33,22 +36,27 @@ public class BlackjackGame implements Game {
         dealerTurn = false;
         pot = 0;
 
-        // Reset hands và đặt cược
+        // Reset hands and place bets
         for (Playable player : players) {
             player.resetHand();
             if (player != dealer) {
-                // bet
                 placeInitialBet(player, playerBets.getOrDefault(player, 0));
             }
         }
         dealer.resetHand();
 
-        // first deal
+        // First deal
         for (int i = 0; i < 2; i++) {
             for (Playable player : players) {
-                if (player instanceof Player) {
-                    ((Player) player).addCard(deck.drawCard());
-                }
+                player.addCard(deck.drawCard());
+            }
+        }
+
+        // Set the current player to the first player (excluding the dealer)
+        for (Playable player : players) {
+            if (player != dealer) {
+                currentPlayer = player;
+                break;
             }
         }
 
@@ -70,7 +78,12 @@ public class BlackjackGame implements Game {
     public List<Playable> getPlayers() {return players;}
 
     @Override
-    public Playable getCurrentPlayer() {return currentPlayer;}
+    public Playable getCurrentPlayer() {
+        if (currentPlayer == null) {
+            throw new IllegalStateException("Current player is not set.");
+        }
+        return currentPlayer;
+    }
 
     @Override
     public List<Card> getPlayerHand(int playerId) {
@@ -112,8 +125,14 @@ public class BlackjackGame implements Game {
     @Override
     public void playerHit(Playable player) {
         if (!dealerTurn && player.getHand().size() < 5) {
-            ((Player) player).addCard(deck.drawCard());
-            if (calculateScore(player.getHand()) > 21) {currentPlayer = getNextPlayer();} // player bust
+            Card drawnCard = deck.drawCard();
+            ((Player) player).addCard(drawnCard);
+            System.out.println("Player " + player.getName() + " drew: " + drawnCard);
+            System.out.println("Player's hand: " + player.getHand());
+            System.out.println("Deck size: " + deck.getRemainingCards());
+            if (calculateScore(player.getHand()) > 21) {
+                currentPlayer = getNextPlayer(); // player bust
+            }
         }
     }
 
@@ -211,4 +230,19 @@ public class BlackjackGame implements Game {
     public void playerFold(Playable player) {
         throw new UnsupportedOperationException("Not supported in Blackjack");
     }
+
+    public Playable getDealer() {
+        return dealer;
+    }
+
+    public void showWinner() {
+        String winner = getWinner();
+        if (winner.isEmpty()) {
+            System.out.println("No winners this round.");
+        } else {
+            System.out.println("Winner(s): " + winner);
+        }
+    }
+
+
 }
