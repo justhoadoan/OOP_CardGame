@@ -125,7 +125,7 @@ public class BlackjackGame implements Game {
         StringBuilder winners = new StringBuilder();
 
         for (Playable player : players) {
-            if (player == dealer) continue;
+            if (player == dealer || player.getName().equals("Dealer")) continue;
             int playerScore = calculateScore(player.getHand());
             boolean isBust = playerScore > 21;
 
