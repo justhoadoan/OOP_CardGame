@@ -9,26 +9,33 @@ public class BlackjackActionProcessor implements ActionProcessor {
     @Override
     public void processAction(String action, Game game, Client client) {
         Player player = (Player) game.getCurrentPlayer();
-            String ClientId = String.valueOf(client.getClientId());
-            String message;
-            switch (action.toLowerCase()){
-                case "hit":
-                    if(client!=null){
-                        client.sendMessage("Hit:" + ClientId);
-                    }
-                    else{
-                        ((BlackjackGame) game).playerHit(player);
-                    }
 
+        if (client == null) {
+            // Handle the case where client is null (e.g., local game)
+            switch (action.toLowerCase()) {
+                case "hit":
+                    ((BlackjackGame) game).playerHit(player);
+                    break;
                 case "stand":
-                    if(client!=null){
-                        client.sendMessage("Stand:" + ClientId);
-                    }
-                    else{
-                        ((BlackjackGame) game).playerStand(player);
-                    }
+                    ((BlackjackGame) game).playerStand(player);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown action: " + action);
+            }
+        } else {
+            // Handle the case where client is not null (e.g., networked game)
+            String clientId = String.valueOf(client.getClientId());
+            switch (action.toLowerCase()) {
+                case "hit":
+                    client.sendMessage("Hit:" + clientId);
+                    break;
+                case "stand":
+                    client.sendMessage("Stand:" + clientId);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown action: " + action);
             }
         }
-
     }
+}
 
