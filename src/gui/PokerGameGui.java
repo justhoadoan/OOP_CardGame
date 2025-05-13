@@ -128,6 +128,7 @@ public class PokerGameGui {
         // Initialize server-side game components
         game = new PokerGame(gameMode, networkManager, cardSkin);
         gameMode.setGame(game);
+        gameMode.setCardSkin(cardSkin);
 
         // Add local player (server)
         Player localPlayer = new Player("Player 1", playerId);

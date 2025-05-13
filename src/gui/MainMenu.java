@@ -84,6 +84,7 @@ public class MainMenu {
                 loader = new FXMLLoader(getClass().getResource("OnlineMenu.fxml"));
                 Scene scene = new Scene(loader.load());
                 OnlineMenu controller = loader.getController();
+                controller.setStage(stage);
                 controller.setSelectedSkin(selectedSkin);
                 controller.setSelectedGame(selectedGame); // Pass the selected game
                 controller.resetState();

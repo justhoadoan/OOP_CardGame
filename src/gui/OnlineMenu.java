@@ -43,6 +43,7 @@ public class OnlineMenu {
     @FXML
     public void initialize() {
         // Initialize the choice boxes with options
+        serverPortField.setText("8888");
         positionChoiceBox.setItems(FXCollections.observableArrayList("Server", "Client"));
     }
 
@@ -66,8 +67,9 @@ public class OnlineMenu {
             loader = new FXMLLoader(getClass().getResource("PokerGame.fxml"));
             Parent root = loader.load();
             PokerGameGui controller = loader.getController();
-            stage.setScene(new Scene(root));
             controller.setupServerGame(selectedSkin, port);
+            stage.setScene(new Scene(root));
+         //   controller.setupServerGame(selectedSkin, port);
             stage.show();
         }
     }
@@ -78,6 +80,7 @@ public class OnlineMenu {
             loader = new FXMLLoader(getClass().getResource("PokerGame.fxml"));
             Parent root = loader.load();
             PokerGameGui controller = loader.getController();
+            controller.setupClientGame(selectedSkin, ip, port);
             stage.setScene(new Scene(root));
             controller.setupClientGame(selectedSkin, ip, port);
             stage.show();
