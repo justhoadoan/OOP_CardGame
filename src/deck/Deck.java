@@ -55,4 +55,8 @@ public class Deck {
     public void setSkin(CardSkin skin) {
         this.skin = skin;
     }
+
+    public int getRemainingCards() {
+        return cards.size(); // Assuming 'cards' is the list of remaining cards in the deck
+    }
 }

@@ -34,17 +34,17 @@
                     <font>
                         <Font name="Arial Rounded MT Bold" size="15.0" />
                     </font></Button>
-            <Button fx:id="startOnlineMenu" styleClass="menu-button" layoutX="212.0" layoutY="175.0" text="Start">
-               <font>
-                  <Font name="Arial Rounded MT Bold" size="15.0" />
-               </font>
-            </Button>
-            <Text layoutX="145.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-common" text="Position" />
-            <Text layoutX="68.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-common" text="Server Port" />
-            <Text layoutX="238.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-common" text="Server IP" />
-            <ChoiceBox fx:id="positionChoiceBox" layoutX="109.0" layoutY="31.0" prefWidth="150.0" />
-            <TextField layoutX="35.0" layoutY="101.0" />
-            <TextField layoutX="196.0" layoutY="101.0" />
+                <Button fx:id="startOnlineMenu" styleClass="menu-button" layoutX="212.0" layoutY="175.0" text="Start" onAction="#startGame" >
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="15.0" />
+                    </font>
+                </Button>
+                <Text layoutX="145.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-common" text="Position" />
+                <Text layoutX="68.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-common" text="Server Port" />
+                <Text layoutX="238.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-common" text="Server IP" />
+                <ChoiceBox fx:id="positionChoiceBox" layoutX="109.0" layoutY="31.0" prefWidth="150.0" />
+                <TextField fx:id="serverIpField" layoutX="35.0" layoutY="101.0" />
+                <TextField fx:id="serverPortField" layoutX="196.0" layoutY="101.0" />
             </children>
         </Pane>
         <ImageView fitHeight="74.0" fitWidth="298.0" layoutX="153.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">

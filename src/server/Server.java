@@ -11,10 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +37,7 @@ public class Server implements NetworkManager {
         try {
             this.nextClientId = 0;
             this.clientHandlers = new HashMap<>();
-            serverSocket = new ServerSocket(port);
+            serverSocket = new ServerSocket(port != 0 ? port : 8888);
             this.game = game;
             isRunning = false;
 
@@ -48,11 +45,13 @@ public class Server implements NetworkManager {
             String serverIp = getLocalIpAddress();
             System.out.println("Server started at IP: " + serverIp + ", Port: " + port);
 
-            // Show server info in a dialog if the game is in graphic mode
             javax.swing.JOptionPane.showMessageDialog(null,
                     "Server started at IP: " + serverIp + ", Port: " + port,
                     "Server Info",
                     javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        } catch (BindException e) {
+            System.err.println("Port " + port + " is already in use. Please choose a different port.");
+            throw new RuntimeException("Port already in use", e);
         } catch (IOException e) {
             System.err.println("Error initializing server on port " + port);
             e.printStackTrace();

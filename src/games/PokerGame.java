@@ -52,23 +52,32 @@ public class PokerGame implements Game {
     public void start() {
         initializeGame();
         dealInitialCards();
-        dealCommunityCards(3);  // Deal flop immediately at game start
+        allPlayerBet();  // First betting round after dealing hole cards
         broadcastState();
     }
+
     public void progressGame() {
         if (isGameOver()) {
             return;
         }
 
+        // If no community cards, deal flop
+        if (communityCards.isEmpty()) {
+            dealCommunityCards(3);  // Deal flop
+            allPlayerBet();
+        }
+        // Turn
         else if (communityCards.size() == 3) {
-            // Turn
             dealCommunityCards(1);
             allPlayerBet();
-        } else if (communityCards.size() == 4) {
-            // River
+        }
+        // River
+        else if (communityCards.size() == 4) {
             dealCommunityCards(1);
             allPlayerBet();
-        } else {
+        }
+        // Game end
+        else {
             determineWinner();
             return;
         }
@@ -135,7 +144,7 @@ public class PokerGame implements Game {
             if (winner instanceof Player) {
                 distributePot((Player) winner);
             } else if (winner instanceof AI) {
-               distributePot(distributePot((AI) winner));
+                distributePot(distributePot((AI) winner));
             }
         }
     }
@@ -152,7 +161,7 @@ public class PokerGame implements Game {
                         System.out.println("No more cards to draw");
                         return;
                     }
-                    
+
                     if (player instanceof Player) {
                         ((Player) player).addCard(card);
                     } else if (player instanceof AI) {
@@ -273,26 +282,19 @@ public class PokerGame implements Game {
 
     @Override
     public void playerRaise(Playable player, int raiseAmount) {
-        int currentBalance = 0;
-        
-        if (player instanceof Player) {
-            Player p = (Player) player;
-            currentBalance = p.getCurrentBalance();
-        } else if (player instanceof AI) {
-            AI ai = (AI) player;
-            currentBalance = ai.getCurrentBalance();
+        int currentBalance = player.getCurrentBalance();
+        int totalBetNeeded = raiseAmount - player.getCurrentBet(); // Calculate additional amount needed
+
+        if (currentBalance >= totalBetNeeded && totalBetNeeded > 0) {
+            // Update player's bet and balance
+            player.addCurrentBalance(-totalBetNeeded);
+            pot += totalBetNeeded;
+            player.setCurrentBet(raiseAmount);
+            currentBet = Math.max(currentBet, raiseAmount);
+
+            // Update UI immediately
+            broadcastState();
         }
-        
-        if (currentBalance >= raiseAmount) {
-            placeBet(player, raiseAmount);
-            
-            if (player instanceof Player) {
-                ((Player) player).addCurrentBalance(-raiseAmount);
-            } else if (player instanceof AI) {
-                ((AI) player).addCurrentBalance(-raiseAmount);
-            }
-        }
-        broadcastState();
     }
 
     @Override
@@ -305,11 +307,17 @@ public class PokerGame implements Game {
     public void playerStand(Playable player) {} // nothing would be done here
 
     @Override
+    public void nextPlayer() {}
+
+    @Override
+    public Playable getPlayerBeforeDealer() {return null;}
+
+    @Override
     public String handlePlayerTurn() {
 
-            // Delegate input handling to PokerActionProcessor
-            PokerActionProcessor processor = new PokerActionProcessor();
-            return processor.getPlayerAction();
+        // Delegate input handling to PokerActionProcessor
+        PokerActionProcessor processor = new PokerActionProcessor();
+        return processor.getPlayerAction();
 
     }
     public void addAIPlayer(String name, String strategyType) {
@@ -340,19 +348,16 @@ public class PokerGame implements Game {
                     Player p = (Player) player;
                     Client client = p.getClient();
                     if (client != null) {
-
                         int clientId = p.getId();
                         List<Card> playerHand = getPlayerHand(clientId);
-                        networkManager.sendMessageToClient
-                                (clientId, "HAND:" +
-                                        playerHand.stream()
-                                            .map(card -> card.getRank() + " of " + card.getSuit())
-                                .collect(Collectors.joining(", ")));
+                        networkManager.sendMessageToClient(clientId, "HAND:" +
+                                playerHand.stream()
+                                        .map(card -> card.getRank() + " of " + card.getSuit())
+                                        .collect(Collectors.joining(", ")));
                     }
                 }
             }
         }
-        
 
         if (gameMode != null) {
             boolean isHumanPlayer = currentPlayer instanceof Player;
@@ -361,12 +366,15 @@ public class PokerGame implements Game {
             if (isHumanPlayer) {
                 playerHand = getPlayerHand(((Player) currentPlayer).getId());
             }
-            if (isHumanPlayer || isGameOver()) {
-                gameMode.updateDisplay(playerHand, getPublicState(), isGameOver() ? getWinner() : null);
-            }
+
+            // Create state string with current bet and pot information
+            String state = getPublicState() +
+                    "\nCurrent Bet: $" + currentBet +
+                    "\nPot: $" + pot;
+
+            gameMode.updateDisplay(playerHand, state, isGameOver() ? getWinner() : null);
         }
     }
-
 
 
     @Override

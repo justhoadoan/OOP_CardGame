@@ -1,5 +1,7 @@
 package gui;
 
+import games.BlackjackGame;
+import games.GameType;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -75,35 +77,32 @@ public class MainMenu {
     public void Next() {
         try {
             FXMLLoader loader;
+            String selectedSkin = cardSkinChoiceBox.getValue();
+            String selectedGame = gameChoiceBox.getValue();
 
-            if (typeChoiceBox.getValue().equals("Online")) {
+            if (typeChoiceBox.getValue() != null && typeChoiceBox.getValue().equals("Online")) {
                 loader = new FXMLLoader(getClass().getResource("OnlineMenu.fxml"));
                 Scene scene = new Scene(loader.load());
-
-                // Get controller and reset state
                 OnlineMenu controller = loader.getController();
-                controller.resetState(); // You define this in the controller
-
+                controller.setStage(stage);
+                controller.setSelectedSkin(selectedSkin);
+                controller.setSelectedGame(selectedGame); // Pass the selected game
+                controller.resetState();
                 stage.setScene(scene);
                 stage.show();
-            }
-//            else if (gameChoiceBox.getValue().equals("BlackJack")) {
-//                loader = new FXMLLoader(getClass().getResource("BlackJackOffline.fxml"));
-//                Scene scene = new Scene(loader.load());
-//
-//                BlackJackOffline controller = loader.getController();
-//                controller.resetState();
-//
-//                stage.setScene(scene);
-//                stage.show();
-//            }
-            else {
+            }else if (gameChoiceBox.getValue() != null && gameChoiceBox.getValue().equals("BlackJack")) {
+                loader = new FXMLLoader(getClass().getResource("BlackJackBet.fxml"));
+                Scene scene = new Scene(loader.load());
+                BlackJackBetGui controller = loader.getController();
+                controller.initialize();
+                stage.setScene(scene);
+                stage.show();
+            } else {
                 loader = new FXMLLoader(getClass().getResource("PokerAIOffline.fxml"));
                 Scene scene = new Scene(loader.load());
-
                 PokerAIOffline controller = loader.getController();
+                controller.setSelectedSkin(selectedSkin); // Pass the selected skin
                 controller.resetState();
-
                 stage.setScene(scene);
                 stage.show();
             }

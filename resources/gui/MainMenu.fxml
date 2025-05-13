@@ -22,7 +22,7 @@
             <Image url="@Background.jpg" />
          </image>
       </ImageView>
-      <Pane layoutX="111.0" layoutY="106.0" prefHeight="227.0" prefWidth="368.0" >
+      <Pane fx:id="mainMenuPane" layoutX="111.0" layoutY="106.0" prefHeight="227.0" prefWidth="368.0">
          <effect>
             <Blend />
          </effect>
