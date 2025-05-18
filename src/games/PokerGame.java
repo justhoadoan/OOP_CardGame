@@ -307,6 +307,12 @@ public class PokerGame implements Game {
     public void playerStand(Playable player) {} // nothing would be done here
 
     @Override
+    public void nextPlayer() {}
+
+    @Override
+    public Playable getPlayerBeforeDealer() {return null;}
+
+    @Override
     public String handlePlayerTurn() {
 
         // Delegate input handling to PokerActionProcessor

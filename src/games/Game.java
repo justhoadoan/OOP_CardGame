@@ -13,7 +13,11 @@ public interface Game {
     List<Playable> getPlayers();
 
     // Game state
+    void nextPlayer();
     Playable getCurrentPlayer();
+
+    Playable getPlayerBeforeDealer();
+
     List<Card> getPlayerHand(int playerId);
     String getPublicState();
 
