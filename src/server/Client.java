@@ -64,8 +64,11 @@ public class Client implements NetworkManager {
         if (parts.length == 0) return;
 
         switch (parts[0]) {
+            case "STATE":
+                String publicState = parts[1];
+                gameMode.updateDisplay(null, publicState, null);
+                break;
             case "HAND":
-                // Process HAND message
                 List<Card> playerHand = new ArrayList<>();
                 for (int i = 1; i < parts.length; i += 2) {
                     String rank = parts[i];
@@ -73,18 +76,6 @@ public class Client implements NetworkManager {
                     playerHand.add(new Card(suit, rank, cardSkin));
                 }
                 gameMode.updateDisplay(playerHand, null, null);
-                handlePlayerAction();
-                break;
-            case "STATE":
-                // Process STATE message
-                String publicState = parts[1];
-                gameMode.updateDisplay(null, publicState, null);
-                handlePlayerAction();
-                break;
-            case "WINNER":
-                // Process WINNER message
-                String winner = parts[1];
-                gameMode.updateDisplay(null, null, winner);
                 break;
         }
     }
@@ -124,11 +115,5 @@ public class Client implements NetworkManager {
         }
     }
 
-    // Create a Card object from a string representation
-    private Card createCardFromString(String cardStr) {
-        String[] parts = cardStr.split(" of ");
-        String rank = parts[0];
-        String suit = parts[1];
-        return new Card(rank, suit, cardSkin);
-    }
+
 }

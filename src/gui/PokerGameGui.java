@@ -138,6 +138,8 @@ public class PokerGameGui {
         // Start server
         networkManager = new Server(port, game);
         networkManager.start();
+
+        game.broadcastState();
     }
     public void setupClientGame(String selectedSkin, String ip, int port) {
         this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
