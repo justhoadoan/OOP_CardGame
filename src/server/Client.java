@@ -45,19 +45,24 @@ public class Client implements NetworkManager {
 
     @Override
     public void start() throws IOException {
-        // Establish connection to server
         socket = new Socket(serverIp, serverPort);
         out = new PrintWriter(socket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-        // Set client ID from server response
-        setClientId(Integer.parseInt(in.readLine()));
+        // Read the first message as the client ID
+        String firstMessage = in.readLine();
+        try {
+            setClientId(Integer.parseInt(firstMessage));
+        } catch (NumberFormatException e) {
+            throw new IOException("Invalid client ID received from server: " + firstMessage, e);
+        }
+
+        // Process subsequent messages
         String message;
         while ((message = in.readLine()) != null) {
             processMessage(message);
         }
     }
-
     // Process incoming messages from server
     private void processMessage(String message) {
         String[] parts = message.split(":");

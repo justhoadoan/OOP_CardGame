@@ -232,6 +232,9 @@ public class Server implements NetworkManager {
         public void run() {
             isRunning = true;
             try {
+                // Send the client ID as the first message
+                sendMessage(String.valueOf(clientId));
+
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
                     server.receiveMessage("ACTION:" + inputLine + ":" + clientId);
