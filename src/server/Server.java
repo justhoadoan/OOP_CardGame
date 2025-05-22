@@ -234,7 +234,12 @@ public class Server implements NetworkManager {
             isRunning = true;
             try {
                 // Send the client ID as the first message
-                sendMessage(String.valueOf(clientId)); // Ensure this is a valid integer
+                sendMessage(String.valueOf(clientId));
+
+                // Send the initial game state after the client ID
+                if (server.game != null) {
+                    sendMessage("STATE:" + server.game.getPublicState());
+                }
 
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
