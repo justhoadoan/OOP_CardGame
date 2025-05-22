@@ -1,5 +1,6 @@
 package playable;
 
+import card.CardSkin;
 import gamemode.GameMode;
 import card.Card;
 import games.Game;
@@ -16,7 +17,7 @@ public class Player implements Playable {
     private int currentBalance;
     private boolean status;
     private Client client;
-
+    private CardSkin cardSkin;
     public Player(String name, int id) {
         this.name = name;
         this.id = id;

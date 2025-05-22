@@ -63,7 +63,7 @@ public class Client implements NetworkManager {
         while ((message = in.readLine()) != null) {
             processMessage(message);
         }
-    }
+    } 
     // Process incoming messages from server
     private void processMessage(String message) {
         String[] parts = message.split(":");
