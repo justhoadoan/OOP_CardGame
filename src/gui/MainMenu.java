@@ -94,6 +94,7 @@ public class MainMenu {
                 loader = new FXMLLoader(getClass().getResource("BlackJackBet.fxml"));
                 Scene scene = new Scene(loader.load());
                 BlackJackBetGui controller = loader.getController();
+                controller.setSelectedSkin(selectedSkin);
                 controller.initialize();
                 stage.setScene(scene);
                 stage.show();

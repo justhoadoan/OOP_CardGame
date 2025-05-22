@@ -55,7 +55,6 @@ public class BlackjackGame implements Game {
             }
         }
         dealer.addCard(deck.drawCard());
-        dealer.addCard(deck.drawCard());
 
         // Set the current player to the first player (excluding the dealer)
         for (Playable player : players) {
@@ -125,7 +124,7 @@ public class BlackjackGame implements Game {
         StringBuilder winners = new StringBuilder();
 
         for (Playable player : players) {
-            if (player == dealer || player.getName().equals("Dealer")) continue;
+            if (player.getName().equals("Dealer")) continue;
             int playerScore = calculateScore(player.getHand());
             boolean isBust = playerScore > 21;
 
@@ -137,7 +136,7 @@ public class BlackjackGame implements Game {
                 return "Draw!";
             }
         }
-        return !winners.isEmpty() ? winners.toString() : "Dealer wins!";
+        return !winners.isEmpty() ? winners.toString() : "Dealer";
     }
 
     @Override

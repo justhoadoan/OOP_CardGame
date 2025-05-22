@@ -20,6 +20,7 @@
             <Image url="@Background.jpg" />
          </image>
       </ImageView>
+      <Button fx:id="replayButton" text="Replay" layoutX="100" layoutY="300" onAction="#replayGame" />
       <Pane layoutX="29.0" layoutY="22.0" prefHeight="355.0" prefWidth="541.0" style="-fx-background-color: radial-gradient(    center 50% 50%,    radius 100%,    #1CB951 0%,    #249744 38%,    #0C7324 78%,    #085E18 100%);; -fx-background-radius: 70;">
          <children>
             <Pane layoutX="25.0" layoutY="23.0" prefHeight="100.0" prefWidth="150.0">

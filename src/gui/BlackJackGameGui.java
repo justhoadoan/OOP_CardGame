@@ -5,18 +5,25 @@ import card.CardSkin;
 import games.BlackjackGame;
 import input.BlackjackActionProcessor;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import playable.Player;
 
 import java.util.List;
 import java.util.Objects;
 
 public class BlackJackGameGui {
+    @FXML private Button replayButton;
     @FXML private ImageView playerCard1;
     @FXML private ImageView playerCard2;
     @FXML private ImageView dealerCard1;
@@ -44,11 +51,9 @@ public class BlackJackGameGui {
         initializeGame();
         // Set up event handlers for buttons
         setupEventsHandlers();
-        // Set up the game with a default skin
-        setupGame("Traditional");
     }
 
-    private void setupGame(String selectedSkin) {
+    void setupGame(String selectedSkin) {
         this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
 
         initializeGame();
@@ -98,6 +103,8 @@ public class BlackJackGameGui {
                 endGame(); // End the game if it's over
             }
         });
+
+        replayButton.setOnAction(event -> replayGame());
     }
 
     @FXML
@@ -110,19 +117,6 @@ public class BlackJackGameGui {
         standButton.fire(); // Trigger the action set in setupEventsHandlers
     }
 
-    @FXML
-    private Label winnerLabel;
-
-    public void displayWinner() {
-        if (game != null) {
-            String winner = game.getWinner(); // Assuming getWinner() returns the winner's name
-            if (winner != null && !winner.isEmpty()) {
-                winnerLabel.setText("Winner: " + winner);
-            } else {
-                winnerLabel.setText("No winner this round.");
-            }
-        }
-    }
 
     private void updatePlayerCards() {
         if (game == null) return;
@@ -225,8 +219,57 @@ public class BlackJackGameGui {
         betValueText.setText("$" + betValue);
     }
 
+    private void showWinnerPopup(String winnerName) {
+        // Create a new stage for the popup
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Game Over");
+
+        // Create a label to display the winner
+        Label winnerLabel = new Label("Winner: " + winnerName);
+        winnerLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        // Create a button to replay the game
+        Button replayButton = new Button("Replay");
+        replayButton.setOnAction(event -> {
+            replayGame(); // Replay the game
+            popupStage.close(); // Close the popup
+        });
+
+        // Create a layout and add the label and button
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(winnerLabel, replayButton);
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(20));
+
+        // Set the scene and show the popup
+        Scene scene = new Scene(layout, 300, 150);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL); // Block interaction with other windows
+        popupStage.showAndWait();
+    }
+
+    @FXML
+    private void replayGame() {
+        // Reset the game state
+        game.start();
+
+        // Reset the GUI components
+        initializeGame();
+        updatePlayerCards();
+        updateDealerCards();
+        updatePlayerScore();
+        updateDealerScore();
+
+        // Re-enable action buttons
+        hitButton.setDisable(false);
+        standButton.setDisable(false);
+
+        System.out.println("Game has been reset for replay.");
+    }
+
     private void endGame() {
-        game.showWinner(); // Log the winner in the console
-        displayWinner();   // Update the GUI with the winner
+        game.showWinner();
+        String winnerName = game.getWinner();// Log the winner in the console
+        showWinnerPopup(winnerName); // Show the popup
     }
 }
