@@ -228,12 +228,13 @@ public class Server implements NetworkManager {
         }
 
         // Method to run the client handler thread
+        // Java
         @Override
         public void run() {
             isRunning = true;
             try {
                 // Send the client ID as the first message
-                sendMessage(String.valueOf(clientId));
+                sendMessage(String.valueOf(clientId)); // Ensure this is a valid integer
 
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {

@@ -43,6 +43,7 @@ public class Client implements NetworkManager {
         return clientId;
     }
 
+    // Java
     @Override
     public void start() throws IOException {
         socket = new Socket(serverIp, serverPort);
@@ -51,10 +52,10 @@ public class Client implements NetworkManager {
 
         // Read the first message as the client ID
         String firstMessage = in.readLine();
-        try {
+        if (firstMessage.matches("\\d+")) { // Check if the message is a number
             setClientId(Integer.parseInt(firstMessage));
-        } catch (NumberFormatException e) {
-            throw new IOException("Invalid client ID received from server: " + firstMessage, e);
+        } else {
+            throw new IOException("Invalid client ID received from server: " + firstMessage);
         }
 
         // Process subsequent messages
