@@ -80,7 +80,7 @@ public class BlackJackGameGui {
 
         // Set up hit button
         hitButton.setOnAction(event -> {
-            actionProcessor.processAction("hit", game, null);
+            actionProcessor.processAction("hit", game);
             // Update GUI after action
             updatePlayerCards();
             updatePlayerScore();
@@ -93,7 +93,7 @@ public class BlackJackGameGui {
 
         // Set up stand button
         standButton.setOnAction(event -> {
-            actionProcessor.processAction("stand", game, null);
+            actionProcessor.processAction("stand", game);
             // Update GUI after action
             updateDealerCards();
             updateDealerScore();

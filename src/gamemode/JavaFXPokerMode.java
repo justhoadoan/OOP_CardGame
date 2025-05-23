@@ -3,7 +3,7 @@ package gamemode;
 import card.Card;
 import card.CardSkin;
 import games.PokerGame;
-import input.InputHandler;
+
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -11,7 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import playable.Playable;
 import test.TestImagePath;
-
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +25,7 @@ public class JavaFXPokerMode implements GameMode {
     private CardSkin cardSkin;
     private final boolean isOnlineMode;
     private final int playerId;
-    private InputHandler inputHandler;
+
 
     public JavaFXPokerMode(ImageView[] communityCards,
                            ImageView[][] playerCards,
@@ -139,14 +138,6 @@ public class JavaFXPokerMode implements GameMode {
         return game != null ? game.getPublicState() : "";
     }
 
-    @Override
-    public InputHandler getInputHandler() {
-        return inputHandler;
-    }
-
-    public void setInputHandler(InputHandler handler) {
-        this.inputHandler = handler;
-    }
 
     public Object getGame() {
         return game;

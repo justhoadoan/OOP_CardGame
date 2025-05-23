@@ -7,8 +7,7 @@ import card.CardSkin;
 import deck.Deck;
 import gamemode.GameMode;
 import playable.*;
-import server.Client;
-import server.NetworkManager;
+
 import input.PokerActionProcessor;
 
 import java.util.*;
@@ -17,7 +16,6 @@ import java.util.stream.Collectors;
 public class PokerGame implements Game {
     private Deck deck;
     private GameMode gameMode;
-    private NetworkManager networkManager;
     private PlayerManager playerManager;
     private int pot;
     private int currentBet;
@@ -26,9 +24,8 @@ public class PokerGame implements Game {
     private List<Card> communityCards;
     private AIStrategyFactory aiFactory;
     private CardSkin skin;
-    public PokerGame(GameMode gameMode, NetworkManager networkManager, CardSkin skin) {
+    public PokerGame(GameMode gameMode, CardSkin skin, CardSkin cardSkin) {
         this.gameMode = gameMode;
-        this.networkManager = networkManager;
         this.skin = skin;
         this.deck = new Deck(null);
         this.players = new ArrayList<>();
@@ -52,7 +49,7 @@ public class PokerGame implements Game {
     public void start() {
         initializeGame();
         dealInitialCards();
-        allPlayerBet();  // First betting round after dealing hole cards
+        allPlayerBet();
         broadcastState();
     }
 
@@ -60,7 +57,6 @@ public class PokerGame implements Game {
         if (isGameOver()) {
             return;
         }
-
         // If no community cards, deal flop
         if (communityCards.isEmpty()) {
             dealCommunityCards(3);  // Deal flop
@@ -219,7 +215,7 @@ public class PokerGame implements Game {
         if (strategy != null) {
             String action = strategy.getAction(state);
             PokerActionProcessor processor = new PokerActionProcessor();
-            processor.processAction(action, this, null);
+            processor.processAction(action, this);
         }
     }
     @Override
@@ -312,14 +308,6 @@ public class PokerGame implements Game {
     @Override
     public Playable getPlayerBeforeDealer() {return null;}
 
-    @Override
-    public String handlePlayerTurn() {
-
-        // Delegate input handling to PokerActionProcessor
-        PokerActionProcessor processor = new PokerActionProcessor();
-        return processor.getPlayerAction();
-
-    }
     public void addAIPlayer(String name, String strategyType) {
         AI ai = new AI(players.size() + 1, name);
         ai.setStrategyType(strategyType);
@@ -339,25 +327,7 @@ public class PokerGame implements Game {
 
     @Override
     public void broadcastState() {
-        if (networkManager != null) {
-            String publicState = getPublicState();
-            networkManager.sendMessage("STATE:" + publicState);
 
-            for (Playable player : playerManager.getPlayers()) {
-                if (player instanceof Player) {
-                    Player p = (Player) player;
-                    Client client = p.getClient();
-                    if (client != null) {
-                        int clientId = p.getId();
-                        List<Card> playerHand = getPlayerHand(clientId);
-                        networkManager.sendMessageToClient(clientId, "HAND:" +
-                                playerHand.stream()
-                                        .map(card -> card.getRank() + " of " + card.getSuit())
-                                        .collect(Collectors.joining(", ")));
-                    }
-                }
-            }
-        }
 
         if (gameMode != null) {
             boolean isHumanPlayer = currentPlayer instanceof Player;
