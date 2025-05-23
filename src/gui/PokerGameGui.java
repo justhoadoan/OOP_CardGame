@@ -177,12 +177,10 @@ public class PokerGameGui {
 
     private void setupEventHandlers() {
         PokerActionProcessor processor = new PokerActionProcessor();
-
         // Setup raise slider and field sync
         raiseSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             raiseField.setText(String.valueOf(newVal.intValue()));
         });
-
         raiseField.textProperty().addListener((obs, oldVal, newVal) -> {
             try {
                 int value = Integer.parseInt(newVal);
@@ -191,17 +189,15 @@ public class PokerGameGui {
                 }
             } catch (NumberFormatException ignored) {}
         });
-
         // Setup raise button
         raiseButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
                 try {
                     int amount = Integer.parseInt(raiseField.getText());
                     int playerBalance = game.getCurrentPlayer().getCurrentBalance();
-                    processor.processAction("raise:" + amount, game);
+                    processor.processAction("raise:" + amount, game, game.getCurrentPlayer());
                     updateMoneyDisplays();
                     game.progressGame();
-
                 } catch (NumberFormatException ex) {
                     // Show error message
                     System.err.println("Invalid raise amount");
@@ -212,7 +208,7 @@ public class PokerGameGui {
         // Setup fold button
         foldButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
-                processor.processAction("fold", game);
+                processor.processAction("fold", game, game.getCurrentPlayer());
                 updateMoneyDisplays();
                 game.progressGame();
             }

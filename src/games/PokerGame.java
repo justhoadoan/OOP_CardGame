@@ -50,6 +50,12 @@ public class PokerGame implements Game {
         initializeGame();
         dealInitialCards();
         allPlayerBet();
+        for (Playable player : players) {
+            if (player instanceof Player) {
+                currentPlayer = player;
+                break;
+            }
+        }
         broadcastState();
     }
 
@@ -106,8 +112,6 @@ public class PokerGame implements Game {
         }
         broadcastState(); // Show dealt cards
     }
-
-
     private void dealCommunityCards(int count) {
         try {
             deck.drawCard(); // Burn card
@@ -122,8 +126,6 @@ public class PokerGame implements Game {
             System.err.println("Error dealing community cards: " + e.getMessage());
         }
     }
-
-
     private void determineWinner() {
         Playable winner = null;
         HandRank bestRank = null;
@@ -144,59 +146,26 @@ public class PokerGame implements Game {
             }
         }
     }
-
-
-    public void allPlayerDraw() {
-        // Check if deck has enough cards
-        for (Playable player : players) {
-            // Handle both Player and AI instances
-            if (player.getStatus()) {
-                try {
-                    Card card = deck.drawCard();
-                    if (card == null) {
-                        System.out.println("No more cards to draw");
-                        return;
-                    }
-
-                    if (player instanceof Player) {
-                        ((Player) player).addCard(card);
-                    } else if (player instanceof AI) {
-                        ((AI) player).addCard(card);
-                    }
-                } catch (Exception e) {
-                    System.out.println("Error drawing card for player " + player.getName() + ": " + e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
     private void allPlayerBet() {
         List<Playable> activePlayers = players.stream()
                 .filter(Playable::getStatus)
                 .collect(Collectors.toList());
-
         if (activePlayers.isEmpty()) return;
         boolean bettingComplete = false;
         while (!bettingComplete) {
             bettingComplete = true;
-
             for (Playable player : activePlayers) {
                 if (!player.getStatus()) continue;
                 currentPlayer = player;
-
                 if (player instanceof AI) {
                     handleAIAction((AI) player);
                 }
-
                 if (isGameOver()) return;
-
                 if (player.getStatus() && player.getCurrentBet() < currentBet) {
                     bettingComplete = false;
                 }
             }
         }
-
         for (Playable player : players) {
             player.setCurrentBet(0);
         }
@@ -215,7 +184,7 @@ public class PokerGame implements Game {
         if (strategy != null) {
             String action = strategy.getAction(state);
             PokerActionProcessor processor = new PokerActionProcessor();
-            processor.processAction(action, this);
+            processor.processAction(action, this, ai);
         }
     }
     @Override
@@ -230,6 +199,7 @@ public class PokerGame implements Game {
 
     @Override
     public Playable getCurrentPlayer() {
+
         return currentPlayer;
     }
 

@@ -2,19 +2,20 @@ package input;
 
 import games.BlackjackGame;
 import games.Game;
+import playable.Playable;
 import playable.Player;
 
 
 public class BlackjackActionProcessor implements ActionProcessor {
     @Override
-    public void processAction(String action, Game game) {
-        Player player = (Player) game.getCurrentPlayer();
+    public void processAction(String action, Game game, Playable currentPlayer) {
+
             switch (action.toLowerCase()) {
                 case "hit":
-                    ((BlackjackGame) game).playerHit(player);
+                    ((BlackjackGame) game).playerHit(currentPlayer);
                     break;
                 case "stand":
-                    ((BlackjackGame) game).playerStand(player);
+                    ((BlackjackGame) game).playerStand(currentPlayer);
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown action: " + action);

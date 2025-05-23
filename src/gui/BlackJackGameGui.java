@@ -66,7 +66,6 @@ public class BlackJackGameGui {
 
         Player dealer = new Player("Dealer", 0);
         game.addPlayer(dealer);
-
         game.start(); // Start the game and initialize the current player
 
         updatePlayerCards();
@@ -77,10 +76,9 @@ public class BlackJackGameGui {
 
     private void setupEventsHandlers() {
         BlackjackActionProcessor actionProcessor = new BlackjackActionProcessor();
-
         // Set up hit button
         hitButton.setOnAction(event -> {
-            actionProcessor.processAction("hit", game);
+            actionProcessor.processAction("hit", game, game.getCurrentPlayer());
             // Update GUI after action
             updatePlayerCards();
             updatePlayerScore();
@@ -90,10 +88,9 @@ public class BlackJackGameGui {
                 endGame(); // End the game if it's over
             }
         });
-
         // Set up stand button
         standButton.setOnAction(event -> {
-            actionProcessor.processAction("stand", game);
+            actionProcessor.processAction("stand", game, game.getCurrentPlayer());
             // Update GUI after action
             updateDealerCards();
             updateDealerScore();
