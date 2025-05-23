@@ -4,7 +4,6 @@ import card.Card;
 import card.CardSkin;
 import games.BlackjackGame;
 import games.PokerGame;
-import input.InputHandler;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -24,7 +23,7 @@ public class JavaFXBlackjackMode implements GameMode {
     private final Label dealerName;
     private BlackjackGame game;
     private CardSkin cardSkin;
-    private InputHandler inputHandler;
+
 
     public JavaFXBlackjackMode(ImageView[] playerCards,
                                ImageView[] dealerCards,
@@ -108,8 +107,5 @@ public class JavaFXBlackjackMode implements GameMode {
         return game != null ? game.getPublicState() : "";
     }
 
-    @Override
-    public InputHandler getInputHandler() {
-        return inputHandler;
-    }
+
 }

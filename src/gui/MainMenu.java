@@ -79,21 +79,11 @@ public class MainMenu {
             FXMLLoader loader;
             String selectedSkin = cardSkinChoiceBox.getValue();
             String selectedGame = gameChoiceBox.getValue();
-
-            if (typeChoiceBox.getValue() != null && typeChoiceBox.getValue().equals("Online")) {
-                loader = new FXMLLoader(getClass().getResource("OnlineMenu.fxml"));
-                Scene scene = new Scene(loader.load());
-                OnlineMenu controller = loader.getController();
-                controller.setStage(stage);
-                controller.setSelectedSkin(selectedSkin);
-                controller.setSelectedGame(selectedGame); // Pass the selected game
-                controller.resetState();
-                stage.setScene(scene);
-                stage.show();
-            }else if (gameChoiceBox.getValue() != null && gameChoiceBox.getValue().equals("BlackJack")) {
+            if (gameChoiceBox.getValue() != null && gameChoiceBox.getValue().equals("BlackJack")) {
                 loader = new FXMLLoader(getClass().getResource("BlackJackBet.fxml"));
                 Scene scene = new Scene(loader.load());
                 BlackJackBetGui controller = loader.getController();
+                controller.setSelectedSkin(selectedSkin);
                 controller.initialize();
                 stage.setScene(scene);
                 stage.show();

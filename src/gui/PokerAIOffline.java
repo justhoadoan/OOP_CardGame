@@ -43,11 +43,6 @@ public class PokerAIOffline {
         controller.resetState();
     }
 
-
-    public void setSelectedSkin(String skin) {
-        this.selectedSkin = skin;
-    }
-
     @FXML
     private void startGame(ActionEvent event) throws IOException {
         String aiStrategy = (String) typeChoiceBox.getValue();
@@ -65,6 +60,10 @@ public class PokerAIOffline {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void setSelectedSkin(String selectedSkin) {
+        this.selectedSkin = selectedSkin;
     }
 
     // reset state method

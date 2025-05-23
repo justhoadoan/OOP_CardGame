@@ -6,13 +6,13 @@ import deck.Deck;
 import gamemode.GameMode;
 import playable.Playable;
 import playable.Player;
-import server.NetworkManager;
+
 import java.util.*;
 
 public class BlackjackGame implements Game {
     private Deck deck;
     private GameMode gameMode;
-    private NetworkManager networkManager;
+
     private List<Playable> players;
     private Playable currentPlayer;
     private Map<Playable, Integer> playerBets;
@@ -21,9 +21,8 @@ public class BlackjackGame implements Game {
     private Playable dealer;
     private Playable playerBeforeDealer;
 
-    public BlackjackGame(GameMode gameMode, NetworkManager networkManager, CardSkin skin) {
+    public BlackjackGame(GameMode gameMode, CardSkin skin, CardSkin cardSkin) {
         this.gameMode = gameMode;
-        this.networkManager = networkManager;
         this.dealer = new Player("Dealer", 0); // Dealer is a special player
         this.players = new ArrayList<>(); // Initialize the players list
         this.playerBets = new HashMap<>(); // Initialize the playerBets map
@@ -54,7 +53,6 @@ public class BlackjackGame implements Game {
                 }
             }
         }
-        dealer.addCard(deck.drawCard());
         dealer.addCard(deck.drawCard());
 
         // Set the current player to the first player (excluding the dealer)
@@ -131,7 +129,7 @@ public class BlackjackGame implements Game {
         StringBuilder winners = new StringBuilder();
 
         for (Playable player : players) {
-            if (player == dealer || player.getName().equals("Dealer")) continue;
+            if (player.getName().equals("Dealer")) continue;
             int playerScore = calculateScore(player.getHand());
             boolean isBust = playerScore > 21;
 
@@ -143,7 +141,7 @@ public class BlackjackGame implements Game {
                 return "Draw!";
             }
         }
-        return !winners.isEmpty() ? winners.toString() : "Dealer wins!";
+        return !winners.isEmpty() ? winners.toString() : "Dealer";
     }
 
     @Override
@@ -253,9 +251,6 @@ public class BlackjackGame implements Game {
     public GameType getGameType() {
         return GameType.BLACKJACK;
     }
-
-    @Override
-    public String handlePlayerTurn() {return null;}
 
     @Override
     public GameMode getGameMode() {

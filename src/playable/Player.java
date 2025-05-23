@@ -1,9 +1,10 @@
 package playable;
 
+import card.CardSkin;
 import gamemode.GameMode;
 import card.Card;
 import games.Game;
-import server.Client;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +16,8 @@ public class Player implements Playable {
     private GameMode gameMode;
     private int currentBalance;
     private boolean status;
-    private Client client;
 
+    private CardSkin cardSkin;
     public Player(String name, int id) {
         this.name = name;
         this.id = id;
@@ -71,8 +72,6 @@ public class Player implements Playable {
     public int getId() {return id;}
 
 
-
-    public Client getClient() {return client;}
     @Override
     public String toString() {
         return "Player{" +

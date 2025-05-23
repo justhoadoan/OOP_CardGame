@@ -5,7 +5,6 @@ import gamemode.JavaFXPokerMode;
 import games.GameType;
 import games.PokerGame;
 import input.PokerActionProcessor;
-import input.PokerButtonHandler;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -18,9 +17,7 @@ import javafx.scene.text.Text;
 import playable.AI;
 import playable.Playable;
 import playable.Player;
-import server.Client;
-import server.NetworkManager;
-import server.Server;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -65,7 +62,6 @@ public class PokerGameGui {
     private PokerGame game;
     private CardSkin cardSkin;
     private JavaFXPokerMode gameMode;
-    private NetworkManager networkManager;
     private boolean isOnlineMode;
     private String aiStrategy;
     private int playerId = 1;
@@ -120,45 +116,7 @@ public class PokerGameGui {
             card.setSmooth(true);
         }
     }
-    public void setupServerGame(String selectedSkin, int port) throws IOException {
-        this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
-        this.isOnlineMode = true;
-        setupBaseComponents();
 
-        // Initialize server-side game components
-        game = new PokerGame(gameMode, networkManager, cardSkin);
-        gameMode.setGame(game);
-        gameMode.setCardSkin(cardSkin);
-
-        // Add local player (server)
-        Player localPlayer = new Player("Player 1", playerId);
-        localPlayer.addCurrentBalance(1000);
-        game.addPlayer(localPlayer);
-
-        // Start server
-        networkManager = new Server(port, game);
-        networkManager.start();
-    }
-    public void setupClientGame(String selectedSkin, String ip, int port) {
-        this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
-        this.isOnlineMode = true;
-        setupBaseComponents();
-
-        // Initialize client-side network manager
-        networkManager = new Client(ip, port, gameMode, GameType.POKER, cardSkin);
-
-        // Start client in separate thread
-        new Thread(() -> {
-            try {
-                networkManager.start();
-            } catch (IOException e) {
-                Platform.runLater(() -> {
-                    e.printStackTrace();
-                    // Show error dialog
-                });
-            }
-        }).start();
-    }
 
     private void setupBaseComponents() {
         // Set up common components
@@ -219,12 +177,10 @@ public class PokerGameGui {
 
     private void setupEventHandlers() {
         PokerActionProcessor processor = new PokerActionProcessor();
-
         // Setup raise slider and field sync
         raiseSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             raiseField.setText(String.valueOf(newVal.intValue()));
         });
-
         raiseField.textProperty().addListener((obs, oldVal, newVal) -> {
             try {
                 int value = Integer.parseInt(newVal);
@@ -233,17 +189,15 @@ public class PokerGameGui {
                 }
             } catch (NumberFormatException ignored) {}
         });
-
         // Setup raise button
         raiseButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
                 try {
                     int amount = Integer.parseInt(raiseField.getText());
                     int playerBalance = game.getCurrentPlayer().getCurrentBalance();
-                    processor.processAction("raise:" + amount, game, null);
+                    processor.processAction("raise:" + amount, game, game.getCurrentPlayer());
                     updateMoneyDisplays();
                     game.progressGame();
-
                 } catch (NumberFormatException ex) {
                     // Show error message
                     System.err.println("Invalid raise amount");
@@ -254,7 +208,7 @@ public class PokerGameGui {
         // Setup fold button
         foldButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
-                processor.processAction("fold", game, null);
+                processor.processAction("fold", game, game.getCurrentPlayer());
                 updateMoneyDisplays();
                 game.progressGame();
             }
@@ -309,11 +263,7 @@ public class PokerGameGui {
         }
     }
 
-    public void cleanup() {
-        if (networkManager != null) {
-            networkManager.close();
-        }
-    }
+
 
     public JavaFXPokerMode getGameMode() {
         return gameMode;
