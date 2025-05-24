@@ -43,9 +43,6 @@ public class PokerGame implements Game {
         }
 
     }
-
-
-
     public void start() {
         initializeGame();
         dealInitialCards();
@@ -292,13 +289,9 @@ public class PokerGame implements Game {
     }
 
     public GameMode getGameMode() {return gameMode;}
-
     public void setGameMode(GameMode gameMode) {this.gameMode = gameMode;}
-
     @Override
     public void broadcastState() {
-
-
         if (gameMode != null) {
             boolean isHumanPlayer = currentPlayer instanceof Player;
             List<Card> playerHand = null;
@@ -316,15 +309,9 @@ public class PokerGame implements Game {
         }
     }
 
-
     @Override
     public boolean isGameOver() {
-        int activePlayers = 0;
-        for(Playable player : players) {
-            if(player.getStatus())
-                activePlayers++;
-        }
-        return activePlayers == 1;
+        return countActivePlayers() == 1;
     }
 
     public GameType getGameType() {return GameType.POKER; }
@@ -341,7 +328,6 @@ public class PokerGame implements Game {
     void resetBets() {
         this.pot = 0; this.currentBet = 0;
     }
-
     private int countActivePlayers() {
         int count = 0;
         for (Playable player : players) {
@@ -351,15 +337,12 @@ public class PokerGame implements Game {
         }
         return count;
     }
-
     public List<Card> getCommunityCards() {
         return communityCards;
     }
-
     public String getPot() {
         return String.valueOf(pot);
     }
 
-    // Add a method to check if deck is empty
 
 }

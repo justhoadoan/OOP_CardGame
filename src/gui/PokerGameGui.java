@@ -105,6 +105,74 @@ public class PokerGameGui {
         raiseButton.setDisable(false);
         foldButton.setDisable(false);
     }
+    public void setupGame(String selectedSkin, int numberOfPlayers) {
+        this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
+        this.isOnlineMode = false;
+        setupBaseComponents();
+
+        // Setup offline game
+        game = new PokerGame(gameMode, null, cardSkin);
+        gameMode.setGame(game);
+
+        // Add human player
+        Player humanPlayer = new Player("Player 1", 1);
+        humanPlayer.addCurrentBalance(1000);
+        game.addPlayer(humanPlayer);
+
+        // Add AI or additional human players based on the number of players
+        for (int i = 2; i <= numberOfPlayers; i++) {
+            if (numberOfPlayers == 1) {
+                AI aiPlayer = new AI(i, "AI Player");
+                aiPlayer.addCurrentBalance(1000);
+                aiPlayer.setStrategyType("Rule based");
+                game.addPlayer(aiPlayer);
+            } else {
+                Player additionalPlayer = new Player("Player " + i, i);
+                additionalPlayer.addCurrentBalance(1000);
+                game.addPlayer(additionalPlayer);
+            }
+        }
+
+        game.start();
+        updatePlayerVisibility(numberOfPlayers);
+        updateMoneyDisplays();
+    }
+
+    private void updatePlayerVisibility(int numberOfPlayers) {
+        // Hide all player areas initially
+        player1CardArea.setVisible(false);
+        player2CardArea.setVisible(false);
+        player3CardArea.setVisible(false);
+        player4CardArea.setVisible(false);
+
+        // Show only the relevant player areas
+        if (numberOfPlayers >= 1) player1CardArea.setVisible(true);
+        if (numberOfPlayers >= 2) player2CardArea.setVisible(true);
+        if (numberOfPlayers >= 3) player3CardArea.setVisible(true);
+        if (numberOfPlayers == 4) player4CardArea.setVisible(true);
+    }
+
+    private void updatePlayerCardVisibility() {
+        List<Playable> players = game.getPlayers();
+        Playable currentPlayer = game.getCurrentPlayer();
+
+        // Hide all player cards initially
+        player1CardArea.setVisible(false);
+        player2CardArea.setVisible(false);
+        player3CardArea.setVisible(false);
+        player4CardArea.setVisible(false);
+
+        // Show only the current player's cards
+        if (currentPlayer == players.get(0)) {
+            player1CardArea.setVisible(true);
+        } else if (currentPlayer == players.get(1)) {
+            player2CardArea.setVisible(true);
+        } else if (players.size() > 2 && currentPlayer == players.get(2)) {
+            player3CardArea.setVisible(true);
+        } else if (players.size() > 3 && currentPlayer == players.get(3)) {
+            player4CardArea.setVisible(true);
+        }
+    }
     private void setCardSize(ImageView... cards) {
         double cardWidth = 60;
         double cardHeight = 87;

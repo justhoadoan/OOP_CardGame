@@ -16,9 +16,14 @@ public class PokerActionProcessor implements ActionProcessor {
     private Random random = new Random();
     @Override
     public void processAction(String action, Game game, Playable currentPlayer) {
+        if (currentPlayer == null) {
+            System.err.println("Error: currentPlayer is null.");
+            return; // Prevent further processing
+        }
         action=action.toLowerCase();
         System.out.println("action: "+action);
         System.out.println("currentPlayer: "+currentPlayer.getName());
+
             if (currentPlayer instanceof AI) {
                 AI ai = (AI) currentPlayer;
                 if (action.equals("raise")) {
