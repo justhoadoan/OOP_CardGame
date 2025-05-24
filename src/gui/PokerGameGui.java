@@ -110,7 +110,6 @@ public class PokerGameGui {
         this.isOnlineMode = false;
         setupBaseComponents();
 
-        // Setup offline game
         game = new PokerGame(gameMode, null, cardSkin);
         gameMode.setGame(game);
 
@@ -152,27 +151,6 @@ public class PokerGameGui {
         if (numberOfPlayers == 4) player4CardArea.setVisible(true);
     }
 
-    private void updatePlayerCardVisibility() {
-        List<Playable> players = game.getPlayers();
-        Playable currentPlayer = game.getCurrentPlayer();
-
-        // Hide all player cards initially
-        player1CardArea.setVisible(false);
-        player2CardArea.setVisible(false);
-        player3CardArea.setVisible(false);
-        player4CardArea.setVisible(false);
-
-        // Show only the current player's cards
-        if (currentPlayer == players.get(0)) {
-            player1CardArea.setVisible(true);
-        } else if (currentPlayer == players.get(1)) {
-            player2CardArea.setVisible(true);
-        } else if (players.size() > 2 && currentPlayer == players.get(2)) {
-            player3CardArea.setVisible(true);
-        } else if (players.size() > 3 && currentPlayer == players.get(3)) {
-            player4CardArea.setVisible(true);
-        }
-    }
     private void setCardSize(ImageView... cards) {
         double cardWidth = 60;
         double cardHeight = 87;
