@@ -46,7 +46,6 @@ public class PokerGame implements Game {
     public void start() {
         initializeGame();
         dealInitialCards();
-        allPlayerBet();
         for (Playable player : players) {
             if (player instanceof Player) {
                 currentPlayer = player;
@@ -62,6 +61,7 @@ public class PokerGame implements Game {
         }
         // If no community cards, deal flop
         if (communityCards.isEmpty()) {
+            allPlayerBet();
             dealCommunityCards(3);  // Deal flop
             allPlayerBet();
         }
@@ -143,7 +143,7 @@ public class PokerGame implements Game {
             }
         }
     }
-    private void allPlayerBet() {
+    public void allPlayerBet() {
         List<Playable> activePlayers = players.stream()
                 .filter(Playable::getStatus)
                 .collect(Collectors.toList());
