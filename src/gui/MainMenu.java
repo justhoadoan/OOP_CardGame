@@ -26,7 +26,7 @@ public class MainMenu {
     @FXML
     private AnchorPane mainMenuPane;
     @FXML
-    private Pane typePane;
+    private Pane multiplayerPane;
     @FXML
     private ChoiceBox<String> gameChoiceBox;
     @FXML
@@ -34,7 +34,7 @@ public class MainMenu {
     @FXML
     private ChoiceBox<String> gameModeChoiceBox;
     @FXML
-    private ChoiceBox<String> typeChoiceBox;
+    private ChoiceBox<String> multiplayerChoiceBox;
 
     private Stage stage;
 
@@ -44,11 +44,11 @@ public class MainMenu {
         gameChoiceBox.setItems(FXCollections.observableArrayList("Poker", "BlackJack"));
         cardSkinChoiceBox.setItems(FXCollections.observableArrayList("Traditional", "Realistic", "Animated"));
         gameModeChoiceBox.setItems(FXCollections.observableArrayList("Graphic", "Non-Graphic"));
-        typeChoiceBox.setItems(FXCollections.observableArrayList("Online", "Offline"));
+        multiplayerChoiceBox.setItems(FXCollections.observableArrayList("1", "2", "3", "4"));
 
         // Initially hide optional panes
         skinPane.setVisible(false);
-        typePane.setVisible(false);
+        multiplayerPane.setVisible(false);
 
         // Handle Graphic/Non-Graphic selection
         gameModeChoiceBox.setOnAction(e -> {
@@ -57,7 +57,7 @@ public class MainMenu {
 
         // Handle Poker/Blackjack selection
         gameChoiceBox.setOnAction(e -> {
-            typePane.setVisible("Poker".equals(gameChoiceBox.getValue()));
+            multiplayerPane.setVisible("Poker".equals(gameChoiceBox.getValue()));
         });
     }
 
@@ -74,7 +74,7 @@ public class MainMenu {
             AnchorPane contentPane; // The root element to scale
             Scene scene;
 
-            if ("Online".equals(typeChoiceBox.getValue())) {
+            if ("Online".equals(multiplayerChoiceBox.getValue())) {
                 loader = new FXMLLoader(getClass().getResource("/gui/OnlineMenu.fxml"));
                 StackPane rootPane = loader.load();
                 scene = new Scene(rootPane);
@@ -121,9 +121,9 @@ public class MainMenu {
         gameChoiceBox.getSelectionModel().clearSelection();
         cardSkinChoiceBox.getSelectionModel().clearSelection();
         gameModeChoiceBox.getSelectionModel().clearSelection();
-        typeChoiceBox.getSelectionModel().clearSelection();
+        multiplayerChoiceBox.getSelectionModel().clearSelection();
         skinPane.setVisible(false);
-        typePane.setVisible(false);
+        multiplayerPane.setVisible(false);
         mainMenuPane.setVisible(true);
         nextMainMenu.setVisible(true);
         nextMainMenu.setDisable(false);

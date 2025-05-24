@@ -61,14 +61,14 @@
                   <Text layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-common" text="Game mode" />
                </children>
             </Pane>
-            <Pane fx:id="typePane" layoutX="202.0" layoutY="37.0" prefHeight="54.0" prefWidth="142.0">
+            <Pane fx:id="multiplayerPane" layoutX="202.0" layoutY="37.0" prefHeight="54.0" prefWidth="142.0">
                <children>
                   <HBox layoutY="18.0" prefHeight="27.0" prefWidth="143.0">
                      <children>
-                        <ChoiceBox fx:id="typeChoiceBox" />
+                        <ChoiceBox fx:id="multiplayerChoiceBox" />
                      </children>
                   </HBox>
-                  <Text layoutX="2.0" layoutY="13.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-common" text="Type" />
+                  <Text layoutX="2.0" layoutY="13.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-common" text="Number of players" />
                </children>
             </Pane>
             <Button fx:id="nextMainMenu" layoutX="116.0" layoutY="169.0" onAction="#Next" styleClass="menu-button" text="Next" />

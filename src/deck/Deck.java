@@ -11,7 +11,7 @@ public class Deck {
 
     public Deck() {
         cards = new ArrayList<>();
-        reset();
+        createNewDeck();
     }
 
     public Deck(CardSkin skin) {
