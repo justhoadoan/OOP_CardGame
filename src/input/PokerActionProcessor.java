@@ -27,7 +27,7 @@ public class PokerActionProcessor implements ActionProcessor {
             if (currentPlayer instanceof AI) {
                 AI ai = (AI) currentPlayer;
                 if (action.equals("raise")) {
-                    System.out.println("ai rasing");
+                    System.out.println("ai raising");
                     int amount = calculateAIRaiseAmount(ai);
                     ((PokerGame) game).playerRaise(ai, amount);
                 } else {
@@ -35,12 +35,11 @@ public class PokerActionProcessor implements ActionProcessor {
                     ((PokerGame) game).playerFold(ai);
                 }
             } else if (currentPlayer instanceof Player) {
-                System.out.println(action);
                 if (action.split(":")[0].equals("raise")) {
-                    System.out.println("rasing");
+                    System.out.println(" player raising");
                     ((PokerGame) game).playerRaise(currentPlayer, Integer.parseInt(action.split(":")[1]));
                 } else if (action.equals("fold")) {
-                    System.out.println("folding");
+                    System.out.println("player folding");
                     ((PokerGame) game).playerFold((Player) currentPlayer);
                 }
 

@@ -241,6 +241,7 @@ public class PokerGameGui {
                 try {
                     int amount = Integer.parseInt(raiseField.getText());
                     int playerBalance = game.getCurrentPlayer().getCurrentBalance();
+                    System.out.println("asdhakdjshaksjhdajksdh");
                     processor.processAction("raise:" + amount, game, game.getCurrentPlayer());
                     updateMoneyDisplays();
                     game.progressGame();

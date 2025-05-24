@@ -195,10 +195,7 @@ public class PokerGame implements Game {
     public List<Playable> getPlayers() {return players;}
 
     @Override
-    public Playable getCurrentPlayer() {
-
-        return currentPlayer;
-    }
+    public Playable getCurrentPlayer() {return currentPlayer;}
 
     @Override
     public List<Card> getPlayerHand(int playerId) {

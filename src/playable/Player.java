@@ -16,6 +16,7 @@ public class Player implements Playable {
     private GameMode gameMode;
     private int currentBalance;
     private boolean status;
+    private int currentBet;
 
     private CardSkin cardSkin;
     public Player(String name, int id) {
@@ -56,14 +57,10 @@ public class Player implements Playable {
     public void addCurrentBalance(int currentBalance) {this.currentBalance += currentBalance;}
 
     @Override
-    public int getCurrentBet() {
-        return 0; // Not applicable for Player class
-    }
+    public int getCurrentBet() {return currentBet;}
 
     @Override
-    public void setCurrentBet(int i) {
-        // Not applicable for Player class
-    }
+    public void setCurrentBet(int currentBet) {this.currentBet = currentBet;}
 
     public void resetHand() {this.hand = new ArrayList<>();}
 
@@ -83,5 +80,4 @@ public class Player implements Playable {
     public void deductCurrentBalance(int amount) {
         currentBalance -= amount;
     }
-
 }
