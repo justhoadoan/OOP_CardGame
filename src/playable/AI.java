@@ -15,6 +15,7 @@ public class AI implements Playable {
     private boolean status;
     private Random random;
     private int currentBalance;
+    private int currentBet;
 
     public AI(int id, String name) {
         this.id = id;
@@ -83,14 +84,10 @@ public class AI implements Playable {
     }
 
     @Override
-    public int getCurrentBet() {
-        return 0;
-    }
+    public int getCurrentBet() {return currentBet;}
 
     @Override
-    public void setCurrentBet(int i) {
-
-    }
+    public void setCurrentBet(int currentBet) {this.currentBet = currentBet;}
 
     public void setCurrentBalance(int balance) {
         this.currentBalance = balance;

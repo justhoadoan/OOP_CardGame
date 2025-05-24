@@ -19,10 +19,9 @@ public class MonteCarloAIStrategy implements AIStrategy {
             System.out.println("Pot: " + pot + ", Current Bet: " + currentBet);
             System.out.println("Win Rate: " + winRate);
 
-            if (winRate > 0.7) {
+            winRate = winRate * 3;
+            if (winRate > 0.5) {
                 return "RAISE";
-            } else if (winRate > 0.45) {
-                return (currentBet < pot / 3) ? "CALL" : "FOLD";
             } else {
                 return "FOLD";
             }
@@ -34,6 +33,8 @@ public class MonteCarloAIStrategy implements AIStrategy {
     private double monteCarloSimulation(List<Card> hand, List<Card> communityCards) {
         int wins = 0;
         int losses = 0;
+        int draws = 0;
+
         List<Card> deck = generateDeck(hand, communityCards);
         for (int i = 0; i < SIMULATIONS; i++) {
             Collections.shuffle(deck);
@@ -51,9 +52,12 @@ public class MonteCarloAIStrategy implements AIStrategy {
             } else if (myRank.ordinal() < opponentRank.ordinal()) {
                 losses++;
             }
+            else {
+                draws++;
+            }
         }
 
-        return (double) wins / (wins + losses);
+        return (double)(wins + 0.5 * draws) / (wins + losses + draws);
     }
     private List<Card> generateDeck(List<Card> hand, List<Card> communityCards) {
         List<Card> deck = new ArrayList<>();

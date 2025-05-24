@@ -36,7 +36,7 @@ public class PokerActionProcessor implements ActionProcessor {
                 }
             } else if (currentPlayer instanceof Player) {
                 if (action.split(":")[0].equals("raise")) {
-                    System.out.println(" player raising");
+                    System.out.println("player raising");
                     ((PokerGame) game).playerRaise(currentPlayer, Integer.parseInt(action.split(":")[1]));
                 } else if (action.equals("fold")) {
                     System.out.println("player folding");

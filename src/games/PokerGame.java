@@ -153,7 +153,7 @@ public class PokerGame implements Game {
         while (!bettingComplete) {
             bettingComplete = true;
             for (Playable player : activePlayers) {
-                if (!player.getStatus()) continue;
+                if (!player.getStatus() || (player.getCurrentBet() >= currentBet)) continue;
                 currentPlayer = player;
                 if (player instanceof AI) {
                     handleAIAction((AI) player);
@@ -177,6 +177,10 @@ public class PokerGame implements Game {
         }
         currentBet = 0;
     }
+
+    public void setCurrentBetGame(int currentBet) {this.currentBet = currentBet;}
+
+    public int getCurrentBetGame() {return currentBet;}
 
     private void handleAIAction(AI ai) {
         PokerState state = new PokerState(
@@ -252,6 +256,9 @@ public class PokerGame implements Game {
     @Override
     public void playerRaise(Playable player, int raiseAmount) {
         int currentBalance = player.getCurrentBalance();
+        if (player instanceof AI) {raiseAmount += currentBet;}
+        System.out.println("Player " + player.getName() + " raised to " + raiseAmount + " of " + "Current bet: " + currentBet);
+        System.out.println(raiseAmount);
         int totalBetNeeded = raiseAmount - player.getCurrentBet(); // Calculate additional amount needed
 
         if (currentBalance >= totalBetNeeded && totalBetNeeded > 0) {
