@@ -23,7 +23,7 @@ public class MainMenu {
     @FXML
     private Pane mainMenuPane;
     @FXML
-    private Pane typePane;
+    private Pane multiplayerPane;
     @FXML
     private ChoiceBox<String> gameChoiceBox;
     @FXML
@@ -49,7 +49,7 @@ public class MainMenu {
 
         // skinPane and typePane initially invisible
         skinPane.setVisible(false);
-        typePane.setVisible(false);
+        multiplayerPane.setVisible(false);
 
         // Set visibility of skinPane based on gameModeChoiceBox value
         gameModeChoiceBox.setOnAction(e -> {
@@ -65,9 +65,9 @@ public class MainMenu {
         // Set visibility of typePane based on gameChoiceBox value
         gameChoiceBox.setOnAction(e -> {
             if (gameChoiceBox.getValue().equals("Poker")) {
-                typePane.setVisible(true);
+                multiplayerPane.setVisible(true);
             } else {
-                typePane.setVisible(false);
+                multiplayerPane.setVisible(false);
             }
         });
     }
@@ -126,7 +126,7 @@ public class MainMenu {
         gameModeChoiceBox.getSelectionModel().clearSelection();
         typeChoiceBox.getSelectionModel().clearSelection();
         skinPane.setVisible(false);
-        typePane.setVisible(false);
+        multiplayerPane.setVisible(false);
         mainMenuPane.setVisible(true);
         nextMainMenu.setVisible(true);
         // reset button
