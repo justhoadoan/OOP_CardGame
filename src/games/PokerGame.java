@@ -62,6 +62,7 @@ public class PokerGame implements Game {
         // If no community cards, deal flop
         if (communityCards.isEmpty()) {
             allPlayerBet();
+            if(isGameOver()) return;
             dealCommunityCards(3);  // Deal flop
             allPlayerBet();
         }
@@ -161,6 +162,14 @@ public class PokerGame implements Game {
                 if (player.getStatus() && player.getCurrentBet() < currentBet) {
                     bettingComplete = false;
                 }
+            }
+            // check if all active players have matched the current bet
+            boolean allMatched = activePlayers.stream()
+                    .filter(Playable::getStatus)
+                    .allMatch(p -> p.getCurrentBet() == currentBet);
+
+            if (allMatched) {
+                bettingComplete = true;
             }
         }
         for (Playable player : players) {
