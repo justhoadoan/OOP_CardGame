@@ -192,12 +192,10 @@ public class PokerGameGui {
                 try {
                     int amount = Integer.parseInt(raiseField.getText());
                     int playerBalance = game.getCurrentPlayer().getCurrentBalance();
+                    processor.processAction("raise:" + amount, game, null);
+                    updateMoneyDisplays();
+                    game.progressGame();
 
-                    if (amount > 0 && amount <= playerBalance) {
-                        processor.processAction("raise:" + amount, game, null);
-                        updateMoneyDisplays();
-                        game.progressGame();
-                    }
                 } catch (NumberFormatException ex) {
                     // Show error message
                     System.err.println("Invalid raise amount");
@@ -219,13 +217,17 @@ public class PokerGameGui {
             // Update pot money
             potMoney.setText("$" + game.getPot());
 
-            // Update player money
+            // Update player money labels
             List<Playable> players = game.getPlayers();
             Label[] moneyLabels = {player1Money, player2Money, player3Money, player4Money};
 
-            for (int i = 0; i < moneyLabels.length && i < ((List<?>) players).size(); i++) {
+            for (int i = 0; i < moneyLabels.length && i < players.size(); i++) {
                 Playable player = players.get(i);
-                moneyLabels[i].setText("$" + player.getCurrentBalance());
+                if (player.getStatus()) {
+                    moneyLabels[i].setText("$" + player.getCurrentBalance());
+                } else {
+                    moneyLabels[i].setText("Folded");
+                }
             }
         }
     }
