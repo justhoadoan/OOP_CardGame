@@ -69,11 +69,11 @@ public class PokerGame implements Game {
             return;
         }
 
-        boolean allPlayersBet = players.stream()
-                .filter(Playable::getStatus)
-                .allMatch(Playable::getHasBet);
+//        boolean allPlayersBet = players.stream()
+//                .filter(Playable::getStatus)
+//                .allMatch(Playable::getHasBet);
 
-        if (allPlayersBet) {
+        if (checkAllPlayersMatchBet()) {
             // Reset betting status
             for (Playable player : players) {
                 player.setHasBet(false);
@@ -104,10 +104,9 @@ public class PokerGame implements Game {
             // Find next active player
             int currentIndex = players.indexOf(currentPlayer);
             int nextIndex = (currentIndex + 1) % players.size();
-
             while (nextIndex != currentIndex) {
                 Playable nextPlayer = players.get(nextIndex);
-                if (nextPlayer.getStatus() && !nextPlayer.getHasBet()) {
+                if (nextPlayer.getStatus()) {
                     currentPlayer = nextPlayer;
                     if (currentPlayer instanceof AI) {
                         handleAIAction((AI) currentPlayer);
@@ -119,6 +118,18 @@ public class PokerGame implements Game {
         }
 
         broadcastState();
+    }
+    private boolean checkAllPlayersMatchBet() {
+        boolean allMatched = true;
+        for (Playable player : players) {
+        }
+        for (Playable player : players) {
+            if (player.getStatus() && player.getCurrentBet() != currentBet) {
+                allMatched = false;
+                break;
+            }
+        }
+        return allMatched;
     }
     private void initializeGame() {
         deck.reset();
@@ -337,20 +348,25 @@ public class PokerGame implements Game {
     @Override
     public void playerRaise(Playable player, int raiseAmount) {
         int currentBalance = player.getCurrentBalance();
-        if (player instanceof AI) {raiseAmount += currentBet;}
-        System.out.println("Player " + player.getName() + " raised to " + raiseAmount + " of " + "Current bet: " + currentBet);
-        System.out.println(raiseAmount);
-        int totalBetNeeded = raiseAmount - player.getCurrentBet(); // Calculate additional amount needed
+//        if (player instanceof AI) {raiseAmount += currentBet;}
+//        System.out.println("Player " + player.getName() + " raised " + raiseAmount + " of " + "Current bet: " + currentBet);
+//        int totalBetNeeded = raiseAmount - player.getCurrentBet(); // Calculate additional amount needed
+        int totalBetNeeded = raiseAmount + player.getCurrentBet();
 
-        if (currentBalance >= totalBetNeeded && totalBetNeeded > 0) {
+        if (currentBalance >= raiseAmount && raiseAmount > 0) {
             // Update player's bet and balance
-            player.addCurrentBalance(-totalBetNeeded);
-            pot += totalBetNeeded;
-            player.setCurrentBet(raiseAmount);
-            currentBet = Math.max(currentBet, raiseAmount);
+            player.addCurrentBalance(-raiseAmount);
+//            player.addCurrentBalance(-totalBetNeeded);
+            pot += raiseAmount;
+//            pot += totalBetNeeded;
+            player.setCurrentBet(totalBetNeeded);
+            currentBet = Math.max(currentBet, totalBetNeeded);
 
             // Update UI immediately
             broadcastState();
+        }
+        else {
+            System.out.println("Player " + player.getName() + " cannot raise. Insufficient balance or invalid amount.");
         }
     }
 

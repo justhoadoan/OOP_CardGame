@@ -218,7 +218,7 @@ public class PokerGameGui {
         raiseButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
                 Playable currentPlayer = game.getCurrentPlayer();
-                if (!currentPlayer.getHasBet()) {
+//                if (!currentPlayer.getHasBet()) {
                     try {
                         int amount = Integer.parseInt(raiseField.getText());
                         processor.processAction("raise:" + amount, game, currentPlayer);
@@ -229,7 +229,7 @@ public class PokerGameGui {
                     } catch (NumberFormatException ex) {
                         System.err.println("Invalid raise amount");
                     }
-                }
+//                }
             }
         });
 
@@ -237,13 +237,13 @@ public class PokerGameGui {
         foldButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
                 Playable currentPlayer = game.getCurrentPlayer();
-                if (!currentPlayer.getHasBet()) {
+//                if (!currentPlayer.getHasBet()) {
                     processor.processAction("fold", game, currentPlayer);
                     currentPlayer.setHasBet(true);
                     updateMoneyDisplays();
                     game.progressGame();
                     gameMode.updateDisplay(null, game.getPublicState(), null);
-                }
+//                }
             }
         });
     }
