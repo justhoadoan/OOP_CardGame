@@ -7,13 +7,11 @@ import games.PokerGame;
 import input.PokerActionProcessor;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import playable.AI;
 import playable.Playable;
 import playable.Player;
@@ -186,7 +184,6 @@ public class PokerGameGui {
         // Setup input handlers
         setupEventHandlers();
     }
-
 
     public void setupGame(String selectedSkin, String selectedAI, boolean isOnline) {
         if (isOnline) return; // Don't use this method for online mode

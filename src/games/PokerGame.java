@@ -57,42 +57,31 @@ public class PokerGame implements Game {
     }
 
     public void progressGame() {
-        if (isGameOver()) return;
-
-
-        int currentIndex = players.indexOf(currentPlayer);
-        int nextIndex = (currentIndex + 1) % players.size();
-        boolean foundNextPlayer = false;
-
-
-        while (nextIndex != currentIndex && !foundNextPlayer) {
-            Playable nextPlayer = players.get(nextIndex);
-            if (nextPlayer.getStatus() && !nextPlayer.getHasBet()) {
-                currentPlayer = nextPlayer;
-                foundNextPlayer = true;
-                if (currentPlayer instanceof AI) {
-                    handleAIAction((AI) currentPlayer);
-                }
-                broadcastState();
-                return;
-            }
-            nextIndex = (nextIndex + 1) % players.size();
+        // Check for game over first
+        if (isGameOver()) {
+            determineWinner();
+            return;
         }
 
+        // Check if only one player is active
+        if (countActivePlayers() == 1) {
+            determineWinner();
+            return;
+        }
 
         boolean allPlayersBet = players.stream()
                 .filter(Playable::getStatus)
                 .allMatch(Playable::getHasBet);
 
         if (allPlayersBet) {
-
+            // Reset betting status
             for (Playable player : players) {
                 player.setHasBet(false);
                 player.setCurrentBet(0);
             }
             currentBet = 0;
 
-            // Chia bài cộng đồng
+            // Deal community cards or end game
             if (communityCards.isEmpty()) {
                 dealCommunityCards(3);  // Flop
             } else if (communityCards.size() == 3) {
@@ -104,12 +93,28 @@ public class PokerGame implements Game {
                 return;
             }
 
-            // Set current player về người chơi đầu tiên còn active
+            // Find first active player
             for (Playable player : players) {
                 if (player.getStatus()) {
                     currentPlayer = player;
                     break;
                 }
+            }
+        } else {
+            // Find next active player
+            int currentIndex = players.indexOf(currentPlayer);
+            int nextIndex = (currentIndex + 1) % players.size();
+
+            while (nextIndex != currentIndex) {
+                Playable nextPlayer = players.get(nextIndex);
+                if (nextPlayer.getStatus() && !nextPlayer.getHasBet()) {
+                    currentPlayer = nextPlayer;
+                    if (currentPlayer instanceof AI) {
+                        handleAIAction((AI) currentPlayer);
+                    }
+                    break;
+                }
+                nextIndex = (nextIndex + 1) % players.size();
             }
         }
 
@@ -158,23 +163,64 @@ public class PokerGame implements Game {
         }
     }
     private void determineWinner() {
-        Playable winner = null;
-        HandRank bestRank = null;
-        for (Playable player : players) {
-            if (player.getStatus()) {
-                HandRank currentRank = PokerHandEvaluator.evaluateHand(player.getHand());
-                if (bestRank == null || currentRank.compareTo(bestRank) > 0) {
-                    bestRank = currentRank;
-                    winner = player;
+        try {
+            // If only one player is active, they automatically win
+            if (countActivePlayers() == 1) {
+                Playable winner = players.stream()
+                        .filter(Playable::getStatus)
+                        .findFirst()
+                        .orElse(null);
+                if (winner != null) {
+                    // Distribute pot to winner
+                    winner.addCurrentBalance(pot);
+                    pot = 0;
+
+                    // Set all other players' status to false
+                    for (Playable player : players) {
+                        if (player != winner) {
+                            player.setStatus(false);
+                        }
+                    }
+                    // Keep winner's status as true
+                    broadcastState();
+                    return;
                 }
             }
-        }
-        if (winner != null) {
-            if (winner instanceof Player) {
-                distributePot((Player) winner);
-            } else if (winner instanceof AI) {
-                distributePot(distributePot((AI) winner));
+
+            // If game reached showdown, evaluate hands
+            Playable winner = null;
+            HandRank bestRank = null;
+
+            for (Playable player : players) {
+                if (player.getStatus()) {
+                    List<Card> combinedCards = new ArrayList<>(player.getHand());
+                    combinedCards.addAll(communityCards);
+                    HandRank currentRank = PokerHandEvaluator.evaluateHand(combinedCards);
+
+                    if (bestRank == null || currentRank.compareTo(bestRank) > 0) {
+                        bestRank = currentRank;
+                        winner = player;
+                    }
+                }
             }
+
+            if (winner != null) {
+                // Set all other players' status to false
+                for (Playable player : players) {
+                    if (player != winner) {
+                        player.setStatus(false);
+                    }
+                }
+
+                // Distribute pot to winner
+                winner.addCurrentBalance(pot);
+                pot = 0;
+
+                // Keep winner's status as true
+                broadcastState();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     public void allPlayerBet() {
@@ -199,7 +245,6 @@ public class PokerGame implements Game {
                     }
 
                 }
-
                 if (isGameOver()) return;
                 if (player.getStatus() && player.getCurrentBet() < currentBet) {
                     bettingComplete = false;
@@ -360,7 +405,9 @@ public class PokerGame implements Game {
 
     @Override
     public boolean isGameOver() {
-        return countActivePlayers() == 1;
+        return countActivePlayers() == 1 ||
+                (communityCards.size() == 5 &&
+                        players.stream().filter(Playable::getStatus).allMatch(Playable::getHasBet));
     }
 
     public GameType getGameType() {return GameType.POKER; }
