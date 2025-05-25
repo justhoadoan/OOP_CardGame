@@ -124,7 +124,7 @@ public class MainMenu {
         gameChoiceBox.getSelectionModel().clearSelection();
         cardSkinChoiceBox.getSelectionModel().clearSelection();
         gameModeChoiceBox.getSelectionModel().clearSelection();
-        typeChoiceBox.getSelectionModel().clearSelection();
+       // typeChoiceBox.getSelectionModel().clearSelection();
         skinPane.setVisible(false);
         multiplayerPane.setVisible(false);
         mainMenuPane.setVisible(true);

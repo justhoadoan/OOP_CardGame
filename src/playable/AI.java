@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 public class AI implements Playable {
+    private boolean hasBet;
     private int id;
     private String strategyType;
     private String name;
@@ -85,6 +86,16 @@ public class AI implements Playable {
 
     @Override
     public int getCurrentBet() {return currentBet;}
+
+    @Override
+    public boolean getHasBet() {
+        return hasBet;
+    }
+
+    @Override
+    public void setHasBet(boolean hasBet) {
+        this.hasBet = hasBet;
+    }
 
     @Override
     public void setCurrentBet(int currentBet) {this.currentBet = currentBet;}

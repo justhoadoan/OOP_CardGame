@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class PokerGame implements Game {
+   // private final List<GameEventListener> listeners = new ArrayList<>();
     private Deck deck;
     private GameMode gameMode;
     private PlayerManager playerManager;
@@ -59,10 +60,12 @@ public class PokerGame implements Game {
         if (isGameOver()) {
             return;
         }
+
         // If no community cards, deal flop
         if (communityCards.isEmpty()) {
             allPlayerBet();
-            if(isGameOver()) return;
+            if(isGameOver())
+                return;
             dealCommunityCards(3);  // Deal flop
             allPlayerBet();
         }
@@ -70,17 +73,24 @@ public class PokerGame implements Game {
         else if (communityCards.size() == 3) {
             dealCommunityCards(1);
             allPlayerBet();
+            if (isGameOver()) {
+                return;
+            }
         }
         // River
         else if (communityCards.size() == 4) {
             dealCommunityCards(1);
             allPlayerBet();
+            if (isGameOver()) {
+                return;
+            }
         }
         // Game end
         else {
             determineWinner();
             return;
         }
+
         broadcastState();
     }
     private void initializeGame() {
@@ -93,6 +103,7 @@ public class PokerGame implements Game {
         for (Playable player : players) {
             player.resetHand();
             player.setStatus(true);
+            player.setHasBet(false); // Reset betting status
         }
 
         currentPlayer = players.get(0);
@@ -158,18 +169,18 @@ public class PokerGame implements Game {
                 if (player instanceof AI) {
                     handleAIAction((AI) player);
                 }
+                else {
+                    if(!player.getHasBet()) {
+                        bettingComplete = false;
+                        return;
+                    }
+                    System.out.println(player.getName() + " is betting...");
+                }
+
                 if (isGameOver()) return;
                 if (player.getStatus() && player.getCurrentBet() < currentBet) {
                     bettingComplete = false;
                 }
-            }
-            // check if all active players have matched the current bet
-            boolean allMatched = activePlayers.stream()
-                    .filter(Playable::getStatus)
-                    .allMatch(p -> p.getCurrentBet() == currentBet);
-
-            if (allMatched) {
-                bettingComplete = true;
             }
         }
         for (Playable player : players) {
@@ -181,6 +192,8 @@ public class PokerGame implements Game {
     public void setCurrentBetGame(int currentBet) {this.currentBet = currentBet;}
 
     public int getCurrentBetGame() {return currentBet;}
+
+
 
     private void handleAIAction(AI ai) {
         PokerState state = new PokerState(

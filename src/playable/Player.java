@@ -17,7 +17,7 @@ public class Player implements Playable {
     private int currentBalance;
     private boolean status;
     private int currentBet;
-
+    private boolean hasBet;
     private CardSkin cardSkin;
     public Player(String name, int id) {
         this.name = name;
@@ -41,7 +41,12 @@ public class Player implements Playable {
     public void setHand(List<Card> hand) {this.hand = new ArrayList<>(hand);}
 
     public void setGameMode(GameMode gameMode) {this.gameMode = gameMode;}
-
+    public boolean getHasBet() {
+        return hasBet;
+    }
+    public void setHasBet(boolean hasBet) {
+        this.hasBet = hasBet;
+    }
     @Override
     public void addCard(Card card) {
         if (this.hand == null) {

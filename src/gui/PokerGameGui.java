@@ -76,7 +76,6 @@ public class PokerGameGui {
         // Hide unused player areas initially
         player3CardArea.setVisible(false);
         player4CardArea.setVisible(false);
-
         // Set initial slider range
         raiseSlider.setMin(0);
         raiseSlider.setMax(1000);
@@ -105,6 +104,7 @@ public class PokerGameGui {
         raiseButton.setDisable(false);
         foldButton.setDisable(false);
     }
+
     public void setupGame(String selectedSkin, int numberOfPlayers) {
         this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
         this.isOnlineMode = false;
@@ -120,16 +120,9 @@ public class PokerGameGui {
 
         // Add AI or additional human players based on the number of players
         for (int i = 2; i <= numberOfPlayers; i++) {
-            if (numberOfPlayers == 1) {
-                AI aiPlayer = new AI(i, "AI Player");
-                aiPlayer.addCurrentBalance(1000);
-                aiPlayer.setStrategyType("Rule based");
-                game.addPlayer(aiPlayer);
-            } else {
-                Player additionalPlayer = new Player("Player " + i, i);
-                additionalPlayer.addCurrentBalance(1000);
-                game.addPlayer(additionalPlayer);
-            }
+            Player additionalPlayer = new Player("Player " + i, i);
+            additionalPlayer.addCurrentBalance(1000);
+            game.addPlayer(additionalPlayer);
         }
 
         game.start();
@@ -223,30 +216,22 @@ public class PokerGameGui {
 
     private void setupEventHandlers() {
         PokerActionProcessor processor = new PokerActionProcessor();
-        // Setup raise slider and field sync
-        raiseSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            raiseField.setText(String.valueOf(newVal.intValue()));
-        });
-        raiseField.textProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                int value = Integer.parseInt(newVal);
-                if (value >= raiseSlider.getMin() && value <= raiseSlider.getMax()) {
-                    raiseSlider.setValue(value);
-                }
-            } catch (NumberFormatException ignored) {}
-        });
+
         // Setup raise button
         raiseButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
-                try {
-                    int amount = Integer.parseInt(raiseField.getText());
-                    int playerBalance = game.getCurrentPlayer().getCurrentBalance();
-                    processor.processAction("raise:" + amount, game, game.getCurrentPlayer());
-                    updateMoneyDisplays();
-                    game.progressGame();
-                } catch (NumberFormatException ex) {
-                    // Show error message
-                    System.err.println("Invalid raise amount");
+                Playable currentPlayer = game.getCurrentPlayer();
+                if (!currentPlayer.getHasBet()) {
+                    try {
+                        int amount = Integer.parseInt(raiseField.getText());
+                        processor.processAction("raise:" + amount, game, currentPlayer);
+                        currentPlayer.setHasBet(true);
+                        updateMoneyDisplays();
+                        game.progressGame();
+                        gameMode.updateDisplay(null, game.getPublicState(), null);
+                    } catch (NumberFormatException ex) {
+                        System.err.println("Invalid raise amount");
+                    }
                 }
             }
         });
@@ -254,9 +239,14 @@ public class PokerGameGui {
         // Setup fold button
         foldButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
-                processor.processAction("fold", game, game.getCurrentPlayer());
-                updateMoneyDisplays();
-                game.progressGame();
+                Playable currentPlayer = game.getCurrentPlayer();
+                if (!currentPlayer.getHasBet()) {
+                    processor.processAction("fold", game, currentPlayer);
+                    currentPlayer.setHasBet(true);
+                    updateMoneyDisplays();
+                    game.progressGame();
+                    gameMode.updateDisplay(null, game.getPublicState(), null);
+                }
             }
         });
     }

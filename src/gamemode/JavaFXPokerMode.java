@@ -91,25 +91,29 @@ public class JavaFXPokerMode implements GameMode {
     private void updateAllPlayerCards(List<Card> currentPlayerHand) {
         if (game == null) return;
         List<Playable> players = game.getPlayers();
+        Playable currentPlayer = game.getCurrentPlayer();
 
         for (int i = 0; i < playerCards.length && i < players.size(); i++) {
             Playable player = players.get(i);
-            boolean isCurrentPlayerHand = player.getId() == playerId;
+            boolean isCurrentPlayer = player == currentPlayer;
+            List<Card> playerHand = player.getHand();
 
             for (int j = 0; j < playerCards[i].length; j++) {
-                if (isCurrentPlayerHand) {
-                    if (currentPlayerHand != null && j < currentPlayerHand.size()) {
-                        Card card = currentPlayerHand.get(j);
+                if (player.getStatus()) {
+                    if (isCurrentPlayer && j < playerHand.size()) {
+                        Card card = playerHand.get(j);
                         String path = cardSkin.getImagePath(card.getRank(), card.getSuit());
                         Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path)));
                         playerCards[i][j].setImage(cardImage);
+                    } else {
+                        String backPath = cardSkin.getImagePath("Opponent", "");
+                        Image backImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(backPath)));
+                        playerCards[i][j].setImage(backImage);
                     }
+                    playerCards[i][j].setVisible(true);
                 } else {
-                    String backPath = cardSkin.getImagePath("Opponent", "");
-                    Image backImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(backPath)));
-                    playerCards[i][j].setImage(backImage);
+                    playerCards[i][j].setVisible(false);
                 }
-                playerCards[i][j].setVisible(true);
             }
         }
     }
