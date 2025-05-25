@@ -19,28 +19,9 @@ public class RuleBasedAIStrategy implements AIStrategy  {
             int currentBet = state.getCurrentBet();
             Player player = state.getplayer();
 
-            // Simple decision making:
-            // Strong hands - raise
-            // Decent hands - call if bet is low
-            // Weak hands - fold
-            if (handStrength > 1) {
-                return "raise";
-            }
-            else if(handStrength == 1 && currentBet < player.getCurrentBalance() / 10) {
-                return "raise";
-            }
-            else if (handStrength == 0 && isSuitedConnectors(playerHand)) {
-                return "raise";
-            }
-            else if (handStrength == 0 && currentBet > player.getCurrentBalance() / 5) {
+
                 return "fold";
-            }
-            else if (handStrength == 0 && currentBet < player.getCurrentBalance() / 5) {
-                return "raise";
-            }
-            else {
-                return "fold";
-            }
+
         } catch (Exception e) {
             System.out.println("Error in AI strategy: " + e.getMessage());
             e.printStackTrace();

@@ -1,9 +1,10 @@
 package playable;
 
+import card.CardSkin;
 import gamemode.GameMode;
 import card.Card;
 import games.Game;
-import server.Client;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +16,9 @@ public class Player implements Playable {
     private GameMode gameMode;
     private int currentBalance;
     private boolean status;
-    private Client client;
-
+    private int currentBet;
+    private boolean hasBet;
+    private CardSkin cardSkin;
     public Player(String name, int id) {
         this.name = name;
         this.id = id;
@@ -39,7 +41,12 @@ public class Player implements Playable {
     public void setHand(List<Card> hand) {this.hand = new ArrayList<>(hand);}
 
     public void setGameMode(GameMode gameMode) {this.gameMode = gameMode;}
-
+    public boolean getHasBet() {
+        return hasBet;
+    }
+    public void setHasBet(boolean hasBet) {
+        this.hasBet = hasBet;
+    }
     @Override
     public void addCard(Card card) {
         if (this.hand == null) {
@@ -55,14 +62,10 @@ public class Player implements Playable {
     public void addCurrentBalance(int currentBalance) {this.currentBalance += currentBalance;}
 
     @Override
-    public int getCurrentBet() {
-        return 0; // Not applicable for Player class
-    }
+    public int getCurrentBet() {return currentBet;}
 
     @Override
-    public void setCurrentBet(int i) {
-        // Not applicable for Player class
-    }
+    public void setCurrentBet(int currentBet) {this.currentBet = currentBet;}
 
     public void resetHand() {this.hand = new ArrayList<>();}
 
@@ -71,8 +74,6 @@ public class Player implements Playable {
     public int getId() {return id;}
 
 
-
-    public Client getClient() {return client;}
     @Override
     public String toString() {
         return "Player{" +
@@ -84,5 +85,4 @@ public class Player implements Playable {
     public void deductCurrentBalance(int amount) {
         currentBalance -= amount;
     }
-
 }

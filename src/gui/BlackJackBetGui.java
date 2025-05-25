@@ -16,6 +16,8 @@ public class BlackJackBetGui {
     @FXML private TextField betTextField;
     @FXML private Button dealButton;
 
+    private String selectedSkin;
+
     @FXML
     public void initialize() {
         // Sync slider and text field
@@ -33,6 +35,7 @@ public class BlackJackBetGui {
 
             // Get the controller for BlackJackGameGui
             BlackJackGameGui gameController = loader.getController();
+            gameController.setupGame(selectedSkin);
 
             // Pass the slider value to the gameController
             int betValue = (int) betSlider.getValue();
@@ -45,5 +48,9 @@ public class BlackJackBetGui {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setSelectedSkin(String selectedSkin) {
+        this.selectedSkin = selectedSkin;
     }
 }

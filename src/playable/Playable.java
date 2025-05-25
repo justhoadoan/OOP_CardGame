@@ -19,6 +19,8 @@ public interface Playable {
     void addCurrentBalance(int amount);
 
     int getCurrentBet();
+    boolean getHasBet();
+    void setHasBet(boolean hasBet);
 
     void setCurrentBet(int i);
 }

@@ -5,22 +5,17 @@ import gamemode.JavaFXPokerMode;
 import games.GameType;
 import games.PokerGame;
 import input.PokerActionProcessor;
-import input.PokerButtonHandler;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import playable.AI;
 import playable.Playable;
 import playable.Player;
-import server.Client;
-import server.NetworkManager;
-import server.Server;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -65,7 +60,6 @@ public class PokerGameGui {
     private PokerGame game;
     private CardSkin cardSkin;
     private JavaFXPokerMode gameMode;
-    private NetworkManager networkManager;
     private boolean isOnlineMode;
     private String aiStrategy;
     private int playerId = 1;
@@ -80,7 +74,6 @@ public class PokerGameGui {
         // Hide unused player areas initially
         player3CardArea.setVisible(false);
         player4CardArea.setVisible(false);
-
         // Set initial slider range
         raiseSlider.setMin(0);
         raiseSlider.setMax(1000);
@@ -109,6 +102,46 @@ public class PokerGameGui {
         raiseButton.setDisable(false);
         foldButton.setDisable(false);
     }
+
+    public void setupGame(String selectedSkin, int numberOfPlayers) {
+        this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
+        this.isOnlineMode = false;
+        setupBaseComponents();
+
+        game = new PokerGame(gameMode, null, cardSkin);
+        gameMode.setGame(game);
+
+        // Add human player
+        Player humanPlayer = new Player("Player 1", 1);
+        humanPlayer.addCurrentBalance(1000);
+        game.addPlayer(humanPlayer);
+
+        // Add AI or additional human players based on the number of players
+        for (int i = 2; i <= numberOfPlayers; i++) {
+            Player additionalPlayer = new Player("Player " + i, i);
+            additionalPlayer.addCurrentBalance(1000);
+            game.addPlayer(additionalPlayer);
+        }
+
+        game.start();
+        updatePlayerVisibility(numberOfPlayers);
+        updateMoneyDisplays();
+    }
+
+    private void updatePlayerVisibility(int numberOfPlayers) {
+        // Hide all player areas initially
+        player1CardArea.setVisible(false);
+        player2CardArea.setVisible(false);
+        player3CardArea.setVisible(false);
+        player4CardArea.setVisible(false);
+
+        // Show only the relevant player areas
+        if (numberOfPlayers >= 1) player1CardArea.setVisible(true);
+        if (numberOfPlayers >= 2) player2CardArea.setVisible(true);
+        if (numberOfPlayers >= 3) player3CardArea.setVisible(true);
+        if (numberOfPlayers == 4) player4CardArea.setVisible(true);
+    }
+
     private void setCardSize(ImageView... cards) {
         double cardWidth = 60;
         double cardHeight = 87;
@@ -120,45 +153,7 @@ public class PokerGameGui {
             card.setSmooth(true);
         }
     }
-    public void setupServerGame(String selectedSkin, int port) throws IOException {
-        this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
-        this.isOnlineMode = true;
-        setupBaseComponents();
 
-        // Initialize server-side game components
-        game = new PokerGame(gameMode, networkManager, cardSkin);
-        gameMode.setGame(game);
-        gameMode.setCardSkin(cardSkin);
-
-        // Add local player (server)
-        Player localPlayer = new Player("Player 1", playerId);
-        localPlayer.addCurrentBalance(1000);
-        game.addPlayer(localPlayer);
-
-        // Start server
-        networkManager = new Server(port, game);
-        networkManager.start();
-    }
-    public void setupClientGame(String selectedSkin, String ip, int port) {
-        this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
-        this.isOnlineMode = true;
-        setupBaseComponents();
-
-        // Initialize client-side network manager
-        networkManager = new Client(ip, port, gameMode, GameType.POKER, cardSkin);
-
-        // Start client in separate thread
-        new Thread(() -> {
-            try {
-                networkManager.start();
-            } catch (IOException e) {
-                Platform.runLater(() -> {
-                    e.printStackTrace();
-                    // Show error dialog
-                });
-            }
-        }).start();
-    }
 
     private void setupBaseComponents() {
         // Set up common components
@@ -190,7 +185,6 @@ public class PokerGameGui {
         setupEventHandlers();
     }
 
-
     public void setupGame(String selectedSkin, String selectedAI, boolean isOnline) {
         if (isOnline) return; // Don't use this method for online mode
 
@@ -220,33 +214,21 @@ public class PokerGameGui {
     private void setupEventHandlers() {
         PokerActionProcessor processor = new PokerActionProcessor();
 
-        // Setup raise slider and field sync
-        raiseSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            raiseField.setText(String.valueOf(newVal.intValue()));
-        });
-
-        raiseField.textProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                int value = Integer.parseInt(newVal);
-                if (value >= raiseSlider.getMin() && value <= raiseSlider.getMax()) {
-                    raiseSlider.setValue(value);
-                }
-            } catch (NumberFormatException ignored) {}
-        });
-
         // Setup raise button
         raiseButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
-                try {
-                    int amount = Integer.parseInt(raiseField.getText());
-                    int playerBalance = game.getCurrentPlayer().getCurrentBalance();
-                    processor.processAction("raise:" + amount, game, null);
-                    updateMoneyDisplays();
-                    game.progressGame();
-
-                } catch (NumberFormatException ex) {
-                    // Show error message
-                    System.err.println("Invalid raise amount");
+                Playable currentPlayer = game.getCurrentPlayer();
+                if (!currentPlayer.getHasBet()) {
+                    try {
+                        int amount = Integer.parseInt(raiseField.getText());
+                        processor.processAction("raise:" + amount, game, currentPlayer);
+                        currentPlayer.setHasBet(true);
+                        updateMoneyDisplays();
+                        game.progressGame();
+                        gameMode.updateDisplay(null, game.getPublicState(), null);
+                    } catch (NumberFormatException ex) {
+                        System.err.println("Invalid raise amount");
+                    }
                 }
             }
         });
@@ -254,9 +236,14 @@ public class PokerGameGui {
         // Setup fold button
         foldButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
-                processor.processAction("fold", game, null);
-                updateMoneyDisplays();
-                game.progressGame();
+                Playable currentPlayer = game.getCurrentPlayer();
+                if (!currentPlayer.getHasBet()) {
+                    processor.processAction("fold", game, currentPlayer);
+                    currentPlayer.setHasBet(true);
+                    updateMoneyDisplays();
+                    game.progressGame();
+                    gameMode.updateDisplay(null, game.getPublicState(), null);
+                }
             }
         });
     }
@@ -309,11 +296,7 @@ public class PokerGameGui {
         }
     }
 
-    public void cleanup() {
-        if (networkManager != null) {
-            networkManager.close();
-        }
-    }
+
 
     public JavaFXPokerMode getGameMode() {
         return gameMode;

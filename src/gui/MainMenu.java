@@ -23,7 +23,7 @@ public class MainMenu {
     @FXML
     private Pane mainMenuPane;
     @FXML
-    private Pane typePane;
+    private Pane multiplayerPane;
     @FXML
     private ChoiceBox<String> gameChoiceBox;
     @FXML
@@ -34,7 +34,8 @@ public class MainMenu {
     private ChoiceBox<String> typeChoiceBox;
     @FXML
     private Stage stage;
-
+    @FXML
+    private ChoiceBox<String> multiplayerChoiceBox;
 
     @FXML
     public void initialize() {
@@ -44,11 +45,11 @@ public class MainMenu {
         gameChoiceBox.setItems(FXCollections.observableArrayList("Poker", "BlackJack"));
         cardSkinChoiceBox.setItems(FXCollections.observableArrayList("Traditional", "Realistic", "Animated"));
         gameModeChoiceBox.setItems(FXCollections.observableArrayList("Graphic", "Non-Graphic"));
-        typeChoiceBox.setItems(FXCollections.observableArrayList("Online", "Offline"));
+        multiplayerChoiceBox.setItems(FXCollections.observableArrayList("1", "2", "3", "4"));
 
         // skinPane and typePane initially invisible
         skinPane.setVisible(false);
-        typePane.setVisible(false);
+        multiplayerPane.setVisible(false);
 
         // Set visibility of skinPane based on gameModeChoiceBox value
         gameModeChoiceBox.setOnAction(e -> {
@@ -60,12 +61,13 @@ public class MainMenu {
             }
         });
 
+
         // Set visibility of typePane based on gameChoiceBox value
         gameChoiceBox.setOnAction(e -> {
             if (gameChoiceBox.getValue().equals("Poker")) {
-                typePane.setVisible(true);
+                multiplayerPane.setVisible(true);
             } else {
-                typePane.setVisible(false);
+                multiplayerPane.setVisible(false);
             }
         });
     }
@@ -79,30 +81,35 @@ public class MainMenu {
             FXMLLoader loader;
             String selectedSkin = cardSkinChoiceBox.getValue();
             String selectedGame = gameChoiceBox.getValue();
+            String selectedPlayers = multiplayerChoiceBox.getValue(); // Get the number of players
 
-            if (typeChoiceBox.getValue() != null && typeChoiceBox.getValue().equals("Online")) {
-                loader = new FXMLLoader(getClass().getResource("OnlineMenu.fxml"));
-                Scene scene = new Scene(loader.load());
-                OnlineMenu controller = loader.getController();
-                controller.setStage(stage);
-                controller.setSelectedSkin(selectedSkin);
-                controller.setSelectedGame(selectedGame); // Pass the selected game
-                controller.resetState();
-                stage.setScene(scene);
-                stage.show();
-            }else if (gameChoiceBox.getValue() != null && gameChoiceBox.getValue().equals("BlackJack")) {
+            if (selectedGame != null && selectedGame.equals("Poker")) {
+                int numberOfPlayers = Integer.parseInt(selectedPlayers);
+
+                if (numberOfPlayers == 1) {
+                    // Load PokerAIOffline for single player with AI
+                    loader = new FXMLLoader(getClass().getResource("PokerAIOffline.fxml"));
+                    Scene scene = new Scene(loader.load());
+                    PokerAIOffline controller = loader.getController();
+                    controller.setSelectedSkin(selectedSkin);
+                    controller.resetState();
+                    stage.setScene(scene);
+                    stage.show();
+                } else {
+                    // Load PokerGame for multiplayer
+                    loader = new FXMLLoader(getClass().getResource("PokerGame.fxml"));
+                    Scene scene = new Scene(loader.load());
+                    PokerGameGui controller = loader.getController();
+                    controller.setupGame(selectedSkin, numberOfPlayers); // Pass the number of players
+                    stage.setScene(scene);
+                    stage.show();
+                }
+            } else if (selectedGame != null && selectedGame.equals("BlackJack")) {
                 loader = new FXMLLoader(getClass().getResource("BlackJackBet.fxml"));
                 Scene scene = new Scene(loader.load());
                 BlackJackBetGui controller = loader.getController();
+                controller.setSelectedSkin(selectedSkin);
                 controller.initialize();
-                stage.setScene(scene);
-                stage.show();
-            } else {
-                loader = new FXMLLoader(getClass().getResource("PokerAIOffline.fxml"));
-                Scene scene = new Scene(loader.load());
-                PokerAIOffline controller = loader.getController();
-                controller.setSelectedSkin(selectedSkin); // Pass the selected skin
-                controller.resetState();
                 stage.setScene(scene);
                 stage.show();
             }
@@ -117,9 +124,9 @@ public class MainMenu {
         gameChoiceBox.getSelectionModel().clearSelection();
         cardSkinChoiceBox.getSelectionModel().clearSelection();
         gameModeChoiceBox.getSelectionModel().clearSelection();
-        typeChoiceBox.getSelectionModel().clearSelection();
+       // typeChoiceBox.getSelectionModel().clearSelection();
         skinPane.setVisible(false);
-        typePane.setVisible(false);
+        multiplayerPane.setVisible(false);
         mainMenuPane.setVisible(true);
         nextMainMenu.setVisible(true);
         // reset button
