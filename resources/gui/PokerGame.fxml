@@ -30,31 +30,31 @@
             <Image url="@Table.png" />
          </image>
       </ImageView>
-      <HBox layoutX="171.0" layoutY="172.0" prefHeight="89.0" prefWidth="246.0">
+      <HBox layoutX="166.0" layoutY="173.0" prefHeight="89.0" prefWidth="246.0">
          <children>
             <ImageView fx:id="communityCard1" pickOnBounds="true" styleClass="cards">
                <image>
-                  <Image url="@../cards/basic/2Hearts.png" />
+                  <Image url="@../cards/realistic/2Hearts.png" />
                </image>
             </ImageView>
             <ImageView fx:id="communityCard2" layoutX="10.0" layoutY="10.0" pickOnBounds="true" styleClass="cards">
                <image>
-                  <Image url="@../cards/basic/10Clubs.png" />
+                  <Image url="@../cards/realistic/10Clubs.png" />
                </image>
             </ImageView>
             <ImageView fx:id="communityCard3" layoutX="10.0" layoutY="10.0" pickOnBounds="true" styleClass="cards">
                <image>
-                  <Image url="@../cards/basic/AceSpades.png" />
+                  <Image url="@../cards/realistic/AceSpades.png" />
                </image>
             </ImageView>
             <ImageView fx:id="communityCard4" layoutX="10.0" layoutY="10.0" pickOnBounds="true" styleClass="cards">
                <image>
-                  <Image url="@../cards/basic/KingHearts.png" />
+                  <Image url="@../cards/realistic/KingHearts.png" />
                </image>
             </ImageView>
             <ImageView fx:id="communityCard5" layoutX="10.0" layoutY="10.0" pickOnBounds="true" styleClass="cards">
                <image>
-                  <Image url="@../cards/basic/QueenHearts.png" />
+                  <Image url="@../cards/realistic/QueenHearts.png" />
                </image>
             </ImageView>
          </children>
