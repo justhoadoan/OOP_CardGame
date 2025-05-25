@@ -57,38 +57,60 @@ public class PokerGame implements Game {
     }
 
     public void progressGame() {
-        if (isGameOver()) {
-            return;
+        if (isGameOver()) return;
+
+
+        int currentIndex = players.indexOf(currentPlayer);
+        int nextIndex = (currentIndex + 1) % players.size();
+        boolean foundNextPlayer = false;
+
+
+        while (nextIndex != currentIndex && !foundNextPlayer) {
+            Playable nextPlayer = players.get(nextIndex);
+            if (nextPlayer.getStatus() && !nextPlayer.getHasBet()) {
+                currentPlayer = nextPlayer;
+                foundNextPlayer = true;
+                if (currentPlayer instanceof AI) {
+                    handleAIAction((AI) currentPlayer);
+                }
+                broadcastState();
+                return;
+            }
+            nextIndex = (nextIndex + 1) % players.size();
         }
 
-        // If no community cards, deal flop
-        if (communityCards.isEmpty()) {
-            allPlayerBet();
-            if(isGameOver())
-                return;
-            dealCommunityCards(3);  // Deal flop
-            allPlayerBet();
-        }
-        // Turn
-        else if (communityCards.size() == 3) {
-            dealCommunityCards(1);
-            allPlayerBet();
-            if (isGameOver()) {
+
+        boolean allPlayersBet = players.stream()
+                .filter(Playable::getStatus)
+                .allMatch(Playable::getHasBet);
+
+        if (allPlayersBet) {
+
+            for (Playable player : players) {
+                player.setHasBet(false);
+                player.setCurrentBet(0);
+            }
+            currentBet = 0;
+
+            // Chia bài cộng đồng
+            if (communityCards.isEmpty()) {
+                dealCommunityCards(3);  // Flop
+            } else if (communityCards.size() == 3) {
+                dealCommunityCards(1);  // Turn
+            } else if (communityCards.size() == 4) {
+                dealCommunityCards(1);  // River
+            } else {
+                determineWinner();
                 return;
             }
-        }
-        // River
-        else if (communityCards.size() == 4) {
-            dealCommunityCards(1);
-            allPlayerBet();
-            if (isGameOver()) {
-                return;
+
+            // Set current player về người chơi đầu tiên còn active
+            for (Playable player : players) {
+                if (player.getStatus()) {
+                    currentPlayer = player;
+                    break;
+                }
             }
-        }
-        // Game end
-        else {
-            determineWinner();
-            return;
         }
 
         broadcastState();
@@ -171,10 +193,11 @@ public class PokerGame implements Game {
                 }
                 else {
                     if(!player.getHasBet()) {
+                        System.out.println(player.getName() + " is betting...");
                         bettingComplete = false;
                         return;
                     }
-                    System.out.println(player.getName() + " is betting...");
+
                 }
 
                 if (isGameOver()) return;
@@ -369,6 +392,5 @@ public class PokerGame implements Game {
     public String getPot() {
         return String.valueOf(pot);
     }
-
 
 }
