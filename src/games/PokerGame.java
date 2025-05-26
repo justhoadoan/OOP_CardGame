@@ -199,7 +199,6 @@ public class PokerGame implements Game {
                     return;
                 }
             }
-
             // If game reached showdown, evaluate hands
             Playable winner = null;
             HandRank bestRank = null;
@@ -216,12 +215,10 @@ public class PokerGame implements Game {
                     }
                 }
             }
-
             if (winner == null) {
                 System.out.println("No winner found.");
                 return;
             }
-
             int winnerNum = 1;
             List<Playable> winners = new ArrayList<>();;
             for (Playable player : players) {
@@ -231,13 +228,13 @@ public class PokerGame implements Game {
                     HandRank currentRank = PokerHandEvaluator.evaluateHand(combinedCards);
 
                     if(currentRank == bestRank && winner.getId() != player.getId()) {
+
                         System.out.println("Tie detected between " + winner.getName() + " and " + player.getName());
                         winnerNum += 1;
                         winners.add(player);
                     }
                 }
             }
-
             // Set all other players' status to false
             for (Playable player : players) {
                 if (player != winner) {
@@ -343,26 +340,37 @@ public class PokerGame implements Game {
     @Override
     public void playerRaise(Playable player, int raiseAmount) {
         int currentBalance = player.getCurrentBalance();
-        if (player instanceof AI) {raiseAmount += currentBet; System.out.println("AI raise amount: " + raiseAmount);}
-//        System.out.println("Player " + player.getName() + " raised " + raiseAmount + " of " + "Current bet: " + currentBet);
-//        int totalBetNeeded = raiseAmount - player.getCurrentBet(); // Calculate additional amount needed
+        if (player instanceof AI) {
+            raiseAmount += currentBet;
+        }
+
         int totalBetNeeded = raiseAmount + player.getCurrentBet();
 
         if (currentBalance >= raiseAmount && raiseAmount > 0) {
             // Update player's bet and balance
             player.addCurrentBalance(-raiseAmount);
-//            player.addCurrentBalance(-totalBetNeeded);
             pot += raiseAmount;
-//            pot += totalBetNeeded;
             player.setCurrentBet(totalBetNeeded);
             currentBet = Math.max(currentBet, totalBetNeeded);
+
+            // Check for all-in
+            if (player.getCurrentBalance() == 0) {
+                handleAllIn();
+            }
 
             // Update UI immediately
             broadcastState();
         }
-        else {
-            System.out.println("Player " + player.getName() + " cannot raise. Insufficient balance or invalid amount.");
+    }
+
+    private void handleAllIn() {
+        // Deal remaining community cards if any
+        while (communityCards.size() < 5) {
+            dealCommunityCards(1);
         }
+
+        // Force immediate showdown
+        determineWinner();
     }
 
     @Override

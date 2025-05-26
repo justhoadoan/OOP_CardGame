@@ -9,20 +9,15 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import playable.AI;
 import playable.Playable;
-import test.TestImagePath;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,24 +29,28 @@ public class JavaFXPokerMode implements GameMode {
     private final Text potMoney;
     private PokerGame game;
     private CardSkin cardSkin;
-    private final boolean isOnlineMode;
-    private final int playerId;
 
+    private final int playerId;
+    private final TextField raiseField;
+    private final Slider raiseSlider;
 
     public JavaFXPokerMode(ImageView[] communityCards,
                            ImageView[][] playerCards,
                            Label[] playerNames,
                            Label[] playerMoney,
                            Text potMoney,
-                           boolean isOnlineMode,
-                           int playerId) {
+                           int playerId,
+                           TextField raiseField, Slider raiseSlider) {
         this.communityCards = communityCards;
         this.playerCards = playerCards;
         this.playerNames = playerNames;
         this.playerMoney = playerMoney;
         this.potMoney = potMoney;
-        this.isOnlineMode = isOnlineMode;
+
         this.playerId = playerId;
+        this.raiseField = raiseField;
+        this.raiseSlider = raiseSlider;
+        setupSliderSync();
     }
 
     @Override
@@ -66,6 +65,53 @@ public class JavaFXPokerMode implements GameMode {
             updateDisplay(null, game.getPublicState(), null);
         }
     }
+    private void setupRaiseSliderConstraints() {
+        if (game == null) return;
+
+
+        int currentBet = game.getCurrentBetGame();
+        int minBalance = game.getPlayers().stream()
+                .filter(Playable::getStatus)
+                .mapToInt(Playable::getCurrentBalance)
+                .min()
+                .orElse(0);
+
+
+        Platform.runLater(() -> {
+            raiseSlider.setMin(currentBet);
+            raiseSlider.setMax(minBalance);
+            raiseSlider.setValue(currentBet);
+            raiseField.setText(String.valueOf(currentBet));
+        });
+    }
+
+    private void setupSliderSync() {
+        raiseSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            double value = newVal.doubleValue();
+            if (value < raiseSlider.getMin()) {
+                raiseSlider.setValue(raiseSlider.getMin());
+            } else if (value > raiseSlider.getMax()) {
+                raiseSlider.setValue(raiseSlider.getMax());
+            } else {
+                raiseField.setText(String.valueOf((int)value));
+            }
+        });
+
+        raiseField.textProperty().addListener((obs, oldVal, newVal) -> {
+            try {
+                int value = Integer.parseInt(newVal);
+                if (value < raiseSlider.getMin()) {
+                    raiseField.setText(String.valueOf((int)raiseSlider.getMin()));
+                } else if (value > raiseSlider.getMax()) {
+                    raiseField.setText(String.valueOf((int)raiseSlider.getMax()));
+                } else {
+                    raiseSlider.setValue(value);
+                }
+            } catch (NumberFormatException ignored) {
+                raiseField.setText(oldVal);
+            }
+        });
+    }
 
     @Override
     public void updateDisplay(List<Card> playerHand, String publicState, String winner) {
@@ -74,6 +120,7 @@ public class JavaFXPokerMode implements GameMode {
             updateAllPlayerCards(playerHand);
             updatePlayerInfo();
             updatePotMoney();
+            setupRaiseSliderConstraints();
             if (winner != null) {
                 try {
                     showGameOverDialog(winner);
