@@ -1,4 +1,4 @@
-package input;
+package processor;
 
 import games.Game;
 import playable.Playable;

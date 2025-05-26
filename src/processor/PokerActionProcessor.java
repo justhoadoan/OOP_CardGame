@@ -1,4 +1,4 @@
-package input;
+package processor;
 
 
 import games.Game;
@@ -8,8 +8,6 @@ import playable.AI;
 import playable.Playable;
 
 
-import javax.swing.*;
-import java.util.Scanner;
 import java.util.Random;
 
 public class PokerActionProcessor implements ActionProcessor {
