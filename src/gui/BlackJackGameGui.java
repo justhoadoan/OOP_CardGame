@@ -3,6 +3,7 @@ package gui;
 import card.Card;
 import card.CardSkin;
 import games.BlackjackGame;
+import javafx.scene.layout.StackPane;
 import processor.BlackjackActionProcessor;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class BlackJackGameGui {
+    @FXML private StackPane rootPane;
     @FXML private Button replayButton;
     @FXML private ImageView playerCard1;
     @FXML private ImageView playerCard2;
@@ -268,5 +270,8 @@ public class BlackJackGameGui {
         game.showWinner();
         String winnerName = game.getWinner();// Log the winner in the console
         showWinnerPopup(winnerName); // Show the popup
+    }
+    public AnchorPane getGamePane() {
+        return gamePane; // Expose the game pane for scaling
     }
 }

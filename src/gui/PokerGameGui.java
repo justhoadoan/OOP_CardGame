@@ -3,6 +3,8 @@ package gui;
 import card.CardSkin;
 import gamemode.JavaFXPokerMode;
 import games.PokerGame;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import processor.PokerActionProcessor;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -17,6 +19,8 @@ import playable.Player;
 import java.util.List;
 
 public class PokerGameGui {
+    @FXML private AnchorPane gamePane;
+    @FXML private StackPane rootPane;
     @FXML private ImageView communityCard1;
     @FXML private ImageView communityCard2;
     @FXML private ImageView communityCard3;
@@ -292,9 +296,7 @@ public class PokerGameGui {
         }
     }
 
-
-
-    public JavaFXPokerMode getGameMode() {
-        return gameMode;
+    public AnchorPane getGamePane() {
+        return gamePane;
     }
 }
