@@ -194,8 +194,7 @@ public class PokerGame implements Game {
                             player.setStatus(false);
                         }
                     }
-
-                    // Reveal all players' cards
+                    // Keep winner's status as true
                     broadcastState();
                     return;
                 }
@@ -218,14 +217,46 @@ public class PokerGame implements Game {
                 }
             }
 
-            if (winner != null) {
-                // Distribute pot to winner
-                winner.addCurrentBalance(pot);
-                pot = 0;
-
-                // Reveal all players' cards
-                broadcastState();
+            if (winner == null) {
+                System.out.println("No winner found.");
+                return;
             }
+
+            int winnerNum = 1;
+            List<Playable> winners = new ArrayList<>();;
+            for (Playable player : players) {
+                if (player.getStatus()) {
+                    List<Card> combinedCards = new ArrayList<>(player.getHand());
+                    combinedCards.addAll(communityCards);
+                    HandRank currentRank = PokerHandEvaluator.evaluateHand(combinedCards);
+
+                    if(currentRank == bestRank && winner.getId() != player.getId()) {
+                        System.out.println("Tie detected between " + winner.getName() + " and " + player.getName());
+                        winnerNum += 1;
+                        winners.add(player);
+                    }
+                }
+            }
+
+            // Set all other players' status to false
+            for (Playable player : players) {
+                if (player != winner) {
+                    player.setStatus(false);
+                }
+            }
+
+            // Distribute pot to winner
+            pot = pot / winnerNum;
+            if (!winners.isEmpty()) {
+                for (Playable tiedPlayer : winners) {
+                    tiedPlayer.addCurrentBalance(pot);
+                }
+            }
+            pot = 0;
+
+            // Keep winner's status as true
+            broadcastState();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
