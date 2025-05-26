@@ -2,21 +2,18 @@ package gamemode;
 
 import card.Card;
 import card.CardSkin;
+import games.Game;
 import games.PokerGame;
 
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import playable.AI;
 import playable.Playable;
-import test.TestImagePath;
-import java.io.InputStream;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -28,29 +25,30 @@ public class JavaFXPokerMode implements GameMode {
     private final Text potMoney;
     private PokerGame game;
     private CardSkin cardSkin;
-    private final boolean isOnlineMode;
+
     private final int playerId;
 
-
+    private final TextField raiseField;
+    private final Slider raiseSlider;
     public JavaFXPokerMode(ImageView[] communityCards,
                            ImageView[][] playerCards,
                            Label[] playerNames,
                            Label[] playerMoney,
                            Text potMoney,
-                           boolean isOnlineMode,
-                           int playerId) {
+                           int playerId, TextField raiseField, Slider raiseSlider) {
         this.communityCards = communityCards;
         this.playerCards = playerCards;
         this.playerNames = playerNames;
         this.playerMoney = playerMoney;
         this.potMoney = potMoney;
-        this.isOnlineMode = isOnlineMode;
         this.playerId = playerId;
+        this.raiseField = raiseField;
+        this.raiseSlider = raiseSlider;
     }
 
     @Override
-    public void setGame(PokerGame game) {
-        this.game = game;
+    public void setGame(Game game) {
+        this.game = (PokerGame) game;
     }
 
     @Override
@@ -67,10 +65,44 @@ public class JavaFXPokerMode implements GameMode {
             updateCommunityCards();
             updateAllPlayerCards(playerHand);
             updatePlayerInfo();
+            setupRaiseSliderConstraints();
             updatePotMoney();
             if (winner != null) {
                 showGameOverDialog(winner);
             }
+        });
+    }
+    private void setupRaiseSliderConstraints() {
+        if (game == null) return;
+
+        // Get current bet and minimum balance
+        int currentBet = game.getCurrentBetGame();
+        int minBalance = game.getPlayers().stream()
+                .filter(Playable::getStatus)
+                .mapToInt(Playable::getCurrentBalance)
+                .min()
+                .orElse(0);
+
+        // Set slider constraints
+        Platform.runLater(() -> {
+            raiseSlider.setMin(currentBet);
+            raiseSlider.setMax(minBalance);
+            raiseSlider.setValue(currentBet);
+            raiseField.setText(String.valueOf(currentBet));
+
+            // Sync slider and text field
+            raiseSlider.valueProperty().addListener((obs, oldVal, newVal) ->
+                    raiseField.setText(String.valueOf(newVal.intValue()))
+            );
+
+            raiseField.textProperty().addListener((obs, oldVal, newVal) -> {
+                try {
+                    int value = Integer.parseInt(newVal);
+                    if (value >= currentBet && value <= minBalance) {
+                        raiseSlider.setValue(value);
+                    }
+                } catch (NumberFormatException ignored) {}
+            });
         });
     }
 
@@ -160,6 +192,7 @@ public class JavaFXPokerMode implements GameMode {
             playerMoney[i].setText("$" + player.getCurrentBalance());
         }
     }
+
 
     private void updatePotMoney() {
         if (game == null) return;
