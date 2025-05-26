@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PopupController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="413.0" prefWidth="284.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PopupController">
     <children>
-        <Text layoutX="13.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DM chơi ngu vl" wrappingWidth="574.1366786956787" />
-        <Button layoutX="73.0" layoutY="129.0" mnemonicParsing="false" text="DMM chơi tiếp" />
-        <Button layoutX="344.0" layoutY="117.0" mnemonicParsing="false" text="Cút" />
+      <AnchorPane prefHeight="384.0" prefWidth="262.0" style="-fx-background-color: black;">
+         <children>
+            <ImageView fitHeight="413.0" fitWidth="293.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@popupBackground.png" />
+               </image>
+            </ImageView>
+              <Button fx:id="againBtn" layoutX="91.0" layoutY="323.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="Play again" visible="false" />
+              <Button fx:id="exitBtn" layoutX="91.0" layoutY="353.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="105.0" text="Exit" visible="false">
+               <font>
+                  <Font size="10.0" />
+               </font></Button>
+            <Text fx:id="gameState" layoutX="91.0" layoutY="214.0" stroke="#f6f1f1" strokeType="OUTSIDE" strokeWidth="0.3" style="-fx-fill: white;" text="Game State" textAlignment="CENTER" wrappingWidth="105.2459945678711">
+               <font>
+                  <Font name="Kiwi Maru Regular" size="18.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
     </children>
-</AnchorPane>
+</StackPane>

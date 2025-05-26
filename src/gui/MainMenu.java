@@ -36,8 +36,6 @@ public class MainMenu {
     @FXML
     private ChoiceBox<String> gameModeChoiceBox;
     @FXML
-    private ChoiceBox<String> typeChoiceBox;
-    @FXML
     private Stage stage;
     @FXML
     private ChoiceBox<String> multiplayerChoiceBox;
