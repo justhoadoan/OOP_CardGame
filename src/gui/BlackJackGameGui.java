@@ -58,7 +58,7 @@ public class BlackJackGameGui {
 
         initializeGame();
 
-        this.game = new BlackjackGame(null, null, cardSkin);
+        this.game = new BlackjackGame();
 
         Player player = new Player("Player", 1);
         player.addCurrentBalance(1000);

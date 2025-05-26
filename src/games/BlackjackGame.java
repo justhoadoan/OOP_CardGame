@@ -11,8 +11,6 @@ import java.util.*;
 
 public class BlackjackGame implements Game {
     private Deck deck;
-    private GameMode gameMode;
-
     private List<Playable> players;
     private Playable currentPlayer;
     private Map<Playable, Integer> playerBets;
@@ -21,8 +19,7 @@ public class BlackjackGame implements Game {
     private Playable dealer;
     private Playable playerBeforeDealer;
 
-    public BlackjackGame(GameMode gameMode, CardSkin skin, CardSkin cardSkin) {
-        this.gameMode = gameMode;
+    public BlackjackGame() {
         this.dealer = new Player("Dealer", 0); // Dealer is a special player
         this.players = new ArrayList<>(); // Initialize the players list
         this.playerBets = new HashMap<>(); // Initialize the playerBets map

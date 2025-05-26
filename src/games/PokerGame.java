@@ -27,7 +27,7 @@ public class PokerGame implements Game {
     public PokerGame(GameMode gameMode, CardSkin skin, CardSkin cardSkin) {
         this.gameMode = gameMode;
         this.skin = skin;
-        this.deck = new Deck(null);
+        this.deck = new Deck();
         this.players = new ArrayList<>();
         this.communityCards = new ArrayList<>();
         this.pot = 0;

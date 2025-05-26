@@ -14,12 +14,6 @@ public class Deck {
         createNewDeck();
     }
 
-    public Deck(CardSkin skin) {
-        this.skin = skin;
-        cards = new ArrayList<>();
-        createNewDeck();
-    }
-
     public void createNewDeck() {
         cards.clear();
         String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
@@ -42,10 +36,6 @@ public class Deck {
             return null;
         }
         return cards.remove(0);
-    }
-
-    public int remainingCards() {
-        return cards.size();
     }
 
     public List<Card> getCards() {
