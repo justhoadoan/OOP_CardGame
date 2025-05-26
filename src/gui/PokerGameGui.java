@@ -2,22 +2,18 @@ package gui;
 
 import card.CardSkin;
 import gamemode.JavaFXPokerMode;
-import games.GameType;
 import games.PokerGame;
-import input.PokerActionProcessor;
-import javafx.application.Platform;
+import processor.PokerActionProcessor;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import playable.AI;
 import playable.Playable;
 import playable.Player;
 
 
-import java.io.IOException;
 import java.util.List;
 
 public class PokerGameGui {

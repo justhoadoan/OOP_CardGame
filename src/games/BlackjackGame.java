@@ -31,7 +31,7 @@ public class BlackjackGame implements Game {
 
     @Override
     public void start() {
-        deck.reset();
+        deck.createNewDeck();
         resetBets();
         dealerTurn = false;
         pot = 0;

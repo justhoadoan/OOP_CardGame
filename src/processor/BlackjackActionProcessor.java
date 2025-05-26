@@ -1,9 +1,8 @@
-package input;
+package processor;
 
 import games.BlackjackGame;
 import games.Game;
 import playable.Playable;
-import playable.Player;
 
 
 public class BlackjackActionProcessor implements ActionProcessor {

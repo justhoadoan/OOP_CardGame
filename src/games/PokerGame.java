@@ -8,7 +8,7 @@ import deck.Deck;
 import gamemode.GameMode;
 import playable.*;
 
-import input.PokerActionProcessor;
+import processor.PokerActionProcessor;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,7 +17,6 @@ public class PokerGame implements Game {
    // private final List<GameEventListener> listeners = new ArrayList<>();
     private Deck deck;
     private GameMode gameMode;
-    private PlayerManager playerManager;
     private int pot;
     private int currentBet;
     private List<Playable> players;
@@ -30,7 +29,6 @@ public class PokerGame implements Game {
         this.skin = skin;
         this.deck = new Deck(null);
         this.players = new ArrayList<>();
-        this.playerManager = new PlayerManager(this);
         this.communityCards = new ArrayList<>();
         this.pot = 0;
         this.currentBet = 0;
@@ -133,7 +131,7 @@ public class PokerGame implements Game {
         return allMatched;
     }
     private void initializeGame() {
-        deck.reset();
+        deck.createNewDeck();
         pot = 0;
         currentBet = 0;
         communityCards.clear();

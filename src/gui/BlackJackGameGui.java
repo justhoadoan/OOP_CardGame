@@ -3,7 +3,7 @@ package gui;
 import card.Card;
 import card.CardSkin;
 import games.BlackjackGame;
-import input.BlackjackActionProcessor;
+import processor.BlackjackActionProcessor;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
