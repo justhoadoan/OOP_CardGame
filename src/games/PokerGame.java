@@ -53,7 +53,6 @@ public class PokerGame implements Game {
         }
         broadcastState();
     }
-
     public void progressGame() {
         // Check for game over first
         if (isGameOver()) {
@@ -61,25 +60,22 @@ public class PokerGame implements Game {
             return;
         }
 
-        // Check if only one player is active
+        // Check if only one player remains active
         if (countActivePlayers() == 1) {
             determineWinner();
             return;
         }
 
-//        boolean allPlayersBet = players.stream()
-//                .filter(Playable::getStatus)
-//                .allMatch(Playable::getHasBet);
-
+        // Check if all active players have made their bets
         if (checkAllPlayersMatchBet()) {
-            // Reset betting status
+            // Reset betting status for next round
             for (Playable player : players) {
                 player.setHasBet(false);
                 player.setCurrentBet(0);
             }
             currentBet = 0;
 
-            // Deal community cards or end game
+            // Deal next round of community cards
             if (communityCards.isEmpty()) {
                 dealCommunityCards(3);  // Flop
             } else if (communityCards.size() == 3) {
@@ -91,7 +87,7 @@ public class PokerGame implements Game {
                 return;
             }
 
-            // Find first active player
+            // Set current player to first active player
             for (Playable player : players) {
                 if (player.getStatus()) {
                     currentPlayer = player;
@@ -99,36 +95,43 @@ public class PokerGame implements Game {
                 }
             }
         } else {
-            // Find next active player
-            int currentIndex = players.indexOf(currentPlayer);
-            int nextIndex = (currentIndex + 1) % players.size();
-            while (nextIndex != currentIndex) {
-                Playable nextPlayer = players.get(nextIndex);
-                if (nextPlayer.getStatus()) {
-                    currentPlayer = nextPlayer;
-                    if (currentPlayer instanceof AI) {
-                        handleAIAction((AI) currentPlayer);
-                        currentPlayer = players.get((nextIndex + 1) % players.size());
-                    }
-                    break;
-                }
-                nextIndex = (nextIndex + 1) % players.size();
-            }
+            // Move to next active player
+            moveToNextActivePlayer();
         }
 
         broadcastState();
     }
-    private boolean checkAllPlayersMatchBet() {
-        boolean allMatched = true;
-        for (Playable player : players) {
-        }
-        for (Playable player : players) {
-            if (player.getStatus() && player.getCurrentBet() != currentBet) {
-                allMatched = false;
+
+    private void moveToNextActivePlayer() {
+        int currentIndex = players.indexOf(currentPlayer);
+        int nextIndex = (currentIndex + 1) % players.size();
+
+        while (nextIndex != currentIndex) {
+            Playable nextPlayer = players.get(nextIndex);
+            if (nextPlayer.getStatus() && !nextPlayer.getHasBet()) {
+                currentPlayer = nextPlayer;
+                if (currentPlayer instanceof AI) {
+                    handleAIAction((AI) currentPlayer);
+                }
                 break;
             }
+            nextIndex = (nextIndex + 1) % players.size();
         }
-        return allMatched;
+    }
+
+    private boolean checkAllPlayersMatchBet() {
+        // Get the number of active players who have bet
+        long activePlayersBetCount = players.stream()
+                .filter(p -> p.getStatus() && p.getHasBet())
+                .count();
+
+        // Get total number of active players
+        long totalActivePlayers = players.stream()
+                .filter(Playable::getStatus)
+                .count();
+
+        // All active players have bet if counts match
+        return activePlayersBetCount == totalActivePlayers;
     }
     private void initializeGame() {
         deck.createNewDeck();
@@ -191,7 +194,8 @@ public class PokerGame implements Game {
                             player.setStatus(false);
                         }
                     }
-                    // Keep winner's status as true
+
+                    // Reveal all players' cards
                     broadcastState();
                     return;
                 }
@@ -215,57 +219,18 @@ public class PokerGame implements Game {
             }
 
             if (winner != null) {
-                // Set all other players' status to false
-                for (Playable player : players) {
-                    if (player != winner) {
-                        player.setStatus(false);
-                    }
-                }
-
                 // Distribute pot to winner
                 winner.addCurrentBalance(pot);
                 pot = 0;
 
-                // Keep winner's status as true
+                // Reveal all players' cards
                 broadcastState();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public void allPlayerBet() {
-        List<Playable> activePlayers = players.stream()
-                .filter(Playable::getStatus)
-                .collect(Collectors.toList());
-        if (activePlayers.isEmpty()) return;
-        boolean bettingComplete = false;
-        while (!bettingComplete) {
-            bettingComplete = true;
-            for (Playable player : activePlayers) {
-                if (!player.getStatus() || (player.getCurrentBet() >= currentBet)) continue;
-                currentPlayer = player;
-                if (player instanceof AI) {
-                    handleAIAction((AI) player);
-                }
-                else {
-                    if(!player.getHasBet()) {
-                        System.out.println(player.getName() + " is betting...");
-                        bettingComplete = false;
-                        return;
-                    }
 
-                }
-                if (isGameOver()) return;
-                if (player.getStatus() && player.getCurrentBet() < currentBet) {
-                    bettingComplete = false;
-                }
-            }
-        }
-        for (Playable player : players) {
-            player.setCurrentBet(0);
-        }
-        currentBet = 0;
-    }
 
     public void setCurrentBetGame(int currentBet) {this.currentBet = currentBet;}
 

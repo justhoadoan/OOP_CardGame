@@ -78,10 +78,9 @@ public class BlackJackGameGui {
 
     private void setupEventsHandlers() {
         BlackjackActionProcessor actionProcessor = new BlackjackActionProcessor();
-        // Set up hit button
+
         hitButton.setOnAction(event -> {
             actionProcessor.processAction("hit", game, game.getCurrentPlayer());
-            // Update GUI after action
             updatePlayerCards();
             updatePlayerScore();
             if (game.isGameOver()) {

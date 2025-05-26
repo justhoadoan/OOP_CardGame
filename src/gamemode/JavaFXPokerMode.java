@@ -120,15 +120,17 @@ public class JavaFXPokerMode implements GameMode {
         if (game == null) return;
         List<Playable> players = game.getPlayers();
         Playable currentPlayer = game.getCurrentPlayer();
+        boolean isGameOver = game.isGameOver();
+        boolean isRiverRound = game.getCommunityCards().size() == 5;
 
         for (int i = 0; i < playerCards.length && i < players.size(); i++) {
             Playable player = players.get(i);
-            boolean isCurrentPlayer = player == currentPlayer;
             List<Card> playerHand = player.getHand();
 
             for (int j = 0; j < playerCards[i].length; j++) {
-                if (player.getStatus()) {
-                    if (isCurrentPlayer && !(player instanceof AI) && j < playerHand.size()) {
+                if (j < playerHand.size()) {
+                    // Show all cards if game is over, river round is reached, or it's the current player's hand
+                    if (isGameOver || isRiverRound || (player == currentPlayer && !(player instanceof AI))) {
                         Card card = playerHand.get(j);
                         String path = cardSkin.getImagePath(card.getRank(), card.getSuit());
                         Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path)));
@@ -145,14 +147,17 @@ public class JavaFXPokerMode implements GameMode {
             }
         }
     }
+
+
     private void updatePlayerInfo() {
         if (game == null) return;
         List<Playable> players = game.getPlayers();
+        boolean isGameOver = game.isGameOver();
 
         for (int i = 0; i < playerNames.length && i < players.size(); i++) {
             Playable player = players.get(i);
             playerNames[i].setText(player.getName());
-            playerMoney[i].setText(player.getStatus() ? "$" + player.getCurrentBalance() : "Folded");
+            playerMoney[i].setText("$" + player.getCurrentBalance());
         }
     }
 

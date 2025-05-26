@@ -24,7 +24,6 @@ public class JavaFXBlackjackMode implements GameMode {
     private BlackjackGame game;
     private CardSkin cardSkin;
 
-
     public JavaFXBlackjackMode(ImageView[] playerCards,
                                ImageView[] dealerCards,
                                Text playerScoreText,
@@ -39,18 +38,19 @@ public class JavaFXBlackjackMode implements GameMode {
         this.dealerName = dealerName;
     }
 
+    public void setBlackjackGame(BlackjackGame game) {
+        this.game = game;
+    }
 
     @Override
     public void setGame(PokerGame game) {
-
+        // Not used for Blackjack
     }
 
     @Override
     public void setCardSkin(CardSkin skin) {
         this.cardSkin = skin;
-        if (game != null) {
-            updateDisplay(null, game.getPublicState(), null);
-        }
+        updateDisplay(null, game.getPublicState(), null);
     }
 
     @Override
@@ -64,7 +64,14 @@ public class JavaFXBlackjackMode implements GameMode {
 
     private void updatePlayerCards() {
         if (game == null) return;
-        List<Card> hand = game.getCurrentPlayer().getHand();
+
+        List<Card> hand;
+        if (game.getCurrentPlayer() == game.getDealer()) {
+            hand = game.getPlayerBeforeDealer().getHand();
+        } else {
+            hand = game.getCurrentPlayer().getHand();
+        }
+
         for (int i = 0; i < playerCards.length; i++) {
             if (i < hand.size()) {
                 Card card = hand.get(i);
@@ -80,7 +87,9 @@ public class JavaFXBlackjackMode implements GameMode {
 
     private void updateDealerCards() {
         if (game == null) return;
+
         List<Card> hand = game.getDealer().getHand();
+
         for (int i = 0; i < dealerCards.length; i++) {
             if (i < hand.size()) {
                 Card card = hand.get(i);
@@ -96,16 +105,25 @@ public class JavaFXBlackjackMode implements GameMode {
 
     private void updateScores() {
         if (game == null) return;
-        int playerScore = game.calculateScore(game.getCurrentPlayer().getHand());
-        int dealerScore = game.calculateScore(game.getDealer().getHand());
-        playerScoreText.setText("Player Score: " + playerScore);
-        dealerScoreText.setText("Dealer Score: " + dealerScore);
+
+        // Update player score
+        List<Card> playerHand;
+        if (game.getCurrentPlayer() == game.getDealer()) {
+            playerHand = game.getPlayerBeforeDealer().getHand();
+        } else {
+            playerHand = game.getCurrentPlayer().getHand();
+        }
+        int playerScore = game.calculateScore(playerHand);
+        playerScoreText.setText("" + playerScore);
+
+        // Update dealer score
+        List<Card> dealerHand = game.getDealer().getHand();
+        int dealerScore = game.calculateScore(dealerHand);
+        dealerScoreText.setText("" + dealerScore);
     }
 
     @Override
     public String getGameState() {
         return game != null ? game.getPublicState() : "";
     }
-
-
 }
