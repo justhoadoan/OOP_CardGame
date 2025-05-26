@@ -58,7 +58,7 @@ public class PokerGameGui {
     private PokerGame game;
     private CardSkin cardSkin;
     private JavaFXPokerMode gameMode;
-    private boolean isOnlineMode;
+
     private String aiStrategy;
     private int playerId = 1;
 
@@ -100,10 +100,9 @@ public class PokerGameGui {
         raiseButton.setDisable(false);
         foldButton.setDisable(false);
     }
-
     public void setupGame(String selectedSkin, int numberOfPlayers) {
         this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
-        this.isOnlineMode = false;
+
         setupBaseComponents();
 
         game = new PokerGame(gameMode, null, cardSkin);
@@ -152,7 +151,6 @@ public class PokerGameGui {
         }
     }
 
-
     private void setupBaseComponents() {
         // Set up common components
         ImageView[] communityCards = {
@@ -174,21 +172,18 @@ public class PokerGameGui {
                 new Label[]{player1Name, player2Name, player3Name, player4Name},
                 new Label[]{player1Money, player2Money, player3Money, player4Money},
                 potMoney,
-                true, // isOnline
-                playerId
-        );
+                playerId, raiseField, raiseSlider);
         gameMode.setCardSkin(cardSkin);
 
         // Setup input handlers
         setupEventHandlers();
     }
 
-    public void setupGame(String selectedSkin, String selectedAI, boolean isOnline) {
-        if (isOnline) return; // Don't use this method for online mode
+    public void setupGame(String selectedSkin, String selectedAI) {
+
 
         this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
         this.aiStrategy = selectedAI != null ? selectedAI : "Rule based";
-        this.isOnlineMode = false;
         setupBaseComponents();
 
         // Setup offline game
@@ -211,7 +206,6 @@ public class PokerGameGui {
 
     private void setupEventHandlers() {
         PokerActionProcessor processor = new PokerActionProcessor();
-
         // Setup raise button
         raiseButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
@@ -230,7 +224,6 @@ public class PokerGameGui {
 //                }
             }
         });
-
         // Setup fold button
         foldButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
@@ -249,7 +242,6 @@ public class PokerGameGui {
         if (game != null) {
             // Update pot money
             potMoney.setText("$" + game.getPot());
-
             // Update player money labels
             List<Playable> players = game.getPlayers();
             Label[] moneyLabels = {player1Money, player2Money, player3Money, player4Money};

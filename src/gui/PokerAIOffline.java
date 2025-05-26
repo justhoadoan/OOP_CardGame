@@ -94,7 +94,7 @@ public class PokerAIOffline {
             AnchorPane contentPane;
 
             PokerGameGui controller = loader.getController();
-            controller.setupGame(selectedSkin, aiStrategy, false);
+            controller.setupGame(selectedSkin, aiStrategy);
 
             contentPane = controller.getGamePane(); // Expose via getter in PokerGameGui
             // === SCALING LOGIC ===
