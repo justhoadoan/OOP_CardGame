@@ -50,7 +50,6 @@ public class BlackjackGame implements Game {
                 }
             }
         }
-        dealer.addCard(deck.drawCard());
 
         // Set the current player to the first player (excluding the dealer)
         for (Playable player : players) {
