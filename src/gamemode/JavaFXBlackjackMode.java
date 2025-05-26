@@ -3,6 +3,7 @@ package gamemode;
 import card.Card;
 import card.CardSkin;
 import games.BlackjackGame;
+import games.Game;
 import games.PokerGame;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
@@ -43,7 +44,7 @@ public class JavaFXBlackjackMode implements GameMode {
     }
 
     @Override
-    public void setGame(PokerGame game) {
+    public void setGame(Game game) {
         // Not used for Blackjack
     }
 
