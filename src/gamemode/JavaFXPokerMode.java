@@ -121,6 +121,7 @@ public class JavaFXPokerMode implements GameMode {
         List<Playable> players = game.getPlayers();
         Playable currentPlayer = game.getCurrentPlayer();
         boolean isGameOver = game.isGameOver();
+        boolean isRiverRound = game.getCommunityCards().size() == 5;
 
         for (int i = 0; i < playerCards.length && i < players.size(); i++) {
             Playable player = players.get(i);
@@ -128,8 +129,8 @@ public class JavaFXPokerMode implements GameMode {
 
             for (int j = 0; j < playerCards[i].length; j++) {
                 if (j < playerHand.size()) {
-                    // Show all cards if game is over or if it's the current player's hand
-                    if (isGameOver || (player == currentPlayer && !(player instanceof AI))) {
+                    // Show all cards if game is over, river round is reached, or it's the current player's hand
+                    if (isGameOver || isRiverRound || (player == currentPlayer && !(player instanceof AI))) {
                         Card card = playerHand.get(j);
                         String path = cardSkin.getImagePath(card.getRank(), card.getSuit());
                         Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path)));
