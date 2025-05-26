@@ -3,8 +3,12 @@ package gamemode;
 import card.Card;
 import card.CardSkin;
 import games.PokerGame;
+import gui.DialogHelper;
 
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -12,10 +16,13 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import playable.AI;
 import playable.Playable;
 import test.TestImagePath;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
@@ -69,32 +76,23 @@ public class JavaFXPokerMode implements GameMode {
             updatePlayerInfo();
             updatePotMoney();
             if (winner != null) {
-                showGameOverDialog(winner);
+                try {
+                    showGameOverDialog(winner);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }
 
-    private void showGameOverDialog(String winner) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Game Over");
-        alert.setHeaderText(winner + " has won the game!");
-        alert.setContentText("Would you like to play again?");
-
-        ButtonType playAgainButton = new ButtonType("Play Again");
-        ButtonType exitButton = new ButtonType("Exit", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        alert.getButtonTypes().setAll(playAgainButton, exitButton);
-
-        alert.showAndWait().ifPresent(response -> {
-            if (response == playAgainButton) {
-                if (game != null) {
-                    game.start();
-                }
-            } else {
-                Stage stage = (Stage) communityCards[0].getScene().getWindow();
-                stage.close();
-            }
-        });
+    private void showGameOverDialog(String winner) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/Popup.fxml"));
+        Parent root = loader.load();
+        Stage popupStage = new Stage();
+        popupStage.setScene(new Scene(root));
+        popupStage.setTitle("Popup");
+        //popupStage.initModality(Modality.APPLICATION_MODAL); // Optional
+        popupStage.showAndWait();
     }
 
     private void updateCommunityCards() {
