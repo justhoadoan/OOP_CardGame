@@ -110,6 +110,7 @@ public class PokerGame implements Game {
                     currentPlayer = nextPlayer;
                     if (currentPlayer instanceof AI) {
                         handleAIAction((AI) currentPlayer);
+                        currentPlayer = players.get((nextIndex + 1) % players.size());
                     }
                     break;
                 }
@@ -348,7 +349,7 @@ public class PokerGame implements Game {
     @Override
     public void playerRaise(Playable player, int raiseAmount) {
         int currentBalance = player.getCurrentBalance();
-//        if (player instanceof AI) {raiseAmount += currentBet;}
+        if (player instanceof AI) {raiseAmount += currentBet; System.out.println("AI raise amount: " + raiseAmount);}
 //        System.out.println("Player " + player.getName() + " raised " + raiseAmount + " of " + "Current bet: " + currentBet);
 //        int totalBetNeeded = raiseAmount - player.getCurrentBet(); // Calculate additional amount needed
         int totalBetNeeded = raiseAmount + player.getCurrentBet();

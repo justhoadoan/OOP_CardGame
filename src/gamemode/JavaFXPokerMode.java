@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import playable.AI;
 import playable.Playable;
 import test.TestImagePath;
 import java.io.InputStream;
@@ -127,7 +128,7 @@ public class JavaFXPokerMode implements GameMode {
 
             for (int j = 0; j < playerCards[i].length; j++) {
                 if (player.getStatus()) {
-                    if (isCurrentPlayer && j < playerHand.size()) {
+                    if (isCurrentPlayer && !(player instanceof AI) && j < playerHand.size()) {
                         Card card = playerHand.get(j);
                         String path = cardSkin.getImagePath(card.getRank(), card.getSuit());
                         Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path)));
