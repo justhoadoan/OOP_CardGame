@@ -91,6 +91,9 @@ public class JavaFXPokerMode implements GameMode {
         popupStage.setScene(new Scene(root));
         popupStage.setTitle("Popup");
         //popupStage.initModality(Modality.APPLICATION_MODAL); // Optional
+        popupStage.setOnCloseRequest(event -> {
+            // Handle close request if needed
+        });
         popupStage.showAndWait();
     }
 
