@@ -42,6 +42,7 @@ public class PokerGame implements Game {
         }
 
     }
+
     public void start() {
         initializeGame();
         dealInitialCards();
@@ -53,6 +54,7 @@ public class PokerGame implements Game {
         }
         broadcastState();
     }
+
     public void progressGame() {
         // Check for game over first
         if (isGameOver()) {
@@ -133,6 +135,7 @@ public class PokerGame implements Game {
         // All active players have bet if counts match
         return activePlayersBetCount == totalActivePlayers;
     }
+
     private void initializeGame() {
         deck.createNewDeck();
         pot = 0;
@@ -149,6 +152,7 @@ public class PokerGame implements Game {
         currentPlayer = players.get(0);
         broadcastState(); // Initial state
     }
+
     private void dealInitialCards() {
         // Deal 2 cards to each player
         for (int i = 0; i < 2; i++) {
@@ -161,6 +165,7 @@ public class PokerGame implements Game {
         }
         broadcastState(); // Show dealt cards
     }
+
     private void dealCommunityCards(int count) {
         try {
             deck.drawCard(); // Burn card
@@ -175,6 +180,7 @@ public class PokerGame implements Game {
             System.err.println("Error dealing community cards: " + e.getMessage());
         }
     }
+
     private void determineWinner() {
         try {
             // If only one player is active, they automatically win
@@ -259,12 +265,9 @@ public class PokerGame implements Game {
         }
     }
 
-
     public void setCurrentBetGame(int currentBet) {this.currentBet = currentBet;}
 
     public int getCurrentBetGame() {return currentBet;}
-
-
 
     private void handleAIAction(AI ai) {
         PokerState state = new PokerState(
@@ -333,6 +336,7 @@ public class PokerGame implements Game {
 
         return state.toString();
     }
+
     private boolean isActivePlayer(Playable player) {
         return player.getStatus();
     }
@@ -393,6 +397,7 @@ public class PokerGame implements Game {
         ai.setStrategyType(strategyType);
         addPlayer(ai);
     }
+
     public String getWinner() {
         // Check for tie
         List<Playable> activeWinners = players.stream()
@@ -414,7 +419,9 @@ public class PokerGame implements Game {
     }
 
     public GameMode getGameMode() {return gameMode;}
+
     public void setGameMode(GameMode gameMode) {this.gameMode = gameMode;}
+
     @Override
     public void broadcastState() {
         if (gameMode != null) {
@@ -455,6 +462,7 @@ public class PokerGame implements Game {
     void resetBets() {
         this.pot = 0; this.currentBet = 0;
     }
+
     private int countActivePlayers() {
         int count = 0;
         for (Playable player : players) {
@@ -464,9 +472,11 @@ public class PokerGame implements Game {
         }
         return count;
     }
+
     public List<Card> getCommunityCards() {
         return communityCards;
     }
+
     public String getPot() {
         return String.valueOf(pot);
     }

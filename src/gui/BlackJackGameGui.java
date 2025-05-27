@@ -2,7 +2,10 @@ package gui;
 
 import card.Card;
 import card.CardSkin;
+import gamemode.JavaFXBlackjackMode;
+import gamemode.JavaFXPokerMode;
 import games.BlackjackGame;
+import javafx.event.ActionEvent;
 import javafx.scene.layout.StackPane;
 import processor.BlackjackActionProcessor;
 import javafx.fxml.FXML;
@@ -45,66 +48,6 @@ public class BlackJackGameGui {
     @FXML private Button standButton;
     @FXML private AnchorPane gamePane;
 
-    private BlackjackGame game;
-    private CardSkin cardSkin;
-
-    public void initialize() {
-        // Initialize the game GUI
-        initializeGame();
-        // Set up event handlers for buttons
-        setupEventsHandlers();
-    }
-
-    void setupGame(String selectedSkin) {
-        this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
-
-        initializeGame();
-
-        this.game = new BlackjackGame();
-
-        Player player = new Player("Player", 1);
-        player.addCurrentBalance(1000);
-        game.addPlayer(player);
-
-        Player dealer = new Player("Dealer", 0);
-        game.addPlayer(dealer);
-        game.start(); // Start the game and initialize the current player
-
-        updatePlayerCards();
-        updateDealerCards(); // Ensure dealer cards are updated
-        updatePlayerScore();
-        updateDealerScore();
-    }
-
-    private void setupEventsHandlers() {
-        BlackjackActionProcessor actionProcessor = new BlackjackActionProcessor();
-
-        hitButton.setOnAction(event -> {
-            actionProcessor.processAction("hit", game, game.getCurrentPlayer());
-            updatePlayerCards();
-            updatePlayerScore();
-            if (game.isGameOver()) {
-                hitButton.setDisable(true);
-                standButton.setDisable(true);
-                endGame(); // End the game if it's over
-            }
-        });
-        // Set up stand button
-        standButton.setOnAction(event -> {
-            actionProcessor.processAction("stand", game, game.getCurrentPlayer());
-            // Update GUI after action
-            updateDealerCards();
-            updateDealerScore();
-            if (game.isGameOver()) {
-                hitButton.setDisable(true);
-                standButton.setDisable(true);
-                endGame(); // End the game if it's over
-            }
-        });
-
-        replayButton.setOnAction(event -> replayGame());
-    }
-
     @FXML
     private void handleHit() {
         hitButton.fire(); // Trigger the action set in setupEventsHandlers
@@ -115,8 +58,107 @@ public class BlackJackGameGui {
         standButton.fire(); // Trigger the action set in setupEventsHandlers
     }
 
+    @FXML
+    private void replayGame() {
+        // Reset the game state
+        game.start();
 
-    private void updatePlayerCards() {
+        // Reset the GUI components
+        initializeGame();
+        blackjackMode.updateDisplay(null, game.getPublicState(), null);
+        blackjackMode.updatePlayerCards();
+        blackjackMode.updateDealerCards();
+        blackjackMode.updatePlayerScore();
+        blackjackMode.updateDealerScore();
+
+        // Re-enable action buttons
+        hitButton.setDisable(false);
+        standButton.setDisable(false);
+
+        System.out.println("Game has been reset for replay.");
+    }
+
+    private BlackjackGame game;
+    private CardSkin cardSkin;
+    private JavaFXBlackjackMode blackjackMode;
+
+    public void initialize() {
+        setupEventsHandlers();
+        initializeGame();
+    }
+
+    void setupGame(String selectedSkin) {
+        // Set card skin
+        this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
+
+        // Initialize game first
+        this.game = new BlackjackGame();
+        Player player = new Player("Player", 1);
+        player.addCurrentBalance(1000);
+        game.addPlayer(player);
+        Player dealer = new Player("Dealer", 0);
+        game.addPlayer(dealer);
+
+        // Now setup components with the game already created
+        setupBaseComponents();
+
+        // Start the game
+        game.start();
+
+        // Update display with actual game state
+        blackjackMode.updatePlayerCards();
+        blackjackMode.updateDealerCards();
+        blackjackMode.updatePlayerScore();
+        blackjackMode.updateDealerScore();
+    }
+
+    void setupBaseComponents() {
+        // Initialize the Blackjack mode
+        this.blackjackMode = new JavaFXBlackjackMode(
+                new ImageView[]{playerCard1, playerCard2, playerCard3, playerCard4, playerCard5},
+                new ImageView[]{dealerCard1, dealerCard2, dealerCard3, dealerCard4, dealerCard5},
+                playerScoreText,
+                dealerScoreText,
+                new Label("Player"),
+                new Label("Dealer")
+        );
+        blackjackMode.setGame(game);
+        blackjackMode.setCardSkin(cardSkin); // Make sure to set the card skin
+    }
+
+    private void setupEventsHandlers() {
+        BlackjackActionProcessor actionProcessor = new BlackjackActionProcessor();
+
+        hitButton.setOnAction(event -> {
+            actionProcessor.processAction("hit", game, game.getCurrentPlayer());
+            blackjackMode.updateDisplay(null, game.getPublicState(), null);
+            blackjackMode.updatePlayerCards(); // Update player cards
+            blackjackMode.updatePlayerScore(); // Update player score
+            if (game.isGameOver()) {
+                hitButton.setDisable(true);
+                standButton.setDisable(true);
+                endGame();
+            }
+        });
+        // Set up stand button
+        standButton.setOnAction(event -> {
+            actionProcessor.processAction("stand", game, game.getCurrentPlayer());
+            blackjackMode.updateDisplay(null, game.getPublicState(), null);
+            blackjackMode.updateDealerCards(); // Update dealer cards
+            blackjackMode.updateDealerScore(); // Update dealer score
+            if (game.isGameOver()) {
+                hitButton.setDisable(true);
+                standButton.setDisable(true);
+                endGame();
+            }
+        });
+
+        replayButton.setOnAction(event -> replayGame());
+    }
+
+
+
+/*    private void updatePlayerCards() {
         if (game == null) return;
 
         // Get the current player's hand
@@ -187,7 +229,7 @@ public class BlackJackGameGui {
 
         // Update the dealer's score text
         dealerScoreText.setText("" + dealerScore);
-    }
+    }*/
 
     private void initializeGame() {
         // Hide all player and dealer cards
@@ -202,8 +244,8 @@ public class BlackJackGameGui {
         }
 
         // Reset scores
-        playerScoreText.setText("Player Score: 0");
-        dealerScoreText.setText("Dealer Score: 0");
+        playerScoreText.setText("0");
+        dealerScoreText.setText("0");
 
         // Reset bet value
         betValueText.setText("$0");
@@ -246,30 +288,14 @@ public class BlackJackGameGui {
         popupStage.showAndWait();
     }
 
-    @FXML
-    private void replayGame() {
-        // Reset the game state
-        game.start();
 
-        // Reset the GUI components
-        initializeGame();
-        updatePlayerCards();
-        updateDealerCards();
-        updatePlayerScore();
-        updateDealerScore();
-
-        // Re-enable action buttons
-        hitButton.setDisable(false);
-        standButton.setDisable(false);
-
-        System.out.println("Game has been reset for replay.");
-    }
 
     private void endGame() {
         game.showWinner();
         String winnerName = game.getWinner();// Log the winner in the console
         showWinnerPopup(winnerName); // Show the popup
     }
+
     public AnchorPane getGamePane() {
         return gamePane; // Expose the game pane for scaling
     }

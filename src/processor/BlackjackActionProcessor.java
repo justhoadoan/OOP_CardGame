@@ -1,5 +1,6 @@
 package processor;
 
+import gamemode.JavaFXBlackjackMode;
 import games.BlackjackGame;
 import games.Game;
 import playable.Playable;
