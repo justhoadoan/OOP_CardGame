@@ -5,6 +5,7 @@ import card.CardSkin;
 import games.Game;
 import games.PokerGame;
 
+import gui.PopupController;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -134,14 +135,23 @@ public class JavaFXPokerMode implements GameMode {
     private void showGameOverDialog(String winner) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/Popup.fxml"));
         Parent root = loader.load();
+
+        PopupController controller = loader.getController(); // Access controller
+
         Stage popupStage = new Stage();
         popupStage.setScene(new Scene(root));
-        popupStage.setTitle("Popup");
-        //popupStage.initModality(Modality.APPLICATION_MODAL); // Optional
-        popupStage.setOnCloseRequest(event -> {
-            // Handle close request if needed
-        });
+        popupStage.setTitle("Game Over");
         popupStage.showAndWait();
+
+        // After window is closed
+        if (controller.isPlayAgain()) {
+            if (game != null) {
+                game.start(); // Start a new game
+            }
+        } else {
+            Stage stage = (Stage) communityCards[0].getScene().getWindow();
+            stage.close(); // Exit application
+        }
     }
 
     private void updateCommunityCards() {

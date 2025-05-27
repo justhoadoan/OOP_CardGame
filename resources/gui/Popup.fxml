@@ -17,8 +17,8 @@
                   <Image url="@popupBackground.png" />
                </image>
             </ImageView>
-              <Button fx:id="againBtn" layoutX="91.0" layoutY="323.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="105.0" text="Play again" visible="false" />
-              <Button fx:id="exitBtn" layoutX="91.0" layoutY="353.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="105.0" text="Exit" visible="false">
+              <Button fx:id="againBtn" layoutX="91.0" layoutY="323.0" mnemonicParsing="false" opacity="0.0" prefHeight="25.0" prefWidth="105.0" text="Play again" />
+              <Button fx:id="exitBtn" layoutX="91.0" layoutY="353.0" mnemonicParsing="false" opacity="0.0" prefHeight="22.0" prefWidth="105.0" text="Exit">
                <font>
                   <Font size="10.0" />
                </font></Button>
