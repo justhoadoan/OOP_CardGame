@@ -21,7 +21,7 @@ public class PokerGame implements Game {
     private List<Card> communityCards;
     private AIStrategyFactory aiFactory;
     private CardSkin skin;
-
+    List<Playable> winners = new ArrayList<>();
     public PokerGame(GameMode gameMode, CardSkin skin) {
         this.gameMode = gameMode;
         this.skin = skin;
@@ -148,7 +148,7 @@ public class PokerGame implements Game {
         pot = 0;
         currentBet = 0;
         communityCards.clear();
-
+        winners.clear();
         // Reset all players
         for (Playable player : players) {
             player.resetHand();
@@ -188,8 +188,14 @@ public class PokerGame implements Game {
         }
     }
 
+
+
+    // Modify the determineWinner method to populate the winners list
     private void determineWinner() {
         try {
+            // Reset winners list
+            winners.clear();
+
             // If only one player is active, they automatically win
             if (countActivePlayers() == 1) {
                 Playable winner = players.stream()
@@ -197,6 +203,8 @@ public class PokerGame implements Game {
                         .findFirst()
                         .orElse(null);
                 if (winner != null) {
+                    // Add to winners list
+                    winners.add(winner);
                     // Distribute pot to winner
                     winner.addCurrentBalance(pot);
                     pot = 0;
@@ -207,7 +215,6 @@ public class PokerGame implements Game {
 
             // For showdown, find best hand and possible ties
             HandRank bestRank = null;
-            List<Playable> winners = new ArrayList<>();
 
             // First pass - find the best hand rank
             for (Playable player : players) {
@@ -242,18 +249,7 @@ public class PokerGame implements Game {
             }
             pot = 0;
 
-            // Set all non-winners to inactive
-            for (Playable player : players) {
-                if (winners.contains(player)) {
-                    player.setStatus(true);
-                } else {
-                    player.setStatus(false);
-                }
-            }
-
-            // Only broadcast state once
             broadcastState();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -377,25 +373,18 @@ public class PokerGame implements Game {
     public void playerFold(Playable player) {player.setStatus(false);}
 
     public String getWinner() {
-        // Check for tie
-        List<Playable> activeWinners = players.stream()
-                .filter(Playable::getStatus)
-                .collect(Collectors.toList());
+        if (winners.isEmpty()) {
+            return "";
+        }
 
-        if (activeWinners.size() > 1) {
-            return "Tie between " + activeWinners.stream()
+        if (winners.size() == 1) {
+            return winners.get(0).getName() + " wins";
+        } else {
+            return "Tie between " + winners.stream()
                     .map(Playable::getName)
                     .collect(Collectors.joining(" and "));
         }
-
-        // Single winner
-        for (Playable player : players) {
-            if (player.getStatus())
-                return player.getName() + " wins";
-        }
-        return null;
     }
-
     public void broadcastState() {
         if (gameMode != null) {
             boolean isHumanPlayer = currentPlayer instanceof Player;
