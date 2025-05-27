@@ -1,5 +1,6 @@
 package gui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
@@ -32,17 +33,19 @@ public class PopupController {
     }
 
     public void setWinnerText(String winner) {
-        if (winner != null) {
-            if (winner.contains("Tie")) {
-                winnerText.setText("It's a tie!");
-            } else {
-                winnerText.setText("Winner: " + winner);
+        Platform.runLater(() -> {
+            try {
+                if (winnerText != null) {
+                    winnerText.setText(winner);
+                } else {
+                    System.err.println("winnerText is null in PopupController");
+                }
+            } catch (Exception e) {
+                System.err.println("Error setting winner text: " + e.getMessage());
+                e.printStackTrace();
             }
-        } else {
-            winnerText.setText("Game Over");
-        }
+        });
     }
-
     private void closeWindow() {
         Stage stage = (Stage) againBtn.getScene().getWindow();
         stage.close();

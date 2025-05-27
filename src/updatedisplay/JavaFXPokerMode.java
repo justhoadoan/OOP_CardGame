@@ -136,28 +136,30 @@ public class JavaFXPokerMode implements GameMode {
             updatePlayerInfo();
             updatePotMoney();
             setupRaiseSliderConstraints();
-            if (winner != null) {
+
+            if (winner != null && !winner.isEmpty()) {
                 try {
                     showGameOverDialog(winner);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    System.err.println("Error showing game over dialog: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         });
     }
-
     private void showGameOverDialog(String winner) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/Popup.fxml"));
         Parent root = loader.load();
 
         PopupController controller = loader.getController();
-
-        // Set the winner text
         controller.setWinnerText(winner);
 
         Stage popupStage = new Stage();
         popupStage.setScene(new Scene(root));
         popupStage.setTitle("Game Over");
+        popupStage.setAlwaysOnTop(true);  // Make sure popup stays on top
+
+        // Show and wait - this forces it to be shown immediately
         popupStage.showAndWait();
 
         // After window is closed
@@ -166,8 +168,10 @@ public class JavaFXPokerMode implements GameMode {
                 game.start(); // Start a new game
             }
         } else {
-            Stage stage = (Stage) communityCards[0].getScene().getWindow();
-            stage.close(); // Exit application
+            Platform.runLater(() -> {
+                Stage stage = (Stage) communityCards[0].getScene().getWindow();
+                stage.close(); // Exit application
+            });
         }
     }
 
