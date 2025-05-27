@@ -4,17 +4,14 @@ import cards.card.Card;
 import games.BlackjackGame;
 import games.Game;
 import javafx.application.Platform;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
-import playable.Playable;
-import updatedisplay.GameMode;
 
 import java.util.List;
 import java.util.Objects;
 
-public class JavaFXBlackjackMode extends GameMode {
+public class JavaFXBlackjackMode extends DisplayUpdating {
     private final ImageView[] playerCards;
     private final ImageView[] dealerCards;
     private final Text playerScoreText;

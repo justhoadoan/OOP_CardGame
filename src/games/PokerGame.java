@@ -4,7 +4,7 @@ import ai.*;
 import ai.PokerHandEvaluator.HandRank;
 import cards.card.Card;
 import cards.deck.Deck;
-import updatedisplay.GameMode;
+import updatedisplay.DisplayUpdating;
 import playable.*;
 import processor.PokerActionProcessor;
 import java.util.*;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class PokerGame implements Game {
     private Deck deck;
-    private GameMode gameMode;
+    private DisplayUpdating displayUpdating;
     private int pot;
     private int currentBet;
     private List<Playable> players;
@@ -21,8 +21,8 @@ public class PokerGame implements Game {
     private AIStrategyFactory aiFactory;
     private String skin;
     List<Playable> winners = new ArrayList<>();
-    public PokerGame(GameMode gameMode, String skin) {
-        this.gameMode = gameMode;
+    public PokerGame(DisplayUpdating displayUpdating, String skin) {
+        this.displayUpdating = displayUpdating;
         this.skin = skin;
         this.deck = new Deck();
         this.players = new ArrayList<>();
@@ -31,10 +31,10 @@ public class PokerGame implements Game {
         this.currentBet = 0;
         this.aiFactory = new AIStrategyFactory();
 
-        if (gameMode != null) {
-            gameMode.setGame(this);
+        if (displayUpdating != null) {
+            displayUpdating.setGame(this);
             if (skin != null) {
-                gameMode.setCardSkin(skin);
+                displayUpdating.setCardSkin(skin);
             }
         }
 
@@ -385,7 +385,7 @@ public class PokerGame implements Game {
         }
     }
     public void broadcastState() {
-        if (gameMode != null) {
+        if (displayUpdating != null) {
             boolean isHumanPlayer = currentPlayer instanceof Player;
             List<Card> playerHand = null;
 
@@ -398,7 +398,7 @@ public class PokerGame implements Game {
                     "\nCurrent Bet: $" + currentBet +
                     "\nPot: $" + pot;
 
-            gameMode.updateDisplay(playerHand, state, isGameOver() ? getWinner() : null);
+            displayUpdating.updateDisplay(playerHand, state, isGameOver() ? getWinner() : null);
         }
     }
 

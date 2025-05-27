@@ -4,7 +4,7 @@ import cards.card.Card;
 import games.Game;
 import java.util.List;
 
-public abstract class GameMode {
+public abstract class DisplayUpdating {
     // Core game reference
     public void setGame(Game game) {
 
