@@ -14,7 +14,7 @@ public abstract class GameMode {
 
     }
 
-    void updateDisplay(List<Card> playerHand, String publicState, String winner) {
+    public void updateDisplay(List<Card> playerHand, String publicState, String winner) {
 
     }
 
