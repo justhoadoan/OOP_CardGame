@@ -1,10 +1,8 @@
 package playable;
 
 import card.Card;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class AI implements Playable {
     private boolean hasBet;
