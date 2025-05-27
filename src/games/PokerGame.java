@@ -200,22 +200,16 @@ public class PokerGame implements Game {
                     // Distribute pot to winner
                     winner.addCurrentBalance(pot);
                     pot = 0;
-
-                    // Set all other players' status to false
-                    for (Playable player : players) {
-                        if (player != winner) {
-                            player.setStatus(false);
-                        }
-                    }
-                    // Keep winner's status as true
                     broadcastState();
                     return;
                 }
             }
-            // If game reached showdown, evaluate hands
-            Playable winner = null;
-            HandRank bestRank = null;
 
+            // For showdown, find best hand and possible ties
+            HandRank bestRank = null;
+            List<Playable> winners = new ArrayList<>();
+
+            // First pass - find the best hand rank
             for (Playable player : players) {
                 if (player.getStatus()) {
                     List<Card> combinedCards = new ArrayList<>(player.getHand());
@@ -224,47 +218,40 @@ public class PokerGame implements Game {
 
                     if (bestRank == null || currentRank.compareTo(bestRank) > 0) {
                         bestRank = currentRank;
-                        winner = player;
                     }
                 }
             }
-            if (winner == null) {
-                System.out.println("No winner found.");
-                return;
-            }
-            int winnerNum = 1;
-            List<Playable> winners = new ArrayList<>();;
+
+            // Second pass - find all players with the best hand
             for (Playable player : players) {
                 if (player.getStatus()) {
                     List<Card> combinedCards = new ArrayList<>(player.getHand());
                     combinedCards.addAll(communityCards);
                     HandRank currentRank = PokerHandEvaluator.evaluateHand(combinedCards);
 
-                    if(currentRank == bestRank && winner.getId() != player.getId()) {
-
-                        System.out.println("Tie detected between " + winner.getName() + " and " + player.getName());
-                        winnerNum += 1;
+                    if (currentRank.compareTo(bestRank) == 0) {
                         winners.add(player);
                     }
                 }
             }
-            // Set all other players' status to false
+
+            // Split pot among winners
+            int splitPot = pot / winners.size();
+            for (Playable winner : winners) {
+                winner.addCurrentBalance(splitPot);
+            }
+            pot = 0;
+
+            // Set all non-winners to inactive
             for (Playable player : players) {
-                if (player != winner) {
+                if (winners.contains(player)) {
+                    player.setStatus(true);
+                } else {
                     player.setStatus(false);
                 }
             }
 
-            // Distribute pot to winner
-            pot = pot / winnerNum;
-            if (!winners.isEmpty()) {
-                for (Playable tiedPlayer : winners) {
-                    tiedPlayer.addCurrentBalance(pot);
-                }
-            }
-            pot = 0;
-
-            // Keep winner's status as true
+            // Only broadcast state once
             broadcastState();
 
         } catch (Exception e) {
@@ -404,7 +391,7 @@ public class PokerGame implements Game {
         // Single winner
         for (Playable player : players) {
             if (player.getStatus())
-                return player.getName();
+                return player.getName() + " wins";
         }
         return null;
     }

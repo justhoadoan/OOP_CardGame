@@ -121,6 +121,8 @@ public class JavaFXPokerMode implements GameMode {
         });
     }
 
+    private boolean popupShown = false;
+
     @Override
     public void updateDisplay(List<Card> playerHand, String publicState, String winner) {
         Platform.runLater(() -> {
@@ -129,8 +131,8 @@ public class JavaFXPokerMode implements GameMode {
             updatePlayerInfo();
             updatePotMoney();
             setupRaiseSliderConstraints();
-
-            if (winner != null && !winner.isEmpty()) {
+            if (winner != null && !winner.isEmpty() && !popupShown) {
+                popupShown = true;
                 try {
                     showGameOverDialog(winner);
                 } catch (IOException e) {
@@ -139,6 +141,10 @@ public class JavaFXPokerMode implements GameMode {
                 }
             }
         });
+    }
+
+    public void resetPopupFlag() {
+        popupShown = false;
     }
     private void showGameOverDialog(String winner) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/Popup.fxml"));
