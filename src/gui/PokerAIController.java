@@ -9,18 +9,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.Objects;
 
-public class PokerAIOffline {
-    @FXML private AnchorPane offlineMenuPane;
-    @FXML private Button backOnlineMenu;
-    @FXML private Button startOnlineMenu;
+public class PokerAIController {
+    @FXML private AnchorPane AIMenuPane;
+    @FXML private Button backOnlineMenu, startOnlineMenu;
     @FXML private ChoiceBox typeChoiceBox;
     @FXML private Stage stage;
     private String selectedSkin;
@@ -31,7 +28,6 @@ public class PokerAIOffline {
         typeChoiceBox.getItems().addAll("Rule based", "Monte Carlo");
     }
 
-
     @FXML
     private void backToMainMenu(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -41,7 +37,7 @@ public class PokerAIOffline {
             StackPane root = loader.load();
             Scene scene = new Scene(root);
 
-            MainMenu controller = loader.getController();
+            MainMenuController controller = loader.getController();
             controller.setStage(stage);
             controller.resetState();
 
@@ -93,7 +89,7 @@ public class PokerAIOffline {
             Scene scene = new Scene(root);
             AnchorPane contentPane;
 
-            PokerGameGui controller = loader.getController();
+            PokerGameController controller = loader.getController();
             controller.setupGame(selectedSkin, aiStrategy);
 
             contentPane = controller.getGamePane(); // Expose via getter in PokerGameGui
@@ -131,19 +127,14 @@ public class PokerAIOffline {
     @FXML
     public void resetState() {
         typeChoiceBox.getSelectionModel().clearSelection();
-        offlineMenuPane.setVisible(true);
+        AIMenuPane.setVisible(true);
         startOnlineMenu.setVisible(true);
         backOnlineMenu.setVisible(true);
         // reset button
         backOnlineMenu.setDisable(false);
         startOnlineMenu.setDisable(false);
     }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
-    public AnchorPane getOfflineMenuPane() {
-        return offlineMenuPane;
+    public AnchorPane getAIMenuPane() {
+        return AIMenuPane;
     }
 }

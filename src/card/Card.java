@@ -1,7 +1,6 @@
 package card;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
 
 public class Card {
     private String rank;
@@ -9,27 +8,6 @@ public class Card {
     private CardSkin skin;
     private ImageIcon cardImage;
     private String imagePath;
-
-    public Card(String rank, String suit, CardSkin skin) {
-        this.rank = rank;
-        this.suit = suit;
-        this.skin = skin;
-
-        if (skin != null) {
-            try {
-                imagePath = skin.getImagePath(rank, suit);
-                cardImage = new ImageIcon(imagePath);
-            } catch (Exception e) {
-                System.err.println("Error loading card image: " + e.getMessage());
-                cardImage = null;
-            }
-        }
-    }
-    public String getImagePath() {
-
-        return this.imagePath;
-    }
-
 
     public Card(String rank, String suit) {
         this.rank = rank;
@@ -75,15 +53,6 @@ public class Card {
 
     public String getRank() {
         return rank;
-    }
-
-    public CardSkin getSkin() {
-        return skin;
-    }
-
-    public ImageIcon getCardImage() {
-
-        return cardImage;
     }
 
     public void setSkin(CardSkin skin) {

@@ -9,7 +9,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.Objects;
 
@@ -20,14 +19,14 @@ public class MainFrame extends Application {
         // Load the FXML file for the main menu
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/gui/MainMenu.fxml")));
 
-        // 1) Load the StackPane (the true FXML root)
+        // Load the StackPane (the true FXML root)
         StackPane rootPane = loader.load();
 
-        // 2) Retrieve the child AnchorPane by its fx:id="mainMenuPane"
+        // Retrieve the child AnchorPane by its fx:id="mainMenuPane"
         AnchorPane mainMenuPane = (AnchorPane) loader.getNamespace().get("mainMenuPane");
 
         // Get the controller for the main menu and set the primary stage
-        MainMenu mainMenuController = loader.getController();
+        MainMenuController mainMenuController = loader.getController();
         mainMenuController.setStage(primaryStage);
 
         // Create a scene with the loaded FXML pane and set it to the primary stage
@@ -40,18 +39,26 @@ public class MainFrame extends Application {
         double designW = mainMenuPane.getPrefWidth();
         double designH = mainMenuPane.getPrefHeight();
 
-        // create scaleTransform and add it to the game pane
+        // Create a Scale transform object with initial scale factors of 1 (no scaling)
         Scale scale = new Scale(1, 1);
+
+        // Apply the Scale transform to the mainMenuPane so that it can be dynamically resized
         mainMenuPane.getTransforms().add(scale);
 
-        // 6) bind a uniform scale factor = min(widthRatio, heightRatio)
-        //    so it is always the largest scale that fits without cropping
+        // Create a DoubleBinding that dynamically calculates the scale factor
+        // This binding will automatically update whenever the scene’s width or height changes
+        // It ensures the UI scales proportionally (uniformly) to fit the window without cropping
         DoubleBinding scaleFactor = Bindings.createDoubleBinding(() -> {
-            double widthRatio  = scene.getWidth()  / designW;
-            double heightRatio = scene.getHeight() / designH;
-            return Math.min(widthRatio, heightRatio);
-        }, scene.widthProperty(), scene.heightProperty());
+            double widthRatio  = scene.getWidth()  / designW; // Ratio of current width to original design width
+            double heightRatio = scene.getHeight() / designH; // Ratio of current height to original design height
 
+            // Use the smaller of the two ratios to avoid stretching or cropping
+            return Math.min(widthRatio, heightRatio);
+        }, scene.widthProperty(), scene.heightProperty()); // These properties trigger re-evaluation when changed
+
+        // Bind the scale's X and Y properties to the computed scaleFactor
+        // This ensures both dimensions scale uniformly whenever the window resizes
+        // The bind method links the property to the binding, so updates happen automatically
         scale.xProperty().bind(scaleFactor);
         scale.yProperty().bind(scaleFactor);
 

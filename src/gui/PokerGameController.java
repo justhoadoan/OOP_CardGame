@@ -16,49 +16,20 @@ import playable.Playable;
 import playable.Player;
 import java.util.List;
 
-public class PokerGameGui {
+public class PokerGameController {
     @FXML private AnchorPane gamePane;
     @FXML private StackPane rootPane;
-    @FXML private ImageView communityCard1;
-    @FXML private ImageView communityCard2;
-    @FXML private ImageView communityCard3;
-    @FXML private ImageView communityCard4;
-    @FXML private ImageView communityCard5;
-
-    @FXML private Pane player1CardArea;
-    @FXML private Pane player2CardArea;
-    @FXML private Pane player3CardArea;
-    @FXML private Pane player4CardArea;
-
-    @FXML private ImageView player1Card1;
-    @FXML private ImageView player1Card2;
-    @FXML private ImageView player2Card1;
-    @FXML private ImageView player2Card2;
-    @FXML private ImageView player3Card1;
-    @FXML private ImageView player3Card2;
-    @FXML private ImageView player4Card1;
-    @FXML private ImageView player4Card2;
-
+    @FXML private ImageView communityCard1, communityCard2, communityCard3, communityCard4, communityCard5, player1Card1, player1Card2, player2Card1, player2Card2, player3Card1, player3Card2, player4Card1, player4Card2;
+    @FXML private Pane player1CardArea, player2CardArea, player3CardArea, player4CardArea;
     @FXML private TextField raiseField;
     @FXML private Slider raiseSlider;
-    @FXML private Button raiseButton;
-    @FXML private Button foldButton;
-
-    @FXML private Label player1Name;
-    @FXML private Label player1Money;
-    @FXML private Label player2Name;
-    @FXML private Label player2Money;
-    @FXML private Label player3Name;
-    @FXML private Label player3Money;
-    @FXML private Label player4Name;
-    @FXML private Label player4Money;
-
+    @FXML private Button raiseButton, foldButton;
+    @FXML private Label player1Name, player1Money, player2Name, player2Money, player3Name, player3Money, player4Name, player4Money;
     @FXML private Text potMoney;
 
     private PokerGame game;
     private CardSkin cardSkin;
     private JavaFXPokerMode gameMode;
-
     private String aiStrategy;
     private int playerId = 1;
 
@@ -68,6 +39,7 @@ public class PokerGameGui {
         setupEventHandlers();
         initializeGame();
     }
+
     private void setupComponents() {
         // Hide unused player areas initially
         player3CardArea.setVisible(false);
@@ -255,21 +227,6 @@ public class PokerGameGui {
                 }
             }
         }
-    }
-
-    private void setupSliderAndTextField() {
-        raiseSlider.valueProperty().addListener((obs, oldVal, newVal) ->
-                raiseField.setText(String.valueOf(newVal.intValue()))
-        );
-
-        raiseField.textProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                int val = Integer.parseInt(newVal);
-                if (val >= raiseSlider.getMin() && val <= raiseSlider.getMax()) {
-                    raiseSlider.setValue(val);
-                }
-            } catch (NumberFormatException ignored) {}
-        });
     }
 
     private void initializeGame() {

@@ -1,13 +1,9 @@
 package gui;
 
-import games.BlackjackGame;
-import games.GameType;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -19,31 +15,17 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class MainMenu {
+public class MainMenuController {
     @FXML private StackPane rootPane;
-    @FXML
-    private Button nextMainMenu;
-    @FXML
-    private Pane skinPane;
-    @FXML
-    private AnchorPane mainMenuPane;
-    @FXML
-    private Pane multiplayerPane;
-    @FXML
-    private ChoiceBox<String> gameChoiceBox;
-    @FXML
-    private ChoiceBox<String> cardSkinChoiceBox;
-    @FXML
-    private ChoiceBox<String> gameModeChoiceBox;
-    @FXML
-    private Stage stage;
-    @FXML
-    private ChoiceBox<String> multiplayerChoiceBox;
+    @FXML private Button nextMainMenu;
+    @FXML private Pane skinPane, multiplayerPane;
+    @FXML private AnchorPane mainMenuPane;
+    @FXML private ChoiceBox<String> gameChoiceBox, cardSkinChoiceBox, gameModeChoiceBox, multiplayerChoiceBox;
+    @FXML private Stage stage;
 
     @FXML
     public void initialize() {
         // Reset button
-
         // Initialize the choice boxes with options
         gameChoiceBox.setItems(FXCollections.observableArrayList("Poker", "BlackJack"));
         cardSkinChoiceBox.setItems(FXCollections.observableArrayList("Traditional", "Realistic", "Animated"));
@@ -64,7 +46,6 @@ public class MainMenu {
             }
         });
 
-
         // Set visibility of typePane based on gameChoiceBox value
         gameChoiceBox.setOnAction(e -> {
             if (gameChoiceBox.getValue().equals("Poker")) {
@@ -79,7 +60,7 @@ public class MainMenu {
         this.stage = stage;
     }
 
-    public void Next() throws IOException{
+    public void Next(){
         try {
             // Get stage from current scene
             Stage stage = (Stage) cardSkinChoiceBox.getScene().getWindow(); // Use any @FXML injected node
@@ -96,21 +77,21 @@ public class MainMenu {
                 int numberOfPlayers = Integer.parseInt(selectedPlayers);
                 if (numberOfPlayers == 1) {
                     // Load PokerAIOffline for single player with AI
-                    loader = new FXMLLoader(getClass().getResource("PokerAIOffline.fxml"));
+                    loader = new FXMLLoader(getClass().getResource("PokerAI.fxml"));
                     StackPane rootPane = loader.load();
                     scene = new Scene(rootPane);
 
-                    PokerAIOffline controller = loader.getController();
+                    PokerAIController controller = loader.getController();
                     controller.setSelectedSkin(selectedSkin);
                     controller.resetState();
-                    contentPane = controller.getOfflineMenuPane(); // Get the main content pane
+                    contentPane = controller.getAIMenuPane(); // Get the main content pane
                 } else {
                     // Load PokerGame for multiplayer
                     loader = new FXMLLoader(getClass().getResource("PokerGame.fxml"));
                     StackPane rootPane = loader.load();
                     scene = new Scene(rootPane);
 
-                    PokerGameGui controller = loader.getController();
+                    PokerGameController controller = loader.getController();
                     contentPane = controller.getGamePane(); // Get the main content pane
                     controller.setupGame(selectedSkin, numberOfPlayers); // Pass the number of players
                 }

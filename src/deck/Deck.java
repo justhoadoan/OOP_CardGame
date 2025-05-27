@@ -1,13 +1,11 @@
 package deck;
 import card.Card;
-import card.CardSkin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Deck {
     private List<Card> cards;
-    private CardSkin skin;
 
     public Deck() {
         cards = new ArrayList<>();
@@ -21,7 +19,7 @@ public class Deck {
 
         for (String suit : suits) {
             for (String rank : ranks) {
-                cards.add(new Card(rank, suit, null)); // Không cần skin để tạo card
+                cards.add(new Card(rank, suit));
             }
         }
         shuffle();
@@ -36,14 +34,6 @@ public class Deck {
             return null;
         }
         return cards.remove(0);
-    }
-
-    public List<Card> getCards() {
-        return cards;
-    }
-
-    public void setSkin(CardSkin skin) {
-        this.skin = skin;
     }
 
     public int getRemainingCards() {
