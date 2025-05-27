@@ -3,7 +3,6 @@ package updatedisplay;
 import cards.card.Card;
 import games.Game;
 import games.PokerGame;
-
 import gui.PopupController;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +15,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import playable.AI;
 import playable.Playable;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -29,7 +27,6 @@ public class JavaFXPokerView extends DisplayUpdating {
     private final Text potMoney;
     private PokerGame game;
     private String cardSkin;
-
     private final int playerId;
     private final TextField raiseField;
     private final Slider raiseSlider;
@@ -68,28 +65,22 @@ public class JavaFXPokerView extends DisplayUpdating {
     private void setupRaiseSliderConstraints() {
         if (game == null) return;
 
+
         int currentBet = game.getCurrentBetGame();
         int maxBalance = 1000000000;
         Playable currentPlayer = game.getCurrentPlayer();
-
-
-        int minBet = Math.max(0, currentBet - currentPlayer.getCurrentBet());
-
         for (Playable player : game.getPlayers()) {
             if (player.getStatus()) {
                 maxBalance = Math.min(maxBalance, player.getCurrentBalance() + player.getCurrentBet() - currentPlayer.getCurrentBet());
             }
         }
         final int finalMaxBalance = maxBalance;
-        final int finalMinBet = minBet;
 
         Platform.runLater(() -> {
-            raiseSlider.setValue(Math.max(currentBet, finalMinBet));
-            raiseSlider.setMin(finalMinBet);
+            raiseSlider.setMin(currentBet - currentPlayer.getCurrentBet());
             raiseSlider.setMax(finalMaxBalance);
-            // Force layout refresh to ensure thumb is positioned correctly
-            raiseSlider.requestLayout();
-            raiseField.setText(String.valueOf(Math.max(currentBet, finalMinBet)));
+            raiseSlider.setValue(currentBet);
+            raiseField.setText(String.valueOf(currentBet));
         });
     }
 
@@ -146,6 +137,7 @@ public class JavaFXPokerView extends DisplayUpdating {
     public void resetPopupFlag() {
         popupShown = false;
     }
+
     private void showGameOverDialog(String winner) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/Popup.fxml"));
         Parent root = loader.load();
@@ -163,6 +155,7 @@ public class JavaFXPokerView extends DisplayUpdating {
 
         // After window is closed
         if (controller.isPlayAgain()) {
+            resetPopupFlag(); // Reset the flag here too
             if (game != null) {
                 game.start(); // Start a new game
             }
@@ -236,22 +229,23 @@ public class JavaFXPokerView extends DisplayUpdating {
     private void updatePlayerInfo() {
         if (game == null) return;
         List<Playable> players = game.getPlayers();
-        boolean isGameOver = game.isGameOver();
 
         for (int i = 0; i < playerNames.length && i < players.size(); i++) {
             Playable player = players.get(i);
+            // Update player names
             playerNames[i].setText(player.getName());
-            playerMoney[i].setText("$" + player.getCurrentBalance());
+
+            // Update money display based on player status
+            if (player.getStatus()) {
+                playerMoney[i].setText("$" + player.getCurrentBalance());
+            } else {
+                playerMoney[i].setText("Folded");
+            }
         }
     }
-
     private void updatePotMoney() {
         if (game == null) return;
         potMoney.setText("$" + game.getPot());
-    }
-
-    private void showWinner(String winner) {
-        // Optional: Add winner announcement UI
     }
 
     @Override
