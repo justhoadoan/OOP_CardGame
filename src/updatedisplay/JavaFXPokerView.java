@@ -236,15 +236,20 @@ public class JavaFXPokerView extends DisplayUpdating {
     private void updatePlayerInfo() {
         if (game == null) return;
         List<Playable> players = game.getPlayers();
-        boolean isGameOver = game.isGameOver();
 
         for (int i = 0; i < playerNames.length && i < players.size(); i++) {
             Playable player = players.get(i);
+            // Update player names
             playerNames[i].setText(player.getName());
-            playerMoney[i].setText("$" + player.getCurrentBalance());
+
+            // Update money display based on player status
+            if (player.getStatus()) {
+                playerMoney[i].setText("$" + player.getCurrentBalance());
+            } else {
+                playerMoney[i].setText("Folded");
+            }
         }
     }
-
     private void updatePotMoney() {
         if (game == null) return;
         potMoney.setText("$" + game.getPot());
