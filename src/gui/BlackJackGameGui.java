@@ -1,12 +1,8 @@
 package gui;
 
-import card.Card;
 import card.CardSkin;
 import gamemode.JavaFXBlackjackMode;
-import gamemode.JavaFXPokerMode;
 import games.BlackjackGame;
-import javafx.event.ActionEvent;
-import javafx.scene.layout.StackPane;
 import processor.BlackjackActionProcessor;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -14,21 +10,17 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import playable.Player;
 
-import java.util.List;
-import java.util.Objects;
-
 public class BlackJackGameGui {
     @FXML private StackPane rootPane;
-    @FXML private Button replayButton;
     @FXML private ImageView playerCard1;
     @FXML private ImageView playerCard2;
     @FXML private ImageView dealerCard1;
@@ -40,7 +32,6 @@ public class BlackJackGameGui {
     @FXML private ImageView playerCard5;
     @FXML private ImageView dealerCard5;
 
-
     @FXML private Text betValueText;
     @FXML private Text dealerScoreText;
     @FXML private Text playerScoreText;
@@ -48,14 +39,18 @@ public class BlackJackGameGui {
     @FXML private Button standButton;
     @FXML private AnchorPane gamePane;
 
+    private BlackjackGame game;
+    private CardSkin cardSkin;
+    private JavaFXBlackjackMode blackjackMode;
+
     @FXML
     private void handleHit() {
-        hitButton.fire(); // Trigger the action set in setupEventsHandlers
+        hitButton.fire();
     }
 
     @FXML
     private void handleStand() {
-        standButton.fire(); // Trigger the action set in setupEventsHandlers
+        standButton.fire();
     }
 
     @FXML
@@ -66,21 +61,11 @@ public class BlackJackGameGui {
         // Reset the GUI components
         initializeGame();
         blackjackMode.updateDisplay(null, game.getPublicState(), null);
-        blackjackMode.updatePlayerCards();
-        blackjackMode.updateDealerCards();
-        blackjackMode.updatePlayerScore();
-        blackjackMode.updateDealerScore();
 
         // Re-enable action buttons
         hitButton.setDisable(false);
         standButton.setDisable(false);
-
-        System.out.println("Game has been reset for replay.");
     }
-
-    private BlackjackGame game;
-    private CardSkin cardSkin;
-    private JavaFXBlackjackMode blackjackMode;
 
     public void initialize() {
         setupEventsHandlers();
@@ -91,7 +76,7 @@ public class BlackJackGameGui {
         // Set card skin
         this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
 
-        // Initialize game first
+        // Initialize game
         this.game = new BlackjackGame();
         Player player = new Player("Player", 1);
         player.addCurrentBalance(1000);
@@ -99,13 +84,11 @@ public class BlackJackGameGui {
         Player dealer = new Player("Dealer", 0);
         game.addPlayer(dealer);
 
-        // Now setup components with the game already created
+        // First setup the UI components
         setupBaseComponents();
-
-        // Start the game
         game.start();
 
-        // Update display with actual game state
+        // Update display with game state
         blackjackMode.updatePlayerCards();
         blackjackMode.updateDealerCards();
         blackjackMode.updatePlayerScore();
@@ -113,17 +96,14 @@ public class BlackJackGameGui {
     }
 
     void setupBaseComponents() {
-        // Initialize the Blackjack mode
         this.blackjackMode = new JavaFXBlackjackMode(
                 new ImageView[]{playerCard1, playerCard2, playerCard3, playerCard4, playerCard5},
                 new ImageView[]{dealerCard1, dealerCard2, dealerCard3, dealerCard4, dealerCard5},
                 playerScoreText,
-                dealerScoreText,
-                new Label("Player"),
-                new Label("Dealer")
+                dealerScoreText
         );
         blackjackMode.setGame(game);
-        blackjackMode.setCardSkin(cardSkin); // Make sure to set the card skin
+        blackjackMode.setCardSkin(cardSkin);
     }
 
     private void setupEventsHandlers() {
@@ -132,107 +112,26 @@ public class BlackJackGameGui {
         hitButton.setOnAction(event -> {
             actionProcessor.processAction("hit", game, game.getCurrentPlayer());
             blackjackMode.updateDisplay(null, game.getPublicState(), null);
-            blackjackMode.updatePlayerCards(); // Update player cards
-            blackjackMode.updatePlayerScore(); // Update player score
-            if (game.isGameOver()) {
-                hitButton.setDisable(true);
-                standButton.setDisable(true);
-                endGame();
-            }
+            checkGameOver();
         });
-        // Set up stand button
+
         standButton.setOnAction(event -> {
             actionProcessor.processAction("stand", game, game.getCurrentPlayer());
             blackjackMode.updateDisplay(null, game.getPublicState(), null);
-            blackjackMode.updateDealerCards(); // Update dealer cards
-            blackjackMode.updateDealerScore(); // Update dealer score
-            if (game.isGameOver()) {
-                hitButton.setDisable(true);
-                standButton.setDisable(true);
-                endGame();
-            }
+            checkGameOver();
         });
-
-        replayButton.setOnAction(event -> replayGame());
     }
 
-
-
-/*    private void updatePlayerCards() {
-        if (game == null) return;
-
-        // Get the current player's hand
-        List<Card> hand;
-        if(game.getCurrentPlayer() == game.getDealer()) hand = game.getPlayerBeforeDealer().getHand();
-        else hand = game.getCurrentPlayer().getHand();
-
-        // Update the player's card images
-        ImageView[] playerCards = {playerCard1, playerCard2, playerCard3, playerCard4, playerCard5};
-        for (int i = 0; i < playerCards.length; i++) {
-            if (i < hand.size()) {
-                Card card = hand.get(i);
-                String imagePath = cardSkin.getImagePath(card.getRank(), card.getSuit());
-                Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
-                playerCards[i].setImage(cardImage);
-                playerCards[i].setVisible(true);
-            } else {
-                playerCards[i].setVisible(false);
-            }
+    private void checkGameOver() {
+        if (game.isGameOver()) {
+            hitButton.setDisable(true);
+            standButton.setDisable(true);
+            endGame();
         }
     }
-
-    private void updatePlayerScore() {
-        if (game == null) return;
-
-        // Get the current player's hand
-        List<Card> hand;
-        if(game.getCurrentPlayer() == game.getDealer()) hand = game.getPlayerBeforeDealer().getHand();
-        else hand = game.getCurrentPlayer().getHand();
-
-
-        // Calculate the player's score
-        int playerScore = game.calculateScore(hand);
-
-        // Update the player's score text
-        playerScoreText.setText("" + playerScore);
-    }
-
-    private void updateDealerCards() {
-        if (game == null) return;
-
-        // Get the dealer's hand
-        List<Card> hand = game.getDealer().getHand();
-
-        // Update the dealer's card images
-        ImageView[] dealerCards = {dealerCard1, dealerCard2, dealerCard3, dealerCard4, dealerCard5};
-        for (int i = 0; i < dealerCards.length; i++) {
-            if (i < hand.size()) {
-                Card card = hand.get(i);
-                String imagePath = cardSkin.getImagePath(card.getRank(), card.getSuit());
-                Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
-                dealerCards[i].setImage(cardImage);
-                dealerCards[i].setVisible(true);
-            } else {
-                dealerCards[i].setVisible(false);
-            }
-        }
-    }
-
-    private void updateDealerScore() {
-        if (game == null) return;
-
-        // Get the dealer's hand
-        List<Card> hand = game.getDealer().getHand();
-
-        // Calculate the dealer's score
-        int dealerScore = game.calculateScore(hand);
-
-        // Update the dealer's score text
-        dealerScoreText.setText("" + dealerScore);
-    }*/
 
     private void initializeGame() {
-        // Hide all player and dealer cards
+        // Hide all cards
         ImageView[] playerCards = {playerCard1, playerCard2, playerCard3, playerCard4, playerCard5};
         ImageView[] dealerCards = {dealerCard1, dealerCard2, dealerCard3, dealerCard4, dealerCard5};
 
@@ -243,11 +142,9 @@ public class BlackJackGameGui {
             card.setVisible(false);
         }
 
-        // Reset scores
+        // Reset scores and bet
         playerScoreText.setText("0");
         dealerScoreText.setText("0");
-
-        // Reset bet value
         betValueText.setText("$0");
 
         // Enable action buttons
@@ -259,44 +156,37 @@ public class BlackJackGameGui {
         betValueText.setText("$" + betValue);
     }
 
+    private void endGame() {
+        String winnerName = game.getWinner();
+        showWinnerPopup(winnerName);
+    }
+
     private void showWinnerPopup(String winnerName) {
-        // Create a new stage for the popup
         Stage popupStage = new Stage();
         popupStage.setTitle("Game Over");
 
-        // Create a label to display the winner
         Label winnerLabel = new Label("Winner: " + winnerName);
         winnerLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        // Create a button to replay the game
         Button replayButton = new Button("Replay");
         replayButton.setOnAction(event -> {
-            replayGame(); // Replay the game
-            popupStage.close(); // Close the popup
+            replayGame();
+            popupStage.close();
         });
 
-        // Create a layout and add the label and button
         VBox layout = new VBox(10);
         layout.getChildren().addAll(winnerLabel, replayButton);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(20));
 
-        // Set the scene and show the popup
         Scene scene = new Scene(layout, 300, 150);
         popupStage.setScene(scene);
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Block interaction with other windows
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.showAndWait();
     }
 
-
-
-    private void endGame() {
-        game.showWinner();
-        String winnerName = game.getWinner();// Log the winner in the console
-        showWinnerPopup(winnerName); // Show the popup
-    }
-
     public AnchorPane getGamePane() {
-        return gamePane; // Expose the game pane for scaling
+        return gamePane;
     }
 }
+

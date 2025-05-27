@@ -7,12 +7,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.function.UnaryOperator;
 
 public class BlackJackBetGui {
     @FXML private AnchorPane betPane;
@@ -25,9 +27,33 @@ public class BlackJackBetGui {
 
     @FXML
     public void initialize() {
-        // Sync slider and text field
+        // Set up numeric-only filter for betTextField
+        UnaryOperator<TextFormatter.Change> integerFilter = change -> {
+            String newText = change.getControlNewText();
+            // Allow empty text or valid integers
+            if (newText.isEmpty() || newText.matches("\\d+")) {
+                return change;
+            }
+            return null; // Reject the change
+        };
+
+        betTextField.setTextFormatter(new TextFormatter<>(integerFilter));
+
+        // Keep existing slider synchronization
         betSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             betTextField.setText(String.valueOf(newVal.intValue()));
+        });
+
+        // Update slider when text field changes
+        betTextField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.isEmpty()) {
+                try {
+                    int value = Integer.parseInt(newVal);
+                    if (value >= betSlider.getMin() && value <= betSlider.getMax()) {
+                        betSlider.setValue(value);
+                    }
+                } catch (NumberFormatException ignored) {}
+            }
         });
     }
 

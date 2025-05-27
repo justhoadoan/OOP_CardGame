@@ -19,23 +19,17 @@ public class JavaFXBlackjackMode implements GameMode {
     private final ImageView[] dealerCards;
     private final Text playerScoreText;
     private final Text dealerScoreText;
-    private final Label playerName;
-    private final Label dealerName;
     private BlackjackGame game;
     private CardSkin cardSkin;
 
     public JavaFXBlackjackMode(ImageView[] playerCards,
                                ImageView[] dealerCards,
                                Text playerScoreText,
-                               Text dealerScoreText,
-                               Label playerName,
-                               Label dealerName) {
+                               Text dealerScoreText) {
         this.playerCards = playerCards;
         this.dealerCards = dealerCards;
         this.playerScoreText = playerScoreText;
         this.dealerScoreText = dealerScoreText;
-        this.playerName = playerName;
-        this.dealerName = dealerName;
     }
 
     @Override
@@ -54,15 +48,16 @@ public class JavaFXBlackjackMode implements GameMode {
         Platform.runLater(() -> {
             updatePlayerCards();
             updateDealerCards();
-            updateDealerScore();
             updatePlayerScore();
+            updateDealerScore();
         });
     }
 
     public void updatePlayerCards() {
         if (game == null) return;
 
-        List<Card> hand = game.getCurrentPlayer().getHand();
+        // Get the human player (ID 1) using the proper method
+        List<Card> hand = game.getPlayerHand(1);  // Player ID 1 is the human player
         for (int i = 0; i < playerCards.length; i++) {
             if (i < hand.size()) {
                 Card card = hand.get(i);
@@ -96,7 +91,8 @@ public class JavaFXBlackjackMode implements GameMode {
     public void updatePlayerScore() {
         if (game == null) return;
 
-        List<Card> hand = game.getCurrentPlayer().getHand();
+        // Use the human player's hand (ID 1)
+        List<Card> hand = game.getPlayerHand(1);  // Player ID 1 is the human player
         int playerScore = game.calculateScore(hand);
         playerScoreText.setText("" + playerScore);
     }

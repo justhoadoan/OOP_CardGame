@@ -12,10 +12,10 @@ public class BlackjackActionProcessor implements ActionProcessor {
 
             switch (action.toLowerCase()) {
                 case "hit":
-                    ((BlackjackGame) game).playerHit(currentPlayer);
+                    game.playerHit(currentPlayer);
                     break;
                 case "stand":
-                    ((BlackjackGame) game).playerStand(currentPlayer);
+                    game.playerStand(currentPlayer);
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown action: " + action);

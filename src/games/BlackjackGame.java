@@ -61,10 +61,8 @@ public class BlackjackGame implements Game {
         }
 
         // dealer draw 2 starting card
-        ((Player) dealer).addCard(deck.drawCard());
-        ((Player) dealer).addCard(deck.drawCard());
-
-
+        dealer.addCard(deck.drawCard());
+        dealer.addCard(deck.drawCard());
     }
 
     @Override
@@ -79,11 +77,6 @@ public class BlackjackGame implements Game {
 
     @Override
     public void nextPlayer() {
-        currentPlayer = getNextPlayer();
-        if (currentPlayer == null || currentPlayer == dealer) {
-            currentPlayer = dealer;
-            playDealerTurn();
-        }
     }
 
     @Override
@@ -131,7 +124,7 @@ public class BlackjackGame implements Game {
             boolean isBust = playerScore > 21;
 
             if (!isBust && (dealerScore > 21 || playerScore > dealerScore)) {
-                distributePot(player);
+                // Just determine winners without distributing pot
                 winners.append(player.getName()).append(" ");
             }
             if(!isBust && playerScore == dealerScore) {
@@ -145,12 +138,8 @@ public class BlackjackGame implements Game {
     public void playerHit(Playable player) {
         if (!dealerTurn && player.getHand().size() <= 5) {
             Card drawnCard = deck.drawCard();
-            ((Player) player).addCard(drawnCard);
-            System.out.println("Player " + player.getName() + " drew: " + drawnCard);
-            System.out.println("Player's hand: " + player.getHand());
-            System.out.println("Deck size: " + deck.getRemainingCards());
+            player.addCard(drawnCard);
             if (calculateScore(player.getHand()) > 21) {
-                System.out.println("Player " + player.getName() + " is bust!");
                 currentPlayer = getNextPlayer(); // player bust
                 if (currentPlayer == null || currentPlayer == dealer) {
                     playerBeforeDealer = player;
@@ -271,15 +260,6 @@ public class BlackjackGame implements Game {
 
     public Playable getDealer() {
         return dealer;
-    }
-
-    public void showWinner() {
-        String winner = getWinner();
-        if (winner.isEmpty()) {
-            System.out.println("No winners this round.");
-        } else {
-            System.out.println("Winner(s): " + winner);
-        }
     }
 
 }
