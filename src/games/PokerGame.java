@@ -7,6 +7,8 @@ import cards.deck.Deck;
 import updatedisplay.DisplayUpdating;
 import playable.*;
 import processor.PokerActionProcessor;
+import updatedisplay.JavaFXPokerView;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,6 +23,7 @@ public class PokerGame implements Game {
     private AIStrategyFactory aiFactory;
     private String skin;
     List<Playable> winners = new ArrayList<>();
+
     public PokerGame(DisplayUpdating displayUpdating, String skin) {
         this.displayUpdating = displayUpdating;
         this.skin = skin;
@@ -48,6 +51,9 @@ public class PokerGame implements Game {
                 currentPlayer = player;
                 break;
             }
+        }
+        if (displayUpdating instanceof JavaFXPokerView) {
+            ((JavaFXPokerView) displayUpdating).resetPopupFlag();
         }
         broadcastState();
     }

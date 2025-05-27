@@ -145,6 +145,7 @@ public class JavaFXPokerView extends DisplayUpdating {
     public void resetPopupFlag() {
         popupShown = false;
     }
+
     private void showGameOverDialog(String winner) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/Popup.fxml"));
         Parent root = loader.load();
@@ -162,6 +163,7 @@ public class JavaFXPokerView extends DisplayUpdating {
 
         // After window is closed
         if (controller.isPlayAgain()) {
+            resetPopupFlag(); // Reset the flag here too
             if (game != null) {
                 game.start(); // Start a new game
             }
