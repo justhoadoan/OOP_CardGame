@@ -1,7 +1,6 @@
 package updatedisplay;
 
-import card.Card;
-import card.CardSkin;
+import cards.card.Card;
 import games.Game;
 import games.PokerGame;
 
@@ -29,7 +28,7 @@ public class JavaFXPokerMode implements GameMode {
     private final Label[] playerMoney;
     private final Text potMoney;
     private PokerGame game;
-    private CardSkin cardSkin;
+    private String cardSkin;
 
     private final int playerId;
     private final TextField raiseField;
@@ -60,7 +59,7 @@ public class JavaFXPokerMode implements GameMode {
     }
 
     @Override
-    public void setCardSkin(CardSkin skin) {
+    public void setCardSkin(String skin) {
         this.cardSkin = skin;
         if (game != null) {
             updateDisplay(null, game.getPublicState(), null);
@@ -182,7 +181,7 @@ public class JavaFXPokerMode implements GameMode {
                 Card card = community.get(i);
                 if (cardSkin != null) {
                     card.setSkin(cardSkin);
-                    String imagePath = cardSkin.getImagePath(card.getRank(), card.getSuit());
+                    String imagePath = card.getImagePath(card.getRank(), card.getSuit());
                     Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
                     communityCards[i].setImage(cardImage);
                     communityCards[i].setVisible(true);
@@ -209,11 +208,11 @@ public class JavaFXPokerMode implements GameMode {
                     // Show all cards if game is over, river round is reached, or it's the current player's hand
                     if (isGameOver || isRiverRound || (player == currentPlayer && !(player instanceof AI))) {
                         Card card = playerHand.get(j);
-                        String path = cardSkin.getImagePath(card.getRank(), card.getSuit());
+                        String path = card.getImagePath(card.getRank(), card.getSuit());
                         Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path)));
                         playerCards[i][j].setImage(cardImage);
                     } else {
-                        String backPath = cardSkin.getImagePath("Opponent", "");
+                        String backPath = playerHand.get(j).getImagePath("Opponent","");
                         Image backImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(backPath)));
                         playerCards[i][j].setImage(backImage);
                     }

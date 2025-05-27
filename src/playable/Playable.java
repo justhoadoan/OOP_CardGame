@@ -1,5 +1,5 @@
 package playable;
-import card.Card;
+import cards.card.Card;
 import java.util.List;
 
 public interface Playable {

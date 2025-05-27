@@ -1,9 +1,12 @@
 package games;
 
-import card.Card;
-import deck.Deck;
+import cards.card.Card;
+import cards.deck.Deck;
+import updatedisplay.GameMode;
 import playable.Playable;
 import playable.Player;
+import processor.BlackjackActionProcessor;
+
 import java.util.*;
 
 public class BlackjackGame implements Game {
@@ -57,8 +60,8 @@ public class BlackjackGame implements Game {
         }
 
         // dealer draw 2 starting card
-        ((Player) dealer).addCard(deck.drawCard());
-        ((Player) dealer).addCard(deck.drawCard());
+        dealer.addCard(deck.drawCard());
+        dealer.addCard(deck.drawCard());
     }
 
     @Override
@@ -97,12 +100,14 @@ public class BlackjackGame implements Game {
         return "Dealer's Hand: " + dealer.getHand() + "\nPot: " + pot;
     }
 
+    //    @Override
     public boolean isGameOver() {
         return (dealerTurn && calculateScore(dealer.getHand()) >= 17)
                 || players.stream().allMatch(player -> player.getHand().size() >= 5)
                 || players.stream().allMatch(player -> calculateScore(player.getHand()) > 21);
     }
 
+    //    @Override
     public String getWinner() {
         int dealerScore = calculateScore(dealer.getHand());
         StringBuilder winners = new StringBuilder();
@@ -113,7 +118,7 @@ public class BlackjackGame implements Game {
             boolean isBust = playerScore > 21;
 
             if (!isBust && (dealerScore > 21 || playerScore > dealerScore)) {
-                distributePot(player);
+                // Just determine winners without distributing pot
                 winners.append(player.getName()).append(" ");
             }
             if(!isBust && playerScore == dealerScore) {
@@ -126,12 +131,8 @@ public class BlackjackGame implements Game {
     public void playerHit(Playable player) {
         if (!dealerTurn && player.getHand().size() <= 5) {
             Card drawnCard = deck.drawCard();
-            ((Player) player).addCard(drawnCard);
-            System.out.println("Player " + player.getName() + " drew: " + drawnCard);
-            System.out.println("Player's hand: " + player.getHand());
-            System.out.println("Deck size: " + deck.getRemainingCards());
+            player.addCard(drawnCard);
             if (calculateScore(player.getHand()) > 21) {
-                System.out.println("Player " + player.getName() + " is bust!");
                 currentPlayer = getNextPlayer(); // player bust
                 if (currentPlayer == null || currentPlayer == dealer) {
                     playerBeforeDealer = player;
@@ -223,12 +224,4 @@ public class BlackjackGame implements Game {
         return dealer;
     }
 
-    public void showWinner() {
-        String winner = getWinner();
-        if (winner.isEmpty()) {
-            System.out.println("No winners this round.");
-        } else {
-            System.out.println("Winner(s): " + winner);
-        }
-    }
 }

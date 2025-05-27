@@ -1,13 +1,12 @@
-package card;
+package cards.card;
 
-import javax.swing.ImageIcon;
+import javafx.scene.image.Image;
 
 public class Card {
     private String rank;
     private String suit;
-    private CardSkin skin;
-    private ImageIcon cardImage;
-    private String imagePath;
+    private String skinName;
+    private Image cardImage;
 
     public Card(String rank, String suit) {
         this.rank = rank;
@@ -55,17 +54,21 @@ public class Card {
         return rank;
     }
 
-    public void setSkin(CardSkin skin) {
-        this.skin = skin;
+    public void setSkin(String skin) {
+        this.skinName = skin;
         if (skin != null) {
             try {
-                String imagePath = skin.getImagePath(rank, suit);
-                cardImage = new ImageIcon(imagePath);
+                String imagePath = getImagePath(rank, suit);
+                cardImage = new Image(imagePath);
             } catch (Exception e) {
-                System.err.println("Error loading card image: " + e.getMessage());
+                System.err.println("Error loading cards.card image: " + e.getMessage());
                 cardImage = null;
             }
         }
+    }
+
+    public String getImagePath(String rank, String suit) {
+        return "/cards/" + skinName + "/" + rank + suit + ".png";
     }
 
     @Override

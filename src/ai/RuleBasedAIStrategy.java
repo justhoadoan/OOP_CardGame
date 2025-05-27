@@ -1,6 +1,6 @@
 package ai;
 
-import card.Card;
+import cards.card.Card;
 import playable.Player;
 import java.util.*;
 
@@ -46,7 +46,7 @@ public class RuleBasedAIStrategy implements AIStrategy  {
         // Basic evaluation:
         if (isPair(allCards) || isFlush(allCards) || isStraight(allCards)) return 2;
         
-        // Check for high card value
+        // Check for high cards.card value
         int highestValue = 0;
         for (Card card : allCards) {
             int value = getCardValue(card);
@@ -108,7 +108,7 @@ public class RuleBasedAIStrategy implements AIStrategy  {
                 try {
                     return Integer.parseInt(card.getRank());
                 } catch (NumberFormatException e) {
-                    return 0; // Giá trị mặc định cho trường hợp không phải số hoặc face card
+                    return 0; // Giá trị mặc định cho trường hợp không phải số hoặc face cards.card
                 }
         }
     }

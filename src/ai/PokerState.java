@@ -1,7 +1,7 @@
 package ai;
 
 import java.util.List;
-import card.Card;
+import cards.card.Card;
 import playable.Player;
 
 public class PokerState implements GameState {

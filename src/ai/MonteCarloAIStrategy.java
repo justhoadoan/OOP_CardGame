@@ -1,6 +1,6 @@
 package ai;
 
-import card.Card;
+import cards.card.Card;
 import java.util.*;
 
 public class MonteCarloAIStrategy implements AIStrategy {

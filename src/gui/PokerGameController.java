@@ -1,7 +1,5 @@
 package gui;
 
-import card.CardSkin;
-import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import updatedisplay.JavaFXPokerMode;
 import games.PokerGame;
@@ -31,7 +29,7 @@ public class PokerGameController {
     @FXML private Text potMoney;
 
     private PokerGame game;
-    private CardSkin cardSkin;
+    private String cardSkin;
     private JavaFXPokerMode gameMode;
     private String aiStrategy;
     private int playerId = 1;
@@ -52,7 +50,7 @@ public class PokerGameController {
         raiseSlider.setMax(1000);
         raiseSlider.setValue(100);
         raiseField.setText("100");
-        // Set consistent card sizes
+        // Set consistent cards.card sizes
         setCardSize(communityCard1, communityCard2, communityCard3, communityCard4, communityCard5);
         setCardSize(player1Card1, player1Card2);
         setCardSize(player2Card1, player2Card2);
@@ -76,7 +74,7 @@ public class PokerGameController {
         foldButton.setDisable(false);
     }
     public void setupGame(String selectedSkin, int numberOfPlayers) {
-        this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
+        this.cardSkin = selectedSkin != null ? selectedSkin : "Traditional";
 
         setupBaseComponents();
 
@@ -157,7 +155,7 @@ public class PokerGameController {
     public void setupGame(String selectedSkin, String selectedAI) {
 
 
-        this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
+        this.cardSkin = selectedSkin != null ? selectedSkin : "Traditional";
         this.aiStrategy = selectedAI != null ? selectedAI : "Rule based";
         setupBaseComponents();
 

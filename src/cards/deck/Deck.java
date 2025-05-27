@@ -1,5 +1,5 @@
-package deck;
-import card.Card;
+package cards.deck;
+import cards.card.Card;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +37,6 @@ public class Deck {
     }
 
     public int getRemainingCards() {
-        return cards.size(); // Assuming 'cards' is the list of remaining cards in the deck
+        return cards.size(); // Assuming 'cards' is the list of remaining cards in the cards.deck
     }
 }

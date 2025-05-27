@@ -2,9 +2,8 @@ package games;
 
 import ai.*;
 import ai.PokerHandEvaluator.HandRank;
-import card.Card;
-import card.CardSkin;
-import deck.Deck;
+import cards.card.Card;
+import cards.deck.Deck;
 import updatedisplay.GameMode;
 import playable.*;
 import processor.PokerActionProcessor;
@@ -20,9 +19,9 @@ public class PokerGame implements Game {
     private Playable currentPlayer;
     private List<Card> communityCards;
     private AIStrategyFactory aiFactory;
-    private CardSkin skin;
+    private String skin;
     List<Playable> winners = new ArrayList<>();
-    public PokerGame(GameMode gameMode, CardSkin skin) {
+    public PokerGame(GameMode gameMode, String skin) {
         this.gameMode = gameMode;
         this.skin = skin;
         this.deck = new Deck();
@@ -175,7 +174,7 @@ public class PokerGame implements Game {
 
     private void dealCommunityCards(int count) {
         try {
-            deck.drawCard(); // Burn card
+            deck.drawCard(); // Burn cards.card
             for (int i = 0; i < count; i++) {
                 Card card = deck.drawCard();
                 if (card != null) {

@@ -1,6 +1,6 @@
 package games;
 
-import card.Card;
+import cards.card.Card;
 import playable.Playable;
 import java.util.List;
 

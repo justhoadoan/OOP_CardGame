@@ -1,6 +1,6 @@
 package ai;
 
-import card.Card;
+import cards.card.Card;
 import playable.Player;
 import java.util.List;
 
