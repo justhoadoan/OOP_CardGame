@@ -76,25 +76,18 @@ public class JavaFXPokerMode implements GameMode {
 //                .mapToInt(Playable::getCurrentBalance)
 //                .min()
 //                .orElse(0);
-        int minBalance = 1000000000;
-        List<Playable> players = game.getPlayers();
+        int maxBalance = 1000000000;
         Playable currentPlayer = game.getCurrentPlayer();
-        int currentIndex = players.indexOf(currentPlayer);
-        int nextIndex = (currentIndex + 1) % players.size();
-        Playable nextPlayer = players.get(nextIndex);
-
         for (Playable player : game.getPlayers()) {
             if (player.getStatus()) {
-                minBalance = Math.min(minBalance, player.getCurrentBalance() + player.getCurrentBet() - currentPlayer.getCurrentBet());
-                System.out.println(player.getName() + " " + player.getCurrentBalance() + " " + player.getCurrentBet() + " " + currentPlayer.getName() + " " + currentPlayer.getCurrentBet());
+                maxBalance = Math.min(maxBalance, player.getCurrentBalance() + player.getCurrentBet() - currentPlayer.getCurrentBet());
             }
         }
-        final int finalMinBalance = minBalance;
-//        System.out.println("minBalance: " + minBalance);
+        final int finalMaxBalance = maxBalance;
 
         Platform.runLater(() -> {
-            raiseSlider.setMin(currentBet);
-            raiseSlider.setMax(finalMinBalance);
+            raiseSlider.setMin(currentBet - currentPlayer.getCurrentBet());
+            raiseSlider.setMax(finalMaxBalance);
             raiseSlider.setValue(currentBet);
             raiseField.setText(String.valueOf(currentBet));
         });
