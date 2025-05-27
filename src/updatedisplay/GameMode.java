@@ -1,9 +1,8 @@
-package gamemode;
+package updatedisplay;
 
 import card.Card;
 import card.CardSkin;
 import games.Game;
-import games.PokerGame;
 
 
 import java.util.List;

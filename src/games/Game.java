@@ -1,7 +1,7 @@
 package games;
 
 import card.Card;
-import gamemode.GameMode;
+import updatedisplay.GameMode;
 import playable.Playable;
 
 import java.util.List;

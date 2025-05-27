@@ -1,9 +1,8 @@
 package games;
 
 import card.Card;
-import card.CardSkin;
 import deck.Deck;
-import gamemode.GameMode;
+import updatedisplay.GameMode;
 import playable.Playable;
 import playable.Player;
 

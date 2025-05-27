@@ -1,4 +1,4 @@
-package gamemode;
+package updatedisplay;
 
 import card.Card;
 import card.CardSkin;
