@@ -12,12 +12,12 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane fx:id="rootPane" alignment="TOP_LEFT" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BlackJackGameGui">
+<StackPane fx:id="rootPane" alignment="TOP_LEFT" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BlackJackGameController">
 <AnchorPane fx:id="gamePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" >
    <children>
       <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@Background.jpg" />
+            <Image url="@../images/Background.jpg" />
          </image>
       </ImageView>
       <Button fx:id="replayButton" text="Replay" layoutX="100" layoutY="300" onAction="#replayGame" />
@@ -27,12 +27,12 @@
                <children>
                   <ImageView fitHeight="50.0" fitWidth="150.0" layoutX="-3.0" layoutY="56.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@name.png" />
+                        <Image url="@../images/name.png" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="31.0" layoutY="-12.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@Value.png" />
+                        <Image url="@../images/Value.png" />
                      </image>
                   </ImageView>
                   <Text fill="WHITE" layoutX="55.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dealer" textAlignment="CENTER">
@@ -54,12 +54,12 @@
                <children>
                   <ImageView fitHeight="80.0" fitWidth="100.0" layoutX="28.0" layoutY="16.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@Value.png" />
+                        <Image url="@../images/Value.png" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="50.0" fitWidth="150.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@name.png" />
+                        <Image url="@../images/name.png" />
                      </image>
                   </ImageView>
                   <Text fill="WHITE" layoutX="43.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Player" textAlignment="CENTER" wrappingWidth="62.67010498046875">
@@ -151,7 +151,7 @@
                <children>
                   <ImageView fitHeight="47.0" fitWidth="180.0" layoutX="12.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@MenuFrame.png" />
+                        <Image url="@../images/MenuFrame.png" />
                      </image>
                   </ImageView>
                   <Text fx:id="betValueText" fill="#f4e0b7" layoutX="60.0" layoutY="35.0" stroke="#7b4d15" strokeType="OUTSIDE" text="\$100" textAlignment="CENTER" wrappingWidth="80.0">

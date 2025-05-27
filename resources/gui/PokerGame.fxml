@@ -14,23 +14,23 @@
 <?import javafx.scene.text.Text?>
 
 <StackPane fx:id="rootPane" alignment="TOP_LEFT" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PokerGameController">
-    <AnchorPane fx:id="gamePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: transparent;" stylesheets="@menu.css">
+    <AnchorPane fx:id="gamePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: transparent;" stylesheets="@style.css">
         <children>
             <ImageView fitHeight="407.0" fitWidth="607.0" layoutX="-6.0" layoutY="-3.0" pickOnBounds="true" style="-fx-background-color: transparent;">
                 <image>
-                    <Image url="@Background.jpg" />
+                    <Image url="@../images/Background.jpg" />
                 </image></ImageView>
             <ImageView fitHeight="129.0" fitWidth="200.0" layoutX="201.0" layoutY="4.0">
                 <image>
-                    <Image url="@show_emma.png" />
+                    <Image url="@../images/show_emma.png" />
                 </image>
             </ImageView>
             <ImageView fitHeight="326.0" fitWidth="453.0" layoutX="74.0" layoutY="32.0">
                 <image>
-                    <Image url="@Table.png" />
+                    <Image url="@../images/Table.png" />
                 </image>
             </ImageView>
-            <HBox alignment="CENTER" layoutX="168.0" layoutY="171.0" prefHeight="89.0" prefWidth="246.0">
+            <HBox fx:id="hBox" alignment="TOP_CENTER" layoutX="168.0" layoutY="171.0" prefHeight="89.0" prefWidth="246.0">
                 <children>
                     <ImageView fx:id="communityCard1" pickOnBounds="true" styleClass="cards">
                         <image>
@@ -94,7 +94,7 @@
                     </ImageView>
                     <ImageView fitHeight="54.0" fitWidth="98.0" layoutX="2.0" layoutY="55.0">
                         <image>
-                            <Image url="@pic_wheel_bg.png" />
+                            <Image url="@../images/nameField.png" />
                         </image>
                     </ImageView>
                     <Label fx:id="player1Name" alignment="CENTER" layoutX="4.0" layoutY="53.0" prefHeight="21.0" prefWidth="88.0" style="-fx-text-fill: white;" text="choco" textAlignment="CENTER">
@@ -108,7 +108,7 @@
                 <children>
                     <ImageView fitHeight="41.0" fitWidth="169.0" pickOnBounds="true">
                         <image>
-                            <Image url="@MenuFrame.png" />
+                            <Image url="@../images/MenuFrame.png" />
                         </image>
                     </ImageView>
                     <Text fx:id="potMoney" style="-fx-font-size: 22; -fx-font-family: 'KoPub Batang'; -fx-fill: #f4e0b7;" text="\$500000" textAlignment="CENTER" wrappingWidth="124.0" />
@@ -128,7 +128,7 @@
                     </ImageView>
                     <ImageView fitHeight="54.0" fitWidth="98.0" layoutX="2.0" layoutY="51.0" rotate="180.0">
                         <image>
-                            <Image url="@pic_wheel_bg.png" />
+                            <Image url="@../images/nameField.png" />
                         </image>
                     </ImageView>
                     <Label fx:id="player2Name" alignment="CENTER" layoutX="25.0" layoutY="88.0" prefHeight="15.0" prefWidth="55.0" style="-fx-text-fill: white;" text="choco" textAlignment="CENTER">
@@ -153,7 +153,7 @@
                     </ImageView>
                     <ImageView fitHeight="54.0" fitWidth="98.0" layoutX="2.0" layoutY="51.0" rotate="180.0">
                         <image>
-                            <Image url="@pic_wheel_bg.png" />
+                            <Image url="@../images/nameField.png" />
                         </image>
                     </ImageView>
                     <Label fx:id="player3Name" alignment="CENTER" layoutX="25.0" layoutY="88.0" prefHeight="15.0" prefWidth="55.0" style="-fx-text-fill: white;" text="choco" textAlignment="CENTER">
@@ -178,7 +178,7 @@
                     </ImageView>
                     <ImageView fitHeight="54.0" fitWidth="98.0" layoutX="2.0" layoutY="55.0">
                         <image>
-                            <Image url="@pic_wheel_bg.png" />
+                            <Image url="@../images/nameField.png" />
                         </image>
                     </ImageView>
                     <Label fx:id="player4Name" alignment="CENTER" layoutX="4.0" layoutY="53.0" prefHeight="21.0" prefWidth="88.0" style="-fx-text-fill: white;" text="choco" textAlignment="CENTER">

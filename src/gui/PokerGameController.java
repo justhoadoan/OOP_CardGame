@@ -1,6 +1,8 @@
 package gui;
 
 import card.CardSkin;
+import javafx.geometry.Pos;
+import javafx.scene.layout.HBox;
 import updatedisplay.JavaFXPokerMode;
 import games.PokerGame;
 import javafx.scene.layout.AnchorPane;
@@ -17,6 +19,7 @@ import playable.Player;
 import java.util.List;
 
 public class PokerGameController {
+    @FXML private HBox hBox;
     @FXML private AnchorPane gamePane;
     @FXML private StackPane rootPane;
     @FXML private ImageView communityCard1, communityCard2, communityCard3, communityCard4, communityCard5, player1Card1, player1Card2, player2Card1, player2Card2, player3Card1, player3Card2, player4Card1, player4Card2;

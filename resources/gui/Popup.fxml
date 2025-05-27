@@ -14,7 +14,7 @@
          <children>
             <ImageView fitHeight="413.0" fitWidth="293.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@popupBackground.png" />
+                  <Image url="@../images/popupBackground.png" />
                </image>
             </ImageView>
               <Button fx:id="againBtn" layoutX="91.0" layoutY="323.0" mnemonicParsing="false" opacity="0.0" prefHeight="25.0" prefWidth="105.0" text="Play again" />
