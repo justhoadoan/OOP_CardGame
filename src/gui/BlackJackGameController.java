@@ -23,28 +23,13 @@ import playable.Player;
 import java.util.List;
 import java.util.Objects;
 
-public class BlackJackGameGui {
+public class BlackJackGameController {
     @FXML private StackPane rootPane;
     @FXML private Button replayButton;
-    @FXML private ImageView playerCard1;
-    @FXML private ImageView playerCard2;
-    @FXML private ImageView dealerCard1;
-    @FXML private ImageView dealerCard2;
-    @FXML private ImageView dealerCard3;
-    @FXML private ImageView playerCard3;
-    @FXML private ImageView playerCard4;
-    @FXML private ImageView dealerCard4;
-    @FXML private ImageView playerCard5;
-    @FXML private ImageView dealerCard5;
-
-
-    @FXML private Text betValueText;
-    @FXML private Text dealerScoreText;
-    @FXML private Text playerScoreText;
-    @FXML private Button hitButton;
-    @FXML private Button standButton;
+    @FXML private ImageView playerCard1, playerCard2, dealerCard1, dealerCard2, dealerCard3, playerCard3, playerCard4, dealerCard4, playerCard5, dealerCard5;
+    @FXML private Text betValueText, dealerScoreText, playerScoreText;
+    @FXML private Button hitButton, standButton;
     @FXML private AnchorPane gamePane;
-
     private BlackjackGame game;
     private CardSkin cardSkin;
 
