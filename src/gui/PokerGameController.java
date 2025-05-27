@@ -77,7 +77,7 @@ public class PokerGameController {
 
         setupBaseComponents();
 
-        game = new PokerGame(gameMode, null, cardSkin);
+        game = new PokerGame(gameMode, cardSkin);
         gameMode.setGame(game);
 
         // Add human player
@@ -159,7 +159,7 @@ public class PokerGameController {
         setupBaseComponents();
 
         // Setup offline game
-        game = new PokerGame(gameMode, null, cardSkin);
+        game = new PokerGame(gameMode, cardSkin);
         gameMode.setGame(game);
 
         // Add players for offline mode

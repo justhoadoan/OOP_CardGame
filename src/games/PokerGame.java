@@ -7,14 +7,11 @@ import card.CardSkin;
 import deck.Deck;
 import gamemode.GameMode;
 import playable.*;
-
 import processor.PokerActionProcessor;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class PokerGame implements Game {
-   // private final List<GameEventListener> listeners = new ArrayList<>();
     private Deck deck;
     private GameMode gameMode;
     private int pot;
@@ -24,7 +21,8 @@ public class PokerGame implements Game {
     private List<Card> communityCards;
     private AIStrategyFactory aiFactory;
     private CardSkin skin;
-    public PokerGame(GameMode gameMode, CardSkin skin, CardSkin cardSkin) {
+
+    public PokerGame(GameMode gameMode, CardSkin skin) {
         this.gameMode = gameMode;
         this.skin = skin;
         this.deck = new Deck();
@@ -42,6 +40,7 @@ public class PokerGame implements Game {
         }
 
     }
+
     public void start() {
         initializeGame();
         dealInitialCards();
@@ -53,6 +52,7 @@ public class PokerGame implements Game {
         }
         broadcastState();
     }
+
     public void progressGame() {
         // Check for game over first
         if (isGameOver()) {
@@ -98,7 +98,6 @@ public class PokerGame implements Game {
             // Move to next active player
             moveToNextActivePlayer();
         }
-
         broadcastState();
     }
 
@@ -133,6 +132,7 @@ public class PokerGame implements Game {
         // All active players have bet if counts match
         return activePlayersBetCount == totalActivePlayers;
     }
+
     private void initializeGame() {
         deck.createNewDeck();
         pot = 0;
@@ -149,6 +149,7 @@ public class PokerGame implements Game {
         currentPlayer = players.get(0);
         broadcastState(); // Initial state
     }
+
     private void dealInitialCards() {
         // Deal 2 cards to each player
         for (int i = 0; i < 2; i++) {
@@ -161,6 +162,7 @@ public class PokerGame implements Game {
         }
         broadcastState(); // Show dealt cards
     }
+
     private void dealCommunityCards(int count) {
         try {
             deck.drawCard(); // Burn card
@@ -175,6 +177,7 @@ public class PokerGame implements Game {
             System.err.println("Error dealing community cards: " + e.getMessage());
         }
     }
+
     private void determineWinner() {
         try {
             // If only one player is active, they automatically win
@@ -259,12 +262,7 @@ public class PokerGame implements Game {
         }
     }
 
-
-    public void setCurrentBetGame(int currentBet) {this.currentBet = currentBet;}
-
     public int getCurrentBetGame() {return currentBet;}
-
-
 
     private void handleAIAction(AI ai) {
         PokerState state = new PokerState(
@@ -333,11 +331,7 @@ public class PokerGame implements Game {
 
         return state.toString();
     }
-    private boolean isActivePlayer(Playable player) {
-        return player.getStatus();
-    }
 
-    @Override
     public void playerRaise(Playable player, int raiseAmount) {
         int currentBalance = player.getCurrentBalance();
         if (player instanceof AI) {
@@ -354,10 +348,19 @@ public class PokerGame implements Game {
             currentBet = Math.max(currentBet, totalBetNeeded);
 
             // Check for all-in
-            if (player.getCurrentBalance() == 0) {
+            boolean allPlayerSameBet = true;
+            boolean onePlayerAllIn = false;
+            for (Playable p : players) {
+                if (p.getStatus() && p.getCurrentBet() < currentBet) {
+                    allPlayerSameBet = false;
+                }
+                if( p.getStatus() && p.getCurrentBalance() == 0) {
+                    onePlayerAllIn = true;
+                }
+            }
+            if(allPlayerSameBet && onePlayerAllIn) {
                 handleAllIn();
             }
-
             // Update UI immediately
             broadcastState();
         }
@@ -365,7 +368,7 @@ public class PokerGame implements Game {
 
     private void handleAllIn() {
         // Deal remaining community cards if any
-        while (communityCards.size() < 5) {
+        while (communityCards.size() <= 5) {
             dealCommunityCards(1);
         }
 
@@ -373,37 +376,28 @@ public class PokerGame implements Game {
         determineWinner();
     }
 
-    @Override
     public void playerFold(Playable player) {player.setStatus(false);}
 
-    @Override
-    public void playerHit(Playable player) {} // nothing would be done here
-
-    @Override
-    public void playerStand(Playable player) {} // nothing would be done here
-
-    @Override
-    public void nextPlayer() {}
-
-    @Override
-    public Playable getPlayerBeforeDealer() {return null;}
-
-    public void addAIPlayer(String name, String strategyType) {
-        AI ai = new AI(players.size() + 1, name);
-        ai.setStrategyType(strategyType);
-        addPlayer(ai);
-    }
     public String getWinner() {
-        for(Playable player : players) {
-            if(player.getStatus())
+        // Check for tie
+        List<Playable> activeWinners = players.stream()
+                .filter(Playable::getStatus)
+                .collect(Collectors.toList());
+
+        if (activeWinners.size() > 1) {
+            return "Tie between " + activeWinners.stream()
+                    .map(Playable::getName)
+                    .collect(Collectors.joining(" and "));
+        }
+
+        // Single winner
+        for (Playable player : players) {
+            if (player.getStatus())
                 return player.getName();
         }
         return null;
     }
 
-    public GameMode getGameMode() {return gameMode;}
-    public void setGameMode(GameMode gameMode) {this.gameMode = gameMode;}
-    @Override
     public void broadcastState() {
         if (gameMode != null) {
             boolean isHumanPlayer = currentPlayer instanceof Player;
@@ -429,20 +423,6 @@ public class PokerGame implements Game {
                         players.stream().filter(Playable::getStatus).allMatch(Playable::getHasBet));
     }
 
-    public GameType getGameType() {return GameType.POKER; }
-
-    Playable distributePot(Playable winner) {winner.addCurrentBalance(pot);
-        return winner;
-    }
-
-    void placeBet(Playable player, int amount) {
-        this.pot += amount;
-        this.currentBet = Math.max(this.currentBet, amount);
-    }
-
-    void resetBets() {
-        this.pot = 0; this.currentBet = 0;
-    }
     private int countActivePlayers() {
         int count = 0;
         for (Playable player : players) {

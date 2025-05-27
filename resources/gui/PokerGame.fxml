@@ -30,7 +30,7 @@
                     <Image url="@Table.png" />
                 </image>
             </ImageView>
-            <HBox layoutX="166.0" layoutY="173.0" prefHeight="89.0" prefWidth="246.0">
+            <HBox alignment="CENTER" layoutX="168.0" layoutY="171.0" prefHeight="89.0" prefWidth="246.0">
                 <children>
                     <ImageView fx:id="communityCard1" pickOnBounds="true" styleClass="cards">
                         <image>

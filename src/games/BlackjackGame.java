@@ -1,12 +1,9 @@
 package games;
 
 import card.Card;
-import card.CardSkin;
 import deck.Deck;
-import gamemode.GameMode;
 import playable.Playable;
 import playable.Player;
-
 import java.util.*;
 
 public class BlackjackGame implements Game {
@@ -77,15 +74,6 @@ public class BlackjackGame implements Game {
     public List<Playable> getPlayers() {return players;}
 
     @Override
-    public void nextPlayer() {
-        currentPlayer = getNextPlayer();
-        if (currentPlayer == null || currentPlayer == dealer) {
-            currentPlayer = dealer;
-            playDealerTurn();
-        }
-    }
-
-    @Override
     public Playable getCurrentPlayer() {
         if (currentPlayer == null) {
             throw new IllegalStateException("Current player is not set.");
@@ -93,7 +81,6 @@ public class BlackjackGame implements Game {
         return currentPlayer;
     }
 
-    @Override
     public Playable getPlayerBeforeDealer() {
         return playerBeforeDealer;
     }
@@ -112,14 +99,12 @@ public class BlackjackGame implements Game {
         return "Dealer's Hand: " + dealer.getHand() + "\nPot: " + pot;
     }
 
-//    @Override
     public boolean isGameOver() {
         return (dealerTurn && calculateScore(dealer.getHand()) >= 17)
                 || players.stream().allMatch(player -> player.getHand().size() >= 5)
                 || players.stream().allMatch(player -> calculateScore(player.getHand()) > 21);
     }
 
-//    @Override
     public String getWinner() {
         int dealerScore = calculateScore(dealer.getHand());
         StringBuilder winners = new StringBuilder();
@@ -140,7 +125,6 @@ public class BlackjackGame implements Game {
         return !winners.isEmpty() ? winners.toString() : "Dealer";
     }
 
-    @Override
     public void playerHit(Playable player) {
         if (!dealerTurn && player.getHand().size() <= 5) {
             Card drawnCard = deck.drawCard();
@@ -160,7 +144,6 @@ public class BlackjackGame implements Game {
         }
     }
 
-    @Override
     public void playerStand(Playable player) {
         currentPlayer = getNextPlayer();
         if (currentPlayer == null || currentPlayer == dealer) {
@@ -238,36 +221,6 @@ public class BlackjackGame implements Game {
         pot = 0;
     }
 
-    @Override
-    public void broadcastState() {
-
-    }
-
-    @Override
-    public GameType getGameType() {
-        return GameType.BLACKJACK;
-    }
-
-    @Override
-    public GameMode getGameMode() {
-        return null;
-    }
-
-    @Override
-    public void setGameMode(GameMode gameMode) {
-
-    }
-
-    @Override
-    public void playerRaise(Playable player, int raiseAmount) {
-        throw new UnsupportedOperationException("Not supported in Blackjack");
-    }
-
-    @Override
-    public void playerFold(Playable player) {
-        throw new UnsupportedOperationException("Not supported in Blackjack");
-    }
-
     public Playable getDealer() {
         return dealer;
     }
@@ -280,6 +233,4 @@ public class BlackjackGame implements Game {
             System.out.println("Winner(s): " + winner);
         }
     }
-
-
 }

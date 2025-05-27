@@ -25,7 +25,6 @@ public class MainMenuController {
 
     @FXML
     public void initialize() {
-        // Reset button
         // Initialize the choice boxes with options
         gameChoiceBox.setItems(FXCollections.observableArrayList("Poker", "BlackJack"));
         cardSkinChoiceBox.setItems(FXCollections.observableArrayList("Traditional", "Realistic", "Animated"));
