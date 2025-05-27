@@ -207,12 +207,6 @@ public class BlackjackGame implements Game {
         }
     }
 
-    public void distributePot(Playable winner) {
-        int payout = playerBets.get(winner) * 2; // Trả 1:1
-        winner.addCurrentBalance(payout);
-        pot -= payout;
-    }
-
     public void resetBets() {
         playerBets.clear();
         pot = 0;

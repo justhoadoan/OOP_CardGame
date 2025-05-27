@@ -1,11 +1,9 @@
 package cards.card;
 
-import javafx.scene.image.Image;
-
 public class Card {
     private String rank;
     private String suit;
-    private String skinName;
+    private String skin;
 
     public Card(String rank, String suit) {
         this.rank = rank;
@@ -54,11 +52,11 @@ public class Card {
     }
 
     public void setSkin(String skin) {
-        this.skinName = skin;
+        this.skin = skin;
     }
 
     public String getImagePath(String rank, String suit) {
-        return "/cards/" + skinName + "/" + rank + suit + ".png";
+        return "/cards/" + skin + "/" + rank + suit + ".png";
     }
 
     @Override

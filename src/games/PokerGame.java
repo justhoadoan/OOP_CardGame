@@ -126,18 +126,6 @@ public class PokerGame implements Game {
     }
 
     private boolean checkAllPlayersMatchBet() {
-//        // Get the number of active players who have bet
-//        long activePlayersBetCount = players.stream()
-//                .filter(p -> p.getStatus() && p.getHasBet())
-//                .count();
-//
-//        // Get total number of active players
-//        long totalActivePlayers = players.stream()
-//                .filter(Playable::getStatus)
-//                .count();
-//
-//        // All active players have bet if counts match
-//        return activePlayersBetCount == totalActivePlayers;
         for (Playable player : players) {
             if (player.getStatus()) {
                 if (player.getCurrentBet() != currentBet) {
