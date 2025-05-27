@@ -71,16 +71,30 @@ public class JavaFXPokerMode implements GameMode {
 
 
         int currentBet = game.getCurrentBetGame();
-        int minBalance = game.getPlayers().stream()
-                .filter(Playable::getStatus)
-                .mapToInt(Playable::getCurrentBalance)
-                .min()
-                .orElse(0);
+//        int minBalance = game.getPlayers().stream()
+//                .filter(Playable::getStatus)
+//                .mapToInt(Playable::getCurrentBalance)
+//                .min()
+//                .orElse(0);
+        int minBalance = 1000000000;
+        List<Playable> players = game.getPlayers();
+        Playable currentPlayer = game.getCurrentPlayer();
+        int currentIndex = players.indexOf(currentPlayer);
+        int nextIndex = (currentIndex + 1) % players.size();
+        Playable nextPlayer = players.get(nextIndex);
 
+        for (Playable player : game.getPlayers()) {
+            if (player.getStatus()) {
+                minBalance = Math.min(minBalance, player.getCurrentBalance() + player.getCurrentBet() - currentPlayer.getCurrentBet());
+                System.out.println(player.getName() + " " + player.getCurrentBalance() + " " + player.getCurrentBet() + " " + currentPlayer.getName() + " " + currentPlayer.getCurrentBet());
+            }
+        }
+        final int finalMinBalance = minBalance;
+//        System.out.println("minBalance: " + minBalance);
 
         Platform.runLater(() -> {
             raiseSlider.setMin(currentBet);
-            raiseSlider.setMax(minBalance);
+            raiseSlider.setMax(finalMinBalance);
             raiseSlider.setValue(currentBet);
             raiseField.setText(String.valueOf(currentBet));
         });
@@ -181,7 +195,7 @@ public class JavaFXPokerMode implements GameMode {
         List<Playable> players = game.getPlayers();
         Playable currentPlayer = game.getCurrentPlayer();
         boolean isGameOver = game.isGameOver();
-        boolean isRiverRound = game.getCommunityCards().size() == 5;
+        boolean isRiverRound = game.getCommunityCards().size() > 5;
 
         for (int i = 0; i < playerCards.length && i < players.size(); i++) {
             Playable player = players.get(i);

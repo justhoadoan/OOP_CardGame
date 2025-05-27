@@ -73,6 +73,7 @@ public class PokerGame implements Game {
                 player.setHasBet(false);
                 player.setCurrentBet(0);
             }
+            System.out.println("All players have bet.");
             currentBet = 0;
 
             // Deal next round of community cards
@@ -96,6 +97,7 @@ public class PokerGame implements Game {
             }
         } else {
             // Move to next active player
+            System.out.println("Not all players have bet yet. -> move to next player");
             moveToNextActivePlayer();
         }
         broadcastState();
@@ -107,7 +109,7 @@ public class PokerGame implements Game {
 
         while (nextIndex != currentIndex) {
             Playable nextPlayer = players.get(nextIndex);
-            if (nextPlayer.getStatus() && !nextPlayer.getHasBet()) {
+            if (nextPlayer.getStatus()) {
                 currentPlayer = nextPlayer;
                 if (currentPlayer instanceof AI) {
                     handleAIAction((AI) currentPlayer);
@@ -119,18 +121,26 @@ public class PokerGame implements Game {
     }
 
     private boolean checkAllPlayersMatchBet() {
-        // Get the number of active players who have bet
-        long activePlayersBetCount = players.stream()
-                .filter(p -> p.getStatus() && p.getHasBet())
-                .count();
-
-        // Get total number of active players
-        long totalActivePlayers = players.stream()
-                .filter(Playable::getStatus)
-                .count();
-
-        // All active players have bet if counts match
-        return activePlayersBetCount == totalActivePlayers;
+//        // Get the number of active players who have bet
+//        long activePlayersBetCount = players.stream()
+//                .filter(p -> p.getStatus() && p.getHasBet())
+//                .count();
+//
+//        // Get total number of active players
+//        long totalActivePlayers = players.stream()
+//                .filter(Playable::getStatus)
+//                .count();
+//
+//        // All active players have bet if counts match
+//        return activePlayersBetCount == totalActivePlayers;
+        for (Playable player : players) {
+            if (player.getStatus()) {
+                if (player.getCurrentBet() != currentBet) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void initializeGame() {
@@ -358,6 +368,7 @@ public class PokerGame implements Game {
                     onePlayerAllIn = true;
                 }
             }
+            System.out.println("All player same bet: " + allPlayerSameBet + ", One player all-in: " + onePlayerAllIn);
             if(allPlayerSameBet && onePlayerAllIn) {
                 handleAllIn();
             }
@@ -420,7 +431,7 @@ public class PokerGame implements Game {
     public boolean isGameOver() {
         return countActivePlayers() == 1 ||
                 (communityCards.size() == 5 &&
-                        players.stream().filter(Playable::getStatus).allMatch(Playable::getHasBet));
+                        checkAllPlayersMatchBet());
     }
 
     private int countActivePlayers() {
