@@ -2,7 +2,6 @@ package ai;
 
 import card.Card;
 import playable.Player;
-
 import java.util.*;
 
 public class RuleBasedAIStrategy implements AIStrategy  {
@@ -113,31 +112,5 @@ public class RuleBasedAIStrategy implements AIStrategy  {
                 }
         }
     }
-
-    private boolean isSuitedConnectors(List<Card> hand) {
-        // Kiểm tra xem hand có đủ 2 lá không
-        if (hand == null || hand.size() < 2) {
-            return false;
-        }
-        
-        return hand.get(0).getSuit().equals(hand.get(1).getSuit()) &&
-                Math.abs(rankToValue(hand.get(0).getRank()) - rankToValue(hand.get(1).getRank())) == 1;
-    }
-
-    private int rankToValue(String rank) {
-        switch (rank) {
-            case "Ace":
-                return 14;
-            case "King":
-                return 13;
-            case "Queen":
-                return 12;
-            case "Jack":
-                return 11;
-            default:
-                return Integer.parseInt(rank);
-        }
-    }
-
 }
 
