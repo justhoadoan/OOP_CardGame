@@ -59,8 +59,6 @@ public class BlackjackGame implements Game {
         // dealer draw 2 starting card
         ((Player) dealer).addCard(deck.drawCard());
         ((Player) dealer).addCard(deck.drawCard());
-
-        
     }
 
     @Override
