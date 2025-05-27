@@ -1,6 +1,6 @@
 package ai;
 
-import card.Card;
+import cards.card.Card;
 import java.util.*;
 
 public class MonteCarloAIStrategy implements AIStrategy {
@@ -30,6 +30,7 @@ public class MonteCarloAIStrategy implements AIStrategy {
             return "FOLD";
         }
     }
+
     private double monteCarloSimulation(List<Card> hand, List<Card> communityCards) {
         int wins = 0;
         int losses = 0;
@@ -56,9 +57,9 @@ public class MonteCarloAIStrategy implements AIStrategy {
                 draws++;
             }
         }
-
         return (double)(wins + 0.5 * draws) / (wins + losses + draws);
     }
+
     private List<Card> generateDeck(List<Card> hand, List<Card> communityCards) {
         List<Card> deck = new ArrayList<>();
         String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
@@ -74,6 +75,7 @@ public class MonteCarloAIStrategy implements AIStrategy {
         }
         return deck;
     }
+
     private List<Card> mergeHands(List<Card> hand, List<Card> communityCards) {
         List<Card> combined = new ArrayList<>(hand);
         combined.addAll(communityCards);

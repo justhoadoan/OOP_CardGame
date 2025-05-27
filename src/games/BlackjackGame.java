@@ -1,9 +1,7 @@
 package games;
 
-import card.Card;
-import card.CardSkin;
-import deck.Deck;
-import gamemode.GameMode;
+import cards.card.Card;
+import cards.deck.Deck;
 import playable.Playable;
 import playable.Player;
 
@@ -11,8 +9,6 @@ import java.util.*;
 
 public class BlackjackGame implements Game {
     private Deck deck;
-    private GameMode gameMode;
-
     private List<Playable> players;
     private Playable currentPlayer;
     private Map<Playable, Integer> playerBets;
@@ -21,8 +17,7 @@ public class BlackjackGame implements Game {
     private Playable dealer;
     private Playable playerBeforeDealer;
 
-    public BlackjackGame(GameMode gameMode, CardSkin skin, CardSkin cardSkin) {
-        this.gameMode = gameMode;
+    public BlackjackGame() {
         this.dealer = new Player("Dealer", 0); // Dealer is a special player
         this.players = new ArrayList<>(); // Initialize the players list
         this.playerBets = new HashMap<>(); // Initialize the playerBets map
@@ -31,7 +26,7 @@ public class BlackjackGame implements Game {
 
     @Override
     public void start() {
-        deck.reset();
+        deck.createNewDeck();
         resetBets();
         dealerTurn = false;
         pot = 0;
@@ -53,7 +48,6 @@ public class BlackjackGame implements Game {
                 }
             }
         }
-        dealer.addCard(deck.drawCard());
 
         // Set the current player to the first player (excluding the dealer)
         for (Playable player : players) {
@@ -64,10 +58,8 @@ public class BlackjackGame implements Game {
         }
 
         // dealer draw 2 starting card
-        ((Player) dealer).addCard(deck.drawCard());
-        ((Player) dealer).addCard(deck.drawCard());
-
-        
+        dealer.addCard(deck.drawCard());
+        dealer.addCard(deck.drawCard());
     }
 
     @Override
@@ -81,15 +73,6 @@ public class BlackjackGame implements Game {
     public List<Playable> getPlayers() {return players;}
 
     @Override
-    public void nextPlayer() {
-        currentPlayer = getNextPlayer();
-        if (currentPlayer == null || currentPlayer == dealer) {
-            currentPlayer = dealer;
-            playDealerTurn();
-        }
-    }
-
-    @Override
     public Playable getCurrentPlayer() {
         if (currentPlayer == null) {
             throw new IllegalStateException("Current player is not set.");
@@ -97,7 +80,6 @@ public class BlackjackGame implements Game {
         return currentPlayer;
     }
 
-    @Override
     public Playable getPlayerBeforeDealer() {
         return playerBeforeDealer;
     }
@@ -116,14 +98,14 @@ public class BlackjackGame implements Game {
         return "Dealer's Hand: " + dealer.getHand() + "\nPot: " + pot;
     }
 
-//    @Override
+    //    @Override
     public boolean isGameOver() {
         return (dealerTurn && calculateScore(dealer.getHand()) >= 17)
                 || players.stream().allMatch(player -> player.getHand().size() >= 5)
                 || players.stream().allMatch(player -> calculateScore(player.getHand()) > 21);
     }
 
-//    @Override
+    //    @Override
     public String getWinner() {
         int dealerScore = calculateScore(dealer.getHand());
         StringBuilder winners = new StringBuilder();
@@ -134,7 +116,7 @@ public class BlackjackGame implements Game {
             boolean isBust = playerScore > 21;
 
             if (!isBust && (dealerScore > 21 || playerScore > dealerScore)) {
-                distributePot(player);
+                // Just determine winners without distributing pot
                 winners.append(player.getName()).append(" ");
             }
             if(!isBust && playerScore == dealerScore) {
@@ -144,16 +126,11 @@ public class BlackjackGame implements Game {
         return !winners.isEmpty() ? winners.toString() : "Dealer";
     }
 
-    @Override
     public void playerHit(Playable player) {
         if (!dealerTurn && player.getHand().size() <= 5) {
             Card drawnCard = deck.drawCard();
-            ((Player) player).addCard(drawnCard);
-            System.out.println("Player " + player.getName() + " drew: " + drawnCard);
-            System.out.println("Player's hand: " + player.getHand());
-            System.out.println("Deck size: " + deck.getRemainingCards());
+            player.addCard(drawnCard);
             if (calculateScore(player.getHand()) > 21) {
-                System.out.println("Player " + player.getName() + " is bust!");
                 currentPlayer = getNextPlayer(); // player bust
                 if (currentPlayer == null || currentPlayer == dealer) {
                     playerBeforeDealer = player;
@@ -164,7 +141,6 @@ public class BlackjackGame implements Game {
         }
     }
 
-    @Override
     public void playerStand(Playable player) {
         currentPlayer = getNextPlayer();
         if (currentPlayer == null || currentPlayer == dealer) {
@@ -231,59 +207,13 @@ public class BlackjackGame implements Game {
         }
     }
 
-    public void distributePot(Playable winner) {
-        int payout = playerBets.get(winner) * 2; // Trả 1:1
-        winner.addCurrentBalance(payout);
-        pot -= payout;
-    }
-
     public void resetBets() {
         playerBets.clear();
         pot = 0;
     }
 
-    @Override
-    public void broadcastState() {
-
-    }
-
-    @Override
-    public GameType getGameType() {
-        return GameType.BLACKJACK;
-    }
-
-    @Override
-    public GameMode getGameMode() {
-        return null;
-    }
-
-    @Override
-    public void setGameMode(GameMode gameMode) {
-
-    }
-
-    @Override
-    public void playerRaise(Playable player, int raiseAmount) {
-        throw new UnsupportedOperationException("Not supported in Blackjack");
-    }
-
-    @Override
-    public void playerFold(Playable player) {
-        throw new UnsupportedOperationException("Not supported in Blackjack");
-    }
-
     public Playable getDealer() {
         return dealer;
     }
-
-    public void showWinner() {
-        String winner = getWinner();
-        if (winner.isEmpty()) {
-            System.out.println("No winners this round.");
-        } else {
-            System.out.println("Winner(s): " + winner);
-        }
-    }
-
 
 }

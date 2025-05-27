@@ -1,66 +1,36 @@
 package gui;
 
-import card.CardSkin;
-import gamemode.JavaFXPokerMode;
-import games.GameType;
+import javafx.scene.layout.HBox;
+import updatedisplay.JavaFXPokerView;
 import games.PokerGame;
-import input.PokerActionProcessor;
-import javafx.application.Platform;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import processor.PokerActionProcessor;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import playable.AI;
 import playable.Playable;
 import playable.Player;
-
-
-import java.io.IOException;
 import java.util.List;
 
-public class PokerGameGui {
-    @FXML private ImageView communityCard1;
-    @FXML private ImageView communityCard2;
-    @FXML private ImageView communityCard3;
-    @FXML private ImageView communityCard4;
-    @FXML private ImageView communityCard5;
-
-    @FXML private Pane player1CardArea;
-    @FXML private Pane player2CardArea;
-    @FXML private Pane player3CardArea;
-    @FXML private Pane player4CardArea;
-
-    @FXML private ImageView player1Card1;
-    @FXML private ImageView player1Card2;
-    @FXML private ImageView player2Card1;
-    @FXML private ImageView player2Card2;
-    @FXML private ImageView player3Card1;
-    @FXML private ImageView player3Card2;
-    @FXML private ImageView player4Card1;
-    @FXML private ImageView player4Card2;
-
+public class PokerGameController {
+    @FXML private HBox hBox;
+    @FXML private AnchorPane gamePane;
+    @FXML private StackPane rootPane;
+    @FXML private ImageView communityCard1, communityCard2, communityCard3, communityCard4, communityCard5, player1Card1, player1Card2, player2Card1, player2Card2, player3Card1, player3Card2, player4Card1, player4Card2;
+    @FXML private Pane player1CardArea, player2CardArea, player3CardArea, player4CardArea;
     @FXML private TextField raiseField;
     @FXML private Slider raiseSlider;
-    @FXML private Button raiseButton;
-    @FXML private Button foldButton;
-
-    @FXML private Label player1Name;
-    @FXML private Label player1Money;
-    @FXML private Label player2Name;
-    @FXML private Label player2Money;
-    @FXML private Label player3Name;
-    @FXML private Label player3Money;
-    @FXML private Label player4Name;
-    @FXML private Label player4Money;
-
+    @FXML private Button raiseButton, foldButton;
+    @FXML private Label player1Name, player1Money, player2Name, player2Money, player3Name, player3Money, player4Name, player4Money;
     @FXML private Text potMoney;
 
     private PokerGame game;
-    private CardSkin cardSkin;
-    private JavaFXPokerMode gameMode;
-    private boolean isOnlineMode;
+    private String cardSkin;
+    private JavaFXPokerView gameMode;
     private String aiStrategy;
     private int playerId = 1;
 
@@ -70,6 +40,7 @@ public class PokerGameGui {
         setupEventHandlers();
         initializeGame();
     }
+
     private void setupComponents() {
         // Hide unused player areas initially
         player3CardArea.setVisible(false);
@@ -79,7 +50,7 @@ public class PokerGameGui {
         raiseSlider.setMax(1000);
         raiseSlider.setValue(100);
         raiseField.setText("100");
-        // Set consistent card sizes
+        // Set consistent cards.card sizes
         setCardSize(communityCard1, communityCard2, communityCard3, communityCard4, communityCard5);
         setCardSize(player1Card1, player1Card2);
         setCardSize(player2Card1, player2Card2);
@@ -102,13 +73,12 @@ public class PokerGameGui {
         raiseButton.setDisable(false);
         foldButton.setDisable(false);
     }
-
     public void setupGame(String selectedSkin, int numberOfPlayers) {
-        this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
-        this.isOnlineMode = false;
+        this.cardSkin = selectedSkin != null ? selectedSkin : "Traditional";
+
         setupBaseComponents();
 
-        game = new PokerGame(gameMode, null, cardSkin);
+        game = new PokerGame(gameMode, cardSkin);
         gameMode.setGame(game);
 
         // Add human player
@@ -154,7 +124,6 @@ public class PokerGameGui {
         }
     }
 
-
     private void setupBaseComponents() {
         // Set up common components
         ImageView[] communityCards = {
@@ -170,31 +139,28 @@ public class PokerGameGui {
         };
 
         // Create game mode
-        gameMode = new JavaFXPokerMode(
+        gameMode = new JavaFXPokerView(
                 communityCards,
                 playerCards,
                 new Label[]{player1Name, player2Name, player3Name, player4Name},
                 new Label[]{player1Money, player2Money, player3Money, player4Money},
                 potMoney,
-                true, // isOnline
-                playerId
-        );
+                playerId, raiseField, raiseSlider);
         gameMode.setCardSkin(cardSkin);
 
         // Setup input handlers
         setupEventHandlers();
     }
 
-    public void setupGame(String selectedSkin, String selectedAI, boolean isOnline) {
-        if (isOnline) return; // Don't use this method for online mode
+    public void setupGame(String selectedSkin, String selectedAI) {
 
-        this.cardSkin = new CardSkin(selectedSkin != null ? selectedSkin : "Traditional");
+
+        this.cardSkin = selectedSkin != null ? selectedSkin : "Traditional";
         this.aiStrategy = selectedAI != null ? selectedAI : "Rule based";
-        this.isOnlineMode = false;
         setupBaseComponents();
 
         // Setup offline game
-        game = new PokerGame(gameMode, null, cardSkin);
+        game = new PokerGame(gameMode, cardSkin);
         gameMode.setGame(game);
 
         // Add players for offline mode
@@ -213,37 +179,33 @@ public class PokerGameGui {
 
     private void setupEventHandlers() {
         PokerActionProcessor processor = new PokerActionProcessor();
-
         // Setup raise button
         raiseButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
                 Playable currentPlayer = game.getCurrentPlayer();
-                if (!currentPlayer.getHasBet()) {
-                    try {
-                        int amount = Integer.parseInt(raiseField.getText());
-                        processor.processAction("raise:" + amount, game, currentPlayer);
-                        currentPlayer.setHasBet(true);
-                        updateMoneyDisplays();
-                        game.progressGame();
-                        gameMode.updateDisplay(null, game.getPublicState(), null);
-                    } catch (NumberFormatException ex) {
-                        System.err.println("Invalid raise amount");
-                    }
+                try {
+                    int amount = Integer.parseInt(raiseField.getText());
+                    processor.processAction("raise:" + amount, game, currentPlayer);
+                    currentPlayer.setHasBet(true);
+                    updateMoneyDisplays();
+                    game.progressGame();  // This should advance to the next player
+                    gameMode.updateDisplay(null, game.getPublicState(), null);
+                } catch (NumberFormatException ex) {
+                    System.err.println("Invalid raise amount");
                 }
             }
         });
-
         // Setup fold button
         foldButton.setOnAction(e -> {
             if (game != null && game.getCurrentPlayer() != null) {
                 Playable currentPlayer = game.getCurrentPlayer();
-                if (!currentPlayer.getHasBet()) {
+//                if (!currentPlayer.getHasBet()) {
                     processor.processAction("fold", game, currentPlayer);
                     currentPlayer.setHasBet(true);
                     updateMoneyDisplays();
                     game.progressGame();
                     gameMode.updateDisplay(null, game.getPublicState(), null);
-                }
+//                }
             }
         });
     }
@@ -251,7 +213,6 @@ public class PokerGameGui {
         if (game != null) {
             // Update pot money
             potMoney.setText("$" + game.getPot());
-
             // Update player money labels
             List<Playable> players = game.getPlayers();
             Label[] moneyLabels = {player1Money, player2Money, player3Money, player4Money};
@@ -265,21 +226,6 @@ public class PokerGameGui {
                 }
             }
         }
-    }
-
-    private void setupSliderAndTextField() {
-        raiseSlider.valueProperty().addListener((obs, oldVal, newVal) ->
-                raiseField.setText(String.valueOf(newVal.intValue()))
-        );
-
-        raiseField.textProperty().addListener((obs, oldVal, newVal) -> {
-            try {
-                int val = Integer.parseInt(newVal);
-                if (val >= raiseSlider.getMin() && val <= raiseSlider.getMax()) {
-                    raiseSlider.setValue(val);
-                }
-            } catch (NumberFormatException ignored) {}
-        });
     }
 
     private void initializeGame() {
@@ -296,9 +242,7 @@ public class PokerGameGui {
         }
     }
 
-
-
-    public JavaFXPokerMode getGameMode() {
-        return gameMode;
+    public AnchorPane getGamePane() {
+        return gamePane;
     }
 }

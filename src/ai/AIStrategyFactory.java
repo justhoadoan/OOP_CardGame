@@ -1,7 +1,6 @@
 package ai;
 
 import games.GameType;
-
 import java.util.HashMap;
 import java.util.Map;
 

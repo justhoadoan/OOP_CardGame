@@ -13,192 +13,182 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" stylesheets="@menu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PokerGameGui">
-    <children>
-        <ImageView fitHeight="400.0" fitWidth="600.0" layoutX="-6.0" layoutY="-3.0" pickOnBounds="true">
-            <image>
-                <Image url="@Background.jpg" />
-            </image>
-        </ImageView>
-        <ImageView fitHeight="129.0" fitWidth="200.0" layoutX="190.0" layoutY="18.0">
-            <image>
-                <Image url="@show_emma.png" />
-            </image>
-        </ImageView>
-        <ImageView fitHeight="326.0" fitWidth="453.0" layoutX="63.0" layoutY="46.0">
-            <image>
-                <Image url="@Table.png" />
-            </image>
-        </ImageView>
-        <HBox layoutX="160.0" layoutY="186.0" prefHeight="89.0" prefWidth="246.0">
-            <children>
-                <ImageView fx:id="communityCard1" pickOnBounds="true" styleClass="cards">
-                    <image>
-                        <Image url="@../cards/basic/2Hearts.png" />
-                    </image>
-                </ImageView>
-                <ImageView fx:id="communityCard2" layoutX="10.0" layoutY="10.0" pickOnBounds="true" styleClass="cards">
-                    <image>
-                        <Image url="@../cards/basic/10Clubs.png" />
-                    </image>
-                </ImageView>
-                <ImageView fx:id="communityCard3" layoutX="10.0" layoutY="10.0" pickOnBounds="true" styleClass="cards">
-                    <image>
-                        <Image url="@../cards/basic/AceSpades.png" />
-                    </image>
-                </ImageView>
-                <ImageView fx:id="communityCard4" layoutX="10.0" layoutY="10.0" pickOnBounds="true" styleClass="cards">
-                    <image>
-                        <Image url="@../cards/basic/KingHearts.png" />
-                    </image>
-                </ImageView>
-                <ImageView fx:id="communityCard5" layoutX="10.0" layoutY="10.0" pickOnBounds="true" styleClass="cards">
-                    <image>
-                        <Image url="@../cards/basic/QueenHearts.png" />
-                    </image>
-                </ImageView>
-            </children>
-        </HBox>
-        <Pane layoutX="159.0" layoutY="320.0" prefHeight="62.0" prefWidth="198.0" style="-fx-background-color: linear-gradient(to right, #966F35, #302311); -fx-border-radius: 10px; -fx-background-radius: 10px;">
-            <children>
-                <TextField fx:id="raiseField" layoutX="31.0" layoutY="7.0" prefHeight="27.0" prefWidth="93.0" />
-                <Slider fx:id="raiseSlider" layoutX="13.0" layoutY="41.0" />
-            </children>
-        </Pane>
-        <Button fx:id="foldButton" layoutX="360.0" layoutY="353.0" prefHeight="27.0" prefWidth="61.0" styleClass="play-button" text="Fold">
-            <font>
-                <Font name="Arial Rounded MT Bold" size="15.0" />
-            </font>
-        </Button>
-        <Button  fx:id="raiseButton" layoutX="360.0" layoutY="320.0" prefHeight="28.0" prefWidth="61.0" styleClass="play-button" text="Raise">
-            <font>
-                <Font name="Arial Rounded MT Bold" size="15.0" />
-            </font>
-        </Button>
-        <Pane fx:id="player1CardArea" layoutX="469.0" layoutY="267.0" prefHeight="117.0" prefWidth="100.0">
-            <children>
-                <ImageView fx:id="player1Card2" layoutX="51.0" pickOnBounds="true" styleClass="cards">
-                    <image>
-                        <Image url="@../cards/traditional/JackHearts.png" />
-                    </image>
-                </ImageView>
-                <ImageView fx:id="player1Card1" layoutX="-2.0" pickOnBounds="true" styleClass="cards">
-                    <image>
-                        <Image url="@../cards/traditional/Opponent.png" />
-                    </image>
-                </ImageView>
-                <ImageView fitHeight="54.0" fitWidth="98.0" layoutX="2.0" layoutY="55.0">
-                    <image>
-                        <Image url="@pic_wheel_bg.png" />
-                    </image>
-                </ImageView>
-                <Label fx:id="player1Name" alignment="CENTER" layoutX="4.0" layoutY="53.0" prefHeight="21.0" prefWidth="88.0" style="-fx-text-fill: white;" text="choco" textAlignment="CENTER">
-                    <font>
-                        <Font size="10.0" />
-                    </font></Label>
-                <Label fx:id="player1Money" alignment="CENTER" layoutX="-3.0" layoutY="69.0" prefHeight="35.0" prefWidth="98.0" style="-fx-text-fill: #F4E0B7;" text="\$36000">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Label>
-            </children>
-        </Pane>
-        <StackPane layoutX="202.0" layoutY="139.0" prefHeight="41.0" prefWidth="170.0">
-            <children>
-                <ImageView fitHeight="41.0" fitWidth="169.0" pickOnBounds="true">
-                    <image>
-                        <Image url="@MenuFrame.png" />
-                    </image>
-                </ImageView>
-                <Text fx:id="potMoney" styleClass="text-menu" text="\$500000" textAlignment="CENTER" wrappingWidth="124.0" />
-            </children>
-        </StackPane>
-        <Pane fx:id="player2CardArea" layoutX="23.0" layoutY="25.0" prefHeight="117.0" prefWidth="100.0">
-            <children>
-                <ImageView fx:id="player2Card1" layoutX="52.0" pickOnBounds="true" styleClass="cards">
-                    <image>
-                        <Image url="@../cards/animated/JackHearts.png" />
-                    </image>
-                </ImageView>
-                <ImageView fx:id="player2Card2" layoutX="-2.0" pickOnBounds="true" styleClass="cards">
-                    <image>
-                        <Image url="@../cards/animated/Opponent.png" />
-                    </image>
-                </ImageView>
-                <ImageView fitHeight="54.0" fitWidth="98.0" layoutX="2.0" layoutY="51.0" rotate="180.0">
-                    <image>
-                        <Image url="@pic_wheel_bg.png" />
-                    </image>
-                </ImageView>
-                <Label fx:id="player2Name" alignment="CENTER" layoutX="25.0" layoutY="88.0" prefHeight="15.0" prefWidth="55.0" style="-fx-text-fill: white;" text="choco" textAlignment="CENTER">
-                    <font>
-                        <Font size="10.0" />
-                    </font>
-                </Label>
-                <Label fx:id="player2Money" alignment="CENTER" layoutX="-3.0" layoutY="54.0" prefHeight="35.0" prefWidth="106.0" style="-fx-text-fill: #F4E0B7;" text="\$36000">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Label>
-            </children>
-        </Pane>
-        <Pane fx:id="player3CardArea" layoutX="470.0" layoutY="28.0" prefHeight="117.0" prefWidth="100.0">
-            <children>
-                <ImageView fx:id="player3Card1" layoutX="51.0" pickOnBounds="true" styleClass="cards">
-                    <image>
-                        <Image url="@../cards/basic/JackHearts.png" />
-                    </image>
-                </ImageView>
-                <ImageView fx:id="player3Card2" layoutX="-2.0" pickOnBounds="true" styleClass="cards">
-                    <image>
-                        <Image url="@../cards/basic/Opponent.png" />
-                    </image>
-                </ImageView>
-                <ImageView fitHeight="54.0" fitWidth="98.0" layoutX="2.0" layoutY="51.0" rotate="180.0">
-                    <image>
-                        <Image url="@pic_wheel_bg.png" />
-                    </image>
-                </ImageView>
-                <Label fx:id="player3Name" alignment="CENTER" layoutX="25.0" layoutY="88.0" prefHeight="15.0" prefWidth="55.0" style="-fx-text-fill: white;" text="choco" textAlignment="CENTER">
-                    <font>
-                        <Font size="10.0" />
-                    </font>
-                </Label>
-                <Label fx:id="player3Money" alignment="CENTER" layoutX="-3.0" layoutY="54.0" prefHeight="35.0" prefWidth="106.0" style="-fx-text-fill: #F4E0B7;" text="\$36000">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Label>
-            </children>
-        </Pane>
-        <Pane fx:id="player4CardArea" layoutX="20.0" layoutY="259.0" prefHeight="117.0" prefWidth="100.0">
-            <children>
-                <ImageView fx:id="player4Card1" layoutX="51.0" pickOnBounds="true" styleClass="cards">
-                    <image>
-                        <Image url="@../cards/realistic/JackHearts.png" />
-                    </image>
-                </ImageView>
-                <ImageView fx:id="player4Card2" layoutX="-2.0" pickOnBounds="true" styleClass="cards">
-                    <image>
-                        <Image url="@../cards/realistic/Opponent.png" />
-                    </image>
-                </ImageView>
-                <ImageView fitHeight="54.0" fitWidth="98.0" layoutX="2.0" layoutY="55.0">
-                    <image>
-                        <Image url="@pic_wheel_bg.png" />
-                    </image>
-                </ImageView>
-                <Label fx:id="player4Name" alignment="CENTER" layoutX="4.0" layoutY="53.0" prefHeight="21.0" prefWidth="88.0" style="-fx-text-fill: white;" text="choco" textAlignment="CENTER">
-                    <font>
-                        <Font size="10.0" />
-                    </font>
-                </Label>
-                <Label fx:id="player4Money" alignment="CENTER" layoutX="-1.0" layoutY="69.0" prefHeight="35.0" prefWidth="98.0" style="-fx-text-fill: #F4E0B7;" text="\$36000">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Label>
-            </children>
-        </Pane>
-    </children>
-</AnchorPane>
+<StackPane fx:id="rootPane" alignment="TOP_LEFT" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PokerGameController">
+    <AnchorPane fx:id="gamePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: transparent;" stylesheets="@style.css">
+        <children>
+            <ImageView fitHeight="407.0" fitWidth="607.0" layoutX="-6.0" layoutY="-3.0" pickOnBounds="true" style="-fx-background-color: transparent;">
+                <image>
+                    <Image url="@../images/Background.jpg" />
+                </image></ImageView>
+            <ImageView fitHeight="129.0" fitWidth="200.0" layoutX="201.0" layoutY="4.0">
+                <image>
+                    <Image url="@../images/show_emma.png" />
+                </image>
+            </ImageView>
+            <ImageView fitHeight="326.0" fitWidth="453.0" layoutX="74.0" layoutY="32.0">
+                <image>
+                    <Image url="@../images/Table.png" />
+                </image>
+            </ImageView>
+            <HBox fx:id="hBox" alignment="TOP_CENTER" layoutX="168.0" layoutY="171.0" prefHeight="89.0" prefWidth="246.0">
+                <children>
+                    <ImageView fx:id="communityCard1" pickOnBounds="true" styleClass="cards">
+                        <image>
+                            <Image url="@../cards/realistic/2Hearts.png" />
+                        </image>
+                    </ImageView>
+                    <ImageView fx:id="communityCard2" layoutX="10.0" layoutY="10.0" pickOnBounds="true" styleClass="cards">
+                        <image>
+                            <Image url="@../cards/realistic/10Clubs.png" />
+                        </image>
+                    </ImageView>
+                    <ImageView fx:id="communityCard3" layoutX="10.0" layoutY="10.0" pickOnBounds="true" styleClass="cards">
+                        <image>
+                            <Image url="@../cards/realistic/AceSpades.png" />
+                        </image>
+                    </ImageView>
+                    <ImageView fx:id="communityCard4" layoutX="10.0" layoutY="10.0" pickOnBounds="true" styleClass="cards">
+                        <image>
+                            <Image url="@../cards/realistic/KingHearts.png" />
+                        </image>
+                    </ImageView>
+                    <ImageView fx:id="communityCard5" layoutX="10.0" layoutY="10.0" pickOnBounds="true" styleClass="cards">
+                        <image>
+                            <Image url="@../cards/realistic/QueenHearts.png" />
+                        </image>
+                    </ImageView>
+                </children>
+            </HBox>
+            <Pane layoutX="188.0" layoutY="311.0" prefHeight="70.0" prefWidth="176.0" style="-fx-background-color: linear-gradient(to right, #966F35, #302311); -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-border-color: white;-fx-border-width: 1px; -fx-background-insets: 0.5px;">
+                <children>
+                    <TextField fx:id="raiseField" layoutX="21.0" layoutY="21.0" prefHeight="28.0" prefWidth="132.0" />
+                    <Slider fx:id="raiseSlider" layoutX="9.0" layoutY="52.0" prefHeight="14.0" prefWidth="153.0" />
+                    <Text fill="WHITE" layoutX="11.0" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Money to raise" textAlignment="CENTER" wrappingWidth="149.1366729736328">
+                        <font>
+                            <Font name="Asul" size="14.0" />
+                        </font>
+                    </Text>
+                </children>
+            </Pane>
+            <Button fx:id="raiseButton" layoutX="375.0" layoutY="350.0" prefHeight="31.0" prefWidth="61.0" style="-fx-font-family: 'Asul';" styleClass="play-button" text="Raise">
+                <font>
+                    <Font name="Asul" size="12.0" />
+                </font>
+            </Button>
+            <Button fx:id="foldButton" layoutX="375.0" layoutY="311.0" prefHeight="31.0" prefWidth="63.0" style="-fx-font-family: 'Asul';" styleClass="play-button" text="Fold">
+                <font>
+                    <Font name="Asul" size="12.0" />
+                </font>
+            </Button>
+            <Pane fx:id="player1CardArea" layoutX="469.0" layoutY="267.0" prefHeight="117.0" prefWidth="100.0">
+                <children>
+                    <ImageView fx:id="player1Card2" layoutX="51.0" pickOnBounds="true" styleClass="cards">
+                        <image>
+                            <Image url="@../cards/traditional/JackHearts.png" />
+                        </image>
+                    </ImageView>
+                    <ImageView fx:id="player1Card1" layoutX="-2.0" pickOnBounds="true" styleClass="cards">
+                        <image>
+                            <Image url="@../cards/traditional/Opponent.png" />
+                        </image>
+                    </ImageView>
+                    <ImageView fitHeight="54.0" fitWidth="98.0" layoutX="2.0" layoutY="55.0">
+                        <image>
+                            <Image url="@../images/nameField.png" />
+                        </image>
+                    </ImageView>
+                    <Label fx:id="player1Name" alignment="CENTER" layoutX="4.0" layoutY="53.0" prefHeight="21.0" prefWidth="88.0" style="-fx-text-fill: white;" text="choco" textAlignment="CENTER">
+                        <font>
+                            <Font size="10.0" />
+                        </font></Label>
+                    <Label fx:id="player1Money" alignment="CENTER" layoutX="3.0" layoutY="69.0" prefHeight="35.0" prefWidth="95.0" style="-fx-font-size: 16;" styleClass="text-money" text="\$36000" />
+                </children>
+            </Pane>
+            <StackPane layoutX="213.0" layoutY="125.0" prefHeight="41.0" prefWidth="170.0">
+                <children>
+                    <ImageView fitHeight="41.0" fitWidth="169.0" pickOnBounds="true">
+                        <image>
+                            <Image url="@../images/MenuFrame.png" />
+                        </image>
+                    </ImageView>
+                    <Text fx:id="potMoney" style="-fx-font-size: 22; -fx-font-family: 'KoPub Batang'; -fx-fill: #f4e0b7;" text="\$500000" textAlignment="CENTER" wrappingWidth="124.0" />
+                </children>
+            </StackPane>
+            <Pane fx:id="player2CardArea" layoutX="23.0" layoutY="25.0" prefHeight="117.0" prefWidth="100.0">
+                <children>
+                    <ImageView fx:id="player2Card1" layoutX="52.0" pickOnBounds="true" styleClass="cards">
+                        <image>
+                            <Image url="@../cards/animated/JackHearts.png" />
+                        </image>
+                    </ImageView>
+                    <ImageView fx:id="player2Card2" layoutX="-2.0" pickOnBounds="true" styleClass="cards">
+                        <image>
+                            <Image url="@../cards/animated/Opponent.png" />
+                        </image>
+                    </ImageView>
+                    <ImageView fitHeight="54.0" fitWidth="98.0" layoutX="2.0" layoutY="51.0" rotate="180.0">
+                        <image>
+                            <Image url="@../images/nameField.png" />
+                        </image>
+                    </ImageView>
+                    <Label fx:id="player2Name" alignment="CENTER" layoutX="25.0" layoutY="88.0" prefHeight="15.0" prefWidth="55.0" style="-fx-text-fill: white;" text="choco" textAlignment="CENTER">
+                        <font>
+                            <Font size="10.0" />
+                        </font>
+                    </Label>
+                    <Label fx:id="player2Money" alignment="CENTER" layoutX="4.0" layoutY="54.0" prefHeight="35.0" prefWidth="95.0" style="-fx-font-size: 16;" styleClass="text-money" text="\$36000" />
+                </children>
+            </Pane>
+            <Pane fx:id="player3CardArea" layoutX="470.0" layoutY="28.0" prefHeight="117.0" prefWidth="100.0">
+                <children>
+                    <ImageView fx:id="player3Card1" layoutX="51.0" pickOnBounds="true" styleClass="cards">
+                        <image>
+                            <Image url="@../cards/basic/JackHearts.png" />
+                        </image>
+                    </ImageView>
+                    <ImageView fx:id="player3Card2" layoutX="-2.0" pickOnBounds="true" styleClass="cards">
+                        <image>
+                            <Image url="@../cards/basic/Opponent.png" />
+                        </image>
+                    </ImageView>
+                    <ImageView fitHeight="54.0" fitWidth="98.0" layoutX="2.0" layoutY="51.0" rotate="180.0">
+                        <image>
+                            <Image url="@../images/nameField.png" />
+                        </image>
+                    </ImageView>
+                    <Label fx:id="player3Name" alignment="CENTER" layoutX="25.0" layoutY="88.0" prefHeight="15.0" prefWidth="55.0" style="-fx-text-fill: white;" text="choco" textAlignment="CENTER">
+                        <font>
+                            <Font size="10.0" />
+                        </font>
+                    </Label>
+                    <Label fx:id="player3Money" alignment="CENTER" layoutX="4.0" layoutY="54.0" prefHeight="35.0" prefWidth="95.0" style="-fx-font-size: 16;" styleClass="text-money" text="\$36000" />
+                </children>
+            </Pane>
+            <Pane fx:id="player4CardArea" layoutX="20.0" layoutY="259.0" prefHeight="117.0" prefWidth="100.0">
+                <children>
+                    <ImageView fx:id="player4Card1" layoutX="51.0" pickOnBounds="true" styleClass="cards">
+                        <image>
+                            <Image url="@../cards/realistic/JackHearts.png" />
+                        </image>
+                    </ImageView>
+                    <ImageView fx:id="player4Card2" layoutX="-2.0" pickOnBounds="true" styleClass="cards">
+                        <image>
+                            <Image url="@../cards/realistic/Opponent.png" />
+                        </image>
+                    </ImageView>
+                    <ImageView fitHeight="54.0" fitWidth="98.0" layoutX="2.0" layoutY="55.0">
+                        <image>
+                            <Image url="@../images/nameField.png" />
+                        </image>
+                    </ImageView>
+                    <Label fx:id="player4Name" alignment="CENTER" layoutX="4.0" layoutY="53.0" prefHeight="21.0" prefWidth="88.0" style="-fx-text-fill: white;" text="choco" textAlignment="CENTER">
+                        <font>
+                            <Font size="10.0" />
+                        </font>
+                    </Label>
+                    <Label fx:id="player4Money" alignment="CENTER" layoutX="3.0" layoutY="69.0" prefHeight="35.0" prefWidth="95.0" style="-fx-font-size: 16;" styleClass="text-money" text="\$36000" />
+                </children>
+            </Pane>
+        </children>
+    </AnchorPane>
+</StackPane>

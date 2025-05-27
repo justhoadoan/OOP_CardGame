@@ -1,11 +1,8 @@
 package playable;
 
-import card.Card;
-import games.Game;
-
+import cards.card.Card;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class AI implements Playable {
     private boolean hasBet;
@@ -14,7 +11,6 @@ public class AI implements Playable {
     private String name;
     private List<Card> hand;
     private boolean status;
-    private Random random;
     private int currentBalance;
     private int currentBet;
 
@@ -23,7 +19,6 @@ public class AI implements Playable {
         this.name = name;
         this.hand = new ArrayList<>();
         this.status = true;
-        this.random = new Random();
         this.currentBalance = 1000; // Starting balance
     }
     public String getStrategyType() {
@@ -38,8 +33,6 @@ public class AI implements Playable {
         return id;
     }
 
-
-
     @Override
     public String getName() {
         return name;
@@ -50,10 +43,6 @@ public class AI implements Playable {
         return hand;
     }
 
-    @Override
-    public void setHand(List<Card> hand) {
-        this.hand = hand;
-    }
 
     @Override
     public boolean getStatus() {
@@ -99,8 +88,4 @@ public class AI implements Playable {
 
     @Override
     public void setCurrentBet(int currentBet) {this.currentBet = currentBet;}
-
-    public void setCurrentBalance(int balance) {
-        this.currentBalance = balance;
-    }
 }

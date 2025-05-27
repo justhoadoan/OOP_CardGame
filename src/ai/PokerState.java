@@ -1,7 +1,7 @@
 package ai;
 
 import java.util.List;
-import card.Card;
+import cards.card.Card;
 import playable.Player;
 
 public class PokerState implements GameState {
@@ -21,7 +21,6 @@ public class PokerState implements GameState {
         return communityCards;
     }
 
-
     @Override
     public Player getplayer() {
         return player;
@@ -31,10 +30,12 @@ public class PokerState implements GameState {
     public List<Card> getPlayerHand(){
         return player.getHand();
     }
+
     @Override
     public int getPot(){
         return pot;
     }
+
     @Override
     public int getCurrentBet(){
         return currentBet;
