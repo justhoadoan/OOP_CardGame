@@ -22,7 +22,7 @@
                <font>
                   <Font size="10.0" />
                </font></Button>
-            <Text fx:id="gameState" layoutX="91.0" layoutY="214.0" stroke="#f6f1f1" strokeType="OUTSIDE" strokeWidth="0.3" style="-fx-fill: white;" text="Game State" textAlignment="CENTER" wrappingWidth="105.2459945678711">
+            <Text fx:id="winnerText" layoutX="91.0" layoutY="214.0" stroke="#f6f1f1" strokeType="OUTSIDE" strokeWidth="0.3" style="-fx-fill: white;" text="Game State" textAlignment="CENTER" wrappingWidth="105.2459945678711">
                <font>
                   <Font name="Kiwi Maru Regular" size="18.0" />
                </font>

@@ -1,7 +1,7 @@
 package gui;
 
 import card.CardSkin;
-import gamemode.JavaFXPokerMode;
+import updatedisplay.JavaFXPokerMode;
 import games.PokerGame;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;

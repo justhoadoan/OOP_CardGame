@@ -5,7 +5,7 @@ import ai.PokerHandEvaluator.HandRank;
 import card.Card;
 import card.CardSkin;
 import deck.Deck;
-import gamemode.GameMode;
+import updatedisplay.GameMode;
 import playable.*;
 import processor.PokerActionProcessor;
 import java.util.*;

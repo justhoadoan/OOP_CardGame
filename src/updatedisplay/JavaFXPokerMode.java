@@ -1,4 +1,4 @@
-package gamemode;
+package updatedisplay;
 
 import card.Card;
 import card.CardSkin;
@@ -136,7 +136,10 @@ public class JavaFXPokerMode implements GameMode {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/Popup.fxml"));
         Parent root = loader.load();
 
-        PopupController controller = loader.getController(); // Access controller
+        PopupController controller = loader.getController();
+
+        // Set the winner text
+        controller.setWinnerText(winner);
 
         Stage popupStage = new Stage();
         popupStage.setScene(new Scene(root));
