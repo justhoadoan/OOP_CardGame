@@ -1,7 +1,6 @@
 package gui;
 
-import cards.card.Card;
-import updatedisplay.JavaFXBlackjackMode;
+import updatedisplay.JavaFXBlackjackView;
 import games.BlackjackGame;
 import processor.BlackjackActionProcessor;
 import javafx.fxml.FXML;
@@ -41,7 +40,7 @@ public class BlackJackGameController {
 
     private BlackjackGame game;
     private String cardSkin;
-    private JavaFXBlackjackMode blackjackMode;
+    private JavaFXBlackjackView blackjackMode;
 
     @FXML
     private void handleHit() {
@@ -95,7 +94,7 @@ public class BlackJackGameController {
     }
 
     void setupBaseComponents() {
-        this.blackjackMode = new JavaFXBlackjackMode(
+        this.blackjackMode = new JavaFXBlackjackView(
                 new ImageView[]{playerCard1, playerCard2, playerCard3, playerCard4, playerCard5},
                 new ImageView[]{dealerCard1, dealerCard2, dealerCard3, dealerCard4, dealerCard5},
                 playerScoreText,

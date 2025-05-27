@@ -1,7 +1,7 @@
 package gui;
 
 import javafx.scene.layout.HBox;
-import updatedisplay.JavaFXPokerMode;
+import updatedisplay.JavaFXPokerView;
 import games.PokerGame;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
@@ -30,7 +30,7 @@ public class PokerGameController {
 
     private PokerGame game;
     private String cardSkin;
-    private JavaFXPokerMode gameMode;
+    private JavaFXPokerView gameMode;
     private String aiStrategy;
     private int playerId = 1;
 
@@ -139,7 +139,7 @@ public class PokerGameController {
         };
 
         // Create game mode
-        gameMode = new JavaFXPokerMode(
+        gameMode = new JavaFXPokerView(
                 communityCards,
                 playerCards,
                 new Label[]{player1Name, player2Name, player3Name, player4Name},

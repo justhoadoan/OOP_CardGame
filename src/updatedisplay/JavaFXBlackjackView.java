@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
 import java.util.List;
 import java.util.Objects;
 
-public class JavaFXBlackjackMode extends DisplayUpdating {
+public class JavaFXBlackjackView extends DisplayUpdating {
     private final ImageView[] playerCards;
     private final ImageView[] dealerCards;
     private final Text playerScoreText;
@@ -19,7 +19,7 @@ public class JavaFXBlackjackMode extends DisplayUpdating {
     private BlackjackGame game;
     private String cardSkin;
 
-    public JavaFXBlackjackMode(ImageView[] playerCards,
+    public JavaFXBlackjackView(ImageView[] playerCards,
                                ImageView[] dealerCards,
                                Text playerScoreText,
                                Text dealerScoreText) {

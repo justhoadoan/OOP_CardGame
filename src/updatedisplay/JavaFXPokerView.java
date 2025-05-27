@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-public class JavaFXPokerMode extends DisplayUpdating {
+public class JavaFXPokerView extends DisplayUpdating {
     private final ImageView[] communityCards;
     private final ImageView[][] playerCards;
     private final Label[] playerNames;
@@ -34,7 +34,7 @@ public class JavaFXPokerMode extends DisplayUpdating {
     private final TextField raiseField;
     private final Slider raiseSlider;
 
-    public JavaFXPokerMode(ImageView[] communityCards,
+    public JavaFXPokerView(ImageView[] communityCards,
                            ImageView[][] playerCards,
                            Label[] playerNames,
                            Label[] playerMoney,
