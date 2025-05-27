@@ -4,7 +4,7 @@ import games.BlackjackGame;
 import games.Game;
 import playable.Playable;
 
-public class BlackjackActionProcessor implements ActionProcessor {
+public class BlackjackActionProcessor extends ActionProcessor {
     @Override
     public void processAction(String action, Game game, Playable currentPlayer) {
 

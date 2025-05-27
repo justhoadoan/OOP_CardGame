@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-public class JavaFXPokerMode implements GameMode {
+public class JavaFXPokerMode extends GameMode {
     private final ImageView[] communityCards;
     private final ImageView[][] playerCards;
     private final Label[] playerNames;

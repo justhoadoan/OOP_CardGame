@@ -14,7 +14,7 @@ import updatedisplay.GameMode;
 import java.util.List;
 import java.util.Objects;
 
-public class JavaFXBlackjackMode implements GameMode {
+public class JavaFXBlackjackMode extends GameMode {
     private final ImageView[] playerCards;
     private final ImageView[] dealerCards;
     private final Text playerScoreText;

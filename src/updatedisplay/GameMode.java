@@ -4,10 +4,21 @@ import cards.card.Card;
 import games.Game;
 import java.util.List;
 
-public interface GameMode {
+public abstract class GameMode {
     // Core game reference
-    void setGame(Game game);
-    void setCardSkin(String skin);
-    void updateDisplay(List<Card> playerHand, String publicState, String winner);
-    String getGameState();
+    public void setGame(Game game) {
+
+    }
+
+    public void setCardSkin(String skin) {
+
+    }
+
+    void updateDisplay(List<Card> playerHand, String publicState, String winner) {
+
+    }
+
+    String getGameState() {
+        return null;
+    }
 }
