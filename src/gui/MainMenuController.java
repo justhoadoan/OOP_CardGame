@@ -99,7 +99,7 @@ public class MainMenuController {
                 StackPane rootPane = loader.load();
                 scene = new Scene(rootPane);
 
-                BlackJackBetGui controller = loader.getController();
+                BlackJackBetController controller = loader.getController();
                 controller.setSelectedSkin(selectedSkin);
                 contentPane = controller.getBetPane(); // Get the main content pane
                 controller.initialize();

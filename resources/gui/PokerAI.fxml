@@ -13,14 +13,14 @@
 <?import javafx.scene.text.Text?>
 
 <StackPane fx:id="rootPane" alignment="TOP_LEFT" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PokerAIController">
-    <AnchorPane fx:id="AIMenuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@menu.css">
+    <AnchorPane fx:id="AIMenuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css">
         <children>
             <ImageView fitHeight="406.0" fitWidth="609.0" layoutX="-6.0" layoutY="-3.0" pickOnBounds="true">
                 <image>
-                    <Image url="@Background.jpg" />
+                    <Image url="@../images/Background.jpg" />
                 </image>
             </ImageView>
-            <Pane layoutX="111.0" layoutY="106.0" prefHeight="227.0" prefWidth="368.0" stylesheets="@menu.css">
+            <Pane layoutX="111.0" layoutY="106.0" prefHeight="227.0" prefWidth="368.0" stylesheets="@style.css">
                 <effect>
                     <Blend />
                 </effect>
@@ -38,7 +38,7 @@
             </Pane>
             <ImageView fitHeight="74.0" fitWidth="298.0" layoutX="153.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="@MenuFrame.png" />
+                    <Image url="@../images/MenuFrame.png" />
                 </image>
             </ImageView>
             <Text layoutX="180.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-menu" text="MENU GAME" wrappingWidth="243.0501708984375" />

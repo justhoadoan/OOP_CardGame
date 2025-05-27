@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class BlackJackBetGui {
+public class BlackJackBetController {
     @FXML private AnchorPane betPane;
     @FXML private StackPane rootPane;
     @FXML private Slider betSlider;
@@ -40,7 +40,7 @@ public class BlackJackBetGui {
             Scene scene = new Scene(rootPane);
 
             // Get the controller for BlackJackGameGui
-            BlackJackGameGui gameController = loader.getController();
+            BlackJackGameController gameController = loader.getController();
             gameController.setupGame(selectedSkin);
             AnchorPane contentPane = gameController.getGamePane(); // Get the main content pane
 
