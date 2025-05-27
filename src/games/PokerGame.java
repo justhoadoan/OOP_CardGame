@@ -354,10 +354,19 @@ public class PokerGame implements Game {
             currentBet = Math.max(currentBet, totalBetNeeded);
 
             // Check for all-in
-            if (player.getCurrentBalance() == 0) {
+            boolean allPlayerSameBet = true;
+            boolean onePlayerAllIn = false;
+            for (Playable p : players) {
+                if (p.getStatus() && p.getCurrentBet() < currentBet) {
+                    allPlayerSameBet = false;
+                }
+                if( p.getStatus() && p.getCurrentBalance() == 0) {
+                    onePlayerAllIn = true;
+                }
+            }
+            if(allPlayerSameBet && onePlayerAllIn) {
                 handleAllIn();
             }
-
             // Update UI immediately
             broadcastState();
         }
@@ -365,7 +374,7 @@ public class PokerGame implements Game {
 
     private void handleAllIn() {
         // Deal remaining community cards if any
-        while (communityCards.size() < 5) {
+        while (communityCards.size() <= 5) {
             dealCommunityCards(1);
         }
 
