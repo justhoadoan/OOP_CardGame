@@ -6,7 +6,6 @@ public class Card {
     private String rank;
     private String suit;
     private String skinName;
-    private Image cardImage;
 
     public Card(String rank, String suit) {
         this.rank = rank;
@@ -56,15 +55,6 @@ public class Card {
 
     public void setSkin(String skin) {
         this.skinName = skin;
-//        if (skin != null) {
-//            try {
-//                String imagePath = getImagePath(rank, suit);
-//                cardImage = new Image(imagePath);
-//            } catch (Exception e) {
-//                System.err.println("Error loading cards.card image: " + e.getMessage());
-//                cardImage = null;
-//            }
-//        }
     }
 
     public String getImagePath(String rank, String suit) {
