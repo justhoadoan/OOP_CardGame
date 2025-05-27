@@ -87,7 +87,6 @@ public class BlackJackGameController {
         // First setup the UI components
         setupBaseComponents();
         game.start();
-
         // Update display with game state
         blackjackMode.updatePlayerCards();
         blackjackMode.updateDealerCards();

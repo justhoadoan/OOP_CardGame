@@ -61,6 +61,7 @@ public class JavaFXBlackjackMode implements GameMode {
         for (int i = 0; i < playerCards.length; i++) {
             if (i < hand.size()) {
                 Card card = hand.get(i);
+                card.setSkin(cardSkin);
                 String imagePath = card.getImagePath(card.getRank(), card.getSuit());
                 Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
                 playerCards[i].setImage(cardImage);
@@ -78,6 +79,7 @@ public class JavaFXBlackjackMode implements GameMode {
         for (int i = 0; i < dealerCards.length; i++) {
             if (i < hand.size()) {
                 Card card = hand.get(i);
+                card.setSkin(cardSkin);
                 String imagePath = card.getImagePath(card.getRank(), card.getSuit());
                 Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
                 dealerCards[i].setImage(cardImage);

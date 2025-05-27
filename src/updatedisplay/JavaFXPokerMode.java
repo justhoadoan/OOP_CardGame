@@ -208,11 +208,18 @@ public class JavaFXPokerMode implements GameMode {
                     // Show all cards if game is over, river round is reached, or it's the current player's hand
                     if (isGameOver || isRiverRound || (player == currentPlayer && !(player instanceof AI))) {
                         Card card = playerHand.get(j);
+                        if (cardSkin != null) {
+                            card.setSkin(cardSkin);
+                        }
                         String path = card.getImagePath(card.getRank(), card.getSuit());
                         Image cardImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(path)));
                         playerCards[i][j].setImage(cardImage);
                     } else {
-                        String backPath = playerHand.get(j).getImagePath("Opponent","");
+                        Card card = playerHand.get(j);
+                        if (cardSkin != null) {
+                            card.setSkin(cardSkin);
+                        }
+                        String backPath = card.getImagePath("Opponent","");
                         Image backImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(backPath)));
                         playerCards[i][j].setImage(backImage);
                     }

@@ -56,15 +56,15 @@ public class Card {
 
     public void setSkin(String skin) {
         this.skinName = skin;
-        if (skin != null) {
-            try {
-                String imagePath = getImagePath(rank, suit);
-                cardImage = new Image(imagePath);
-            } catch (Exception e) {
-                System.err.println("Error loading cards.card image: " + e.getMessage());
-                cardImage = null;
-            }
-        }
+//        if (skin != null) {
+//            try {
+//                String imagePath = getImagePath(rank, suit);
+//                cardImage = new Image(imagePath);
+//            } catch (Exception e) {
+//                System.err.println("Error loading cards.card image: " + e.getMessage());
+//                cardImage = null;
+//            }
+//        }
     }
 
     public String getImagePath(String rank, String suit) {
