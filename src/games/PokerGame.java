@@ -394,8 +394,20 @@ public class PokerGame implements Game {
         addPlayer(ai);
     }
     public String getWinner() {
-        for(Playable player : players) {
-            if(player.getStatus())
+        // Check for tie
+        List<Playable> activeWinners = players.stream()
+                .filter(Playable::getStatus)
+                .collect(Collectors.toList());
+
+        if (activeWinners.size() > 1) {
+            return "Tie between " + activeWinners.stream()
+                    .map(Playable::getName)
+                    .collect(Collectors.joining(" and "));
+        }
+
+        // Single winner
+        for (Playable player : players) {
+            if (player.getStatus())
                 return player.getName();
         }
         return null;
