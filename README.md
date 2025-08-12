@@ -16,7 +16,7 @@ Simple console interface, easily extendable for new cards.card game rules.
 
 🛠️ Technologies Used
 
-Java 8 or higher
+Java 24
 
 Java Collections Framework (ArrayList, List, etc.)
 
